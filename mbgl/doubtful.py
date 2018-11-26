@@ -1,49 +1,96 @@
-from widgets.cwidget import *
-from mbgl.model import *
-from functools import partial
+from .doubtful_ui import *
+from app_interface import *
+from utils import cur_datetime
+from report import ItemsStateUI,OperateUI
 
+'''
+妇科：4585 4527 4529 1914 1910 1930 1933 1909 501699 501780
+肝病科 4619
+心胸外科 280008 280018 4617 1441
+消化内科 5001 4599 1911 1920 501725 501726  5010 
+'''
 
-# 四高+甲状腺结节 疑似筛选
-class Doubtful(Widget):
+class Doubtful(DoubtfulUI):
 
     def __init__(self):
         super(Doubtful,self).__init__()
-        self.initParas()
-        self.initUI()
         # 绑定信号
-        self.cb_is_gxy.stateChanged.connect(partial(self.onCheckState, 'IS_GXY'))
-        self.cb_is_gxz.stateChanged.connect(partial(self.onCheckState, 'IS_GXZ'))
-        self.cb_is_gxt.stateChanged.connect(partial(self.onCheckState, 'IS_GXT'))
-        self.cb_is_gns.stateChanged.connect(partial(self.onCheckState, 'IS_GNS'))
-        self.cb_is_jzx.stateChanged.connect(partial(self.onCheckState, 'IS_JZX'))
-        #
+        self.ccb_jb1.currentTextChanged.connect()
         self.gp_quick_search.returnPressed.connect(self.on_quick_search)  # 快速检索
-        self.table.itemClicked.connect(self.on_table_set)
+        self.table_health.itemClicked.connect(self.on_table_set)
         self.btn_export.clicked.connect(self.on_btn_export_click)
         self.btn_query.clicked.connect(self.on_btn_query)
-
-    def initParas(self):
-        self.dwmc_bh = OrderedDict()
-        self.dwmc_py = OrderedDict()
-
-        results = self.session.query(MT_TJ_DW).all()
-        for result in results:
-            self.dwmc_bh[result.dwbh] = str2(result.mc)
-            self.dwmc_py[result.pyjm.lower()] = str2(result.mc)
-
+        ########## 功能栏
+        self.btn_item.clicked.connect(self.on_btn_item_click)
+        self.btn_czjl.clicked.connect(self.on_btn_czjl_click)
+        self.btn_phone.clicked.connect(self.on_btn_phone_click)
+        self.btn_sms.clicked.connect(self.on_btn_sms_click)
+        self.btn_forbidden.clicked.connect(self.on_btn_forbidden_click)
+        # 特殊变量
         ###################################################
+        self.cur_tjbh = None     # 最后一次选择的体检编号
         self.where_jb = {}
         self.where_rq = ''
         self.where_je = ''
+        ############### 系统对话框 #######################################
+        self.item_ui = None       # 项目查看
+        self.operatr_ui = None    # 操作记录界面
+        self.phone_ui = None      # 电话记录对话框
+        self.sms_ui = None        # 短信记录对话框
+
+    #体检系统项目查看
+    def on_btn_item_click(self):
+        if not self.item_ui:
+            self.item_ui = ItemsStateUI(self)
+        self.item_ui.show()
+        if self.cur_tjbh:
+            self.item_ui.returnPressed.emit(self.cur_tjbh)
+
+
+    #体检系统项目查看
+    def on_btn_czjl_click(self):
+        if not self.operatr_ui:
+            self.operatr_ui = OperateUI(self)
+        self.operatr_ui.show()
+        if self.cur_tjbh:
+            self.operatr_ui.returnPressed.emit(self.cur_tjbh)
+
+    # 电话记录
+    def on_btn_phone_click(self):
+        if not self.cur_tjbh:
+            mes_about(self, '请先选择一个人！')
+            return
+        sjhm = self.table_health.getCurItemValueOfKey('sjhm')
+        if not self.phone_ui:
+            self.phone_ui = PhoneUI(self)
+        self.phone_ui.show()
+        self.phone_ui.returnPressed.emit(self.cur_tjbh, sjhm)
+
+    # 短信记录
+    def on_btn_sms_click(self):
+        if not self.cur_tjbh:
+            mes_about(self, '请先选择一个人！')
+            return
+
+        sjhm = self.table_health.getCurItemValueOfKey('sjhm')
+        if not self.sms_ui:
+            self.sms_ui = SmsUI(self)
+        self.sms_ui.show()
+        self.sms_ui.returnPressed.emit(self.cur_tjbh,sjhm)
+
+    def on_btn_forbidden_click(self):
+        pass
+
 
     # 设置快速检索文本
     def on_table_set(self, tableWidgetItem):
         row = tableWidgetItem.row()
-        tjbh = self.table.item(row, 0).text()
-        xm = self.table.item(row, 1).text()
-        sfzh = self.table.item(row, 5).text()
-        sjhm = self.table.item(row, 4).text()
+        tjbh = self.table_health.getItemValueOfKey(row,'tjbh')
+        xm = self.table_health.getItemValueOfKey(row,'xm')
+        sfzh = self.table_health.getItemValueOfKey(row,'sfzh')
+        sjhm = self.table_health.getItemValueOfKey(row,'sjhm')
         self.gp_quick_search.setText(tjbh, xm, sjhm, sfzh)
+        self.cur_tjbh = tjbh
 
     #快速检索
     def on_quick_search(self,p1_str,p2_str):
@@ -56,130 +103,8 @@ class Doubtful(Widget):
         else:
             results = self.session.query(MT_MB_YSKH).filter(MT_MB_YSKH.xm == p2_str).all()
         tmp = [result.to_dict for result in results]
-        self.table.load(tmp)
-        mes_about(self,'共检索出 %s 条数据！' %self.table.rowCount())
-
-    # 导出功能
-    def on_btn_export_click(self):
-        self.table.export()
-
-    def initUI(self):
-        lt_main = QVBoxLayout()
-        lt_top = QHBoxLayout()
-        search_group = QGroupBox('条件检索')
-        search_layout = QGridLayout()
-
-        self.cb_is_gxy = QCheckBox('疑似高血压')
-        self.cb_is_gxz = QCheckBox('疑似高血脂')
-        self.cb_is_gxt = QCheckBox('疑似高血糖')
-        self.cb_is_gns = QCheckBox('疑似高尿酸')
-        self.cb_is_jzx = QCheckBox('疑似甲状腺')
-
-
-
-        self.dg_rq = DateGroup()       # 检索时间
-        self.dg_rq.jsrq.clear()
-        self.dg_rq.jsrq.addItems(['签到日期','总检日期','审核日期'])
-        self.mg_je = MoneyGroup()      # 检索金额
-        self.tj_dw = TUintGroup(self.dwmc_bh,self.dwmc_py)       # 体检单位
-
-        self.btn_query = ToolButton(Icon('query'),'查询')
-
-        self.btn_query.setFixedWidth(64)
-        self.btn_query.setFixedHeight(64)
-        self.btn_query.setAutoRaise(False)
-        # self.btn_export.setFixedWidth(64)
-        # self.btn_export.setFixedHeight(64)
-        # self.btn_export.setAutoRaise(False)
-
-        # 第一列
-        search_layout.addWidget(self.cb_is_gxy, 0, 0, 1, 1)
-        search_layout.addItem(self.tj_dw, 1, 0, 1, 5)
-        # 第二列
-        search_layout.addWidget(self.cb_is_gxt, 0, 1, 1, 1)
-        # 第三列
-        search_layout.addWidget(self.cb_is_jzx, 0, 2, 1, 1)
-        # 第四列
-        search_layout.addWidget(self.cb_is_gxz, 0, 3, 1, 1)
-        # 第五列
-        search_layout.addWidget(self.cb_is_gns, 0, 4, 1, 1)
-        # 第六列
-        search_layout.addItem(self.dg_rq, 0, 5, 1, 4)
-        search_layout.addItem(self.mg_je, 1, 5, 1, 4)
-        search_layout.addWidget(self.btn_query, 0, 9, 2, 2)
-
-        search_layout.setHorizontalSpacing(10)            #设置水平间距
-        search_layout.setVerticalSpacing(10)              #设置垂直间距
-        search_layout.setContentsMargins(10, 10, 10, 10)  #设置外间距
-        search_layout.setColumnStretch(11, 1)             #设置列宽，添加空白项的
-
-        search_group.setLayout(search_layout)
-
-
-        self.gp_quick_search = QuickSearchGroup()
-        
-        lt_top.addWidget(search_group)
-        lt_top.addWidget(self.gp_quick_search)
-        # lt_top.addStretch()
-
-        self.cols = OrderedDict([('tjbh','体检编号'),
-                                 ('xm','姓名'),
-                                 ('xb','性别'),
-                                 ('nl','年龄'),
-                                 ('sjhm','手机号码'),
-                                 ('sfzh','身份证号'),
-                                 ('ysje','体检金额'),
-                                 ('is_gxy','疑似高血压'),
-                                 ('is_gxz', '疑似高血脂'),
-                                 ('is_gxt', '疑似高血糖'),
-                                 ('is_gns', '疑似高尿酸'),
-                                 ('is_jzx', '疑似甲状腺'),
-                                 ('glu', '血糖'),
-                                 ('glu2', '餐后2小时血糖'),
-                                 ('hbalc', '糖化血红蛋白'),
-                                 ('ua', '尿酸'),
-                                 ('tch', '总胆固醇'),
-                                 ('tg', '甘油三酯'),
-                                 ('hdl', '高密度脂蛋白'),
-                                 ('ldl', '低密度脂蛋白'),
-                                 ('hbp', '收缩压'),
-                                 ('lbp', '舒张压'),
-                                 ('dwmc', '单位名称')
-                                 ])
-        #### 刷选表格 ###########################################
-        self.table = SlowHealthTable(self.cols)
-        self.table.setContextMenuPolicy(Qt.CustomContextMenu)              ######允许右键产生子菜单
-        self.table.customContextMenuRequested.connect(self.onTableMenu)   ####右键菜单
-        self.gp_middle = QGroupBox('疑似列表(0)')
-        lt_middle = QHBoxLayout()
-        lt_middle.addWidget(self.table)
-        self.gp_middle.setLayout(lt_middle)
-        ########### 功能区 #################
-        lt_bottom = QHBoxLayout()
-        gp_bottom = QGroupBox()
-        # 按钮功能区
-        self.btn_item = QPushButton(Icon('项目'), '项目查看')         # 查看 LIS 结果
-        self.btn_czjl = QPushButton(Icon('操作'), '操作记录')         # 查看体检记录
-        self.btn_his_visit = QPushButton(Icon('就诊'), '历史就诊')      # 查看历史就诊
-        self.btn_cur_visit = QPushButton(Icon('就诊'), '预约就诊')      # 查看体检记录
-        self.btn_phone = QPushButton(Icon('电话'),'电话记录')         # 查看电话记录
-        self.btn_sms = QPushButton(Icon('短信'),'短信记录')           # 查看短信记录
-        self.btn_export = QPushButton(Icon('导出'), '数据导出')       # 数据导出
-
-        lt_bottom.addWidget(self.btn_item)
-        lt_bottom.addWidget(self.btn_czjl)
-        lt_bottom.addWidget(self.btn_his_visit)
-        lt_bottom.addWidget(self.btn_cur_visit)
-        lt_bottom.addWidget(self.btn_phone)
-        lt_bottom.addWidget(self.btn_sms)
-        lt_bottom.addWidget(self.btn_export)
-        gp_bottom.setLayout(lt_bottom)
-        # 添加布局
-        lt_main.addLayout(lt_top)
-        #lt_main.addStretch()
-        lt_main.addWidget(self.gp_middle)
-        lt_main.addWidget(gp_bottom)
-        self.setLayout(lt_main)
+        self.table_health.load(tmp)
+        mes_about(self,'共检索出 %s 条数据！' %self.table_health.rowCount())
 
     def onCheckState(self,p_str,is_check:int):
         if is_check == 2:
@@ -191,29 +116,40 @@ class Doubtful(Widget):
 
     # 查询
     def on_btn_query(self):
-        cols = ['tjbh','xm','xb','nl','sfzh','sjhm','dwmc','ysje','is_gxy','is_gxz','is_gxt','is_gns'
-            ,'is_jzx','glu','is_yc_glu','glu2','is_yc_glu2','hbalc','is_yc_hbalc','ua','is_yc_ua','tch'
-            ,'is_yc_tch','tg','is_yc_tg','hdl','is_yc_hdl','ldl','is_yc_ldl','hbp','is_yc_hbp','lbp','is_yc_lbp']
-        sql = get_mbgl_sql()
-        if self.dg_rq.where_date:
-            sql = sql + self.dg_rq.where_date
-        if self.mg_je.get_where_text():
-            sql = sql + self.mg_je.get_where_text()
-        if self.tj_dw.where_dwbh:
-            sql = sql + ''' AND DWBH = '%s' ''' %self.tj_dw.where_dwbh
-        if self.where_jb:
-            sql = sql + ''' AND %s ''' %' AND '.join(["%s = '%s' " %(key,value) for key,value in self.where_jb.items()])
-        # print(sql)
-        # return
-        results = self.session.execute(sql).fetchall()
-        new_results = [dict(zip(cols,result)) for result in results]
-        self.table.load(new_results)
-        self.gp_middle.setTitle('疑似列表(%s)' %self.table.rowCount())
-        mes_about(self, '检索出 %s 条数据！' %self.table.rowCount())
+        if not any([self.cb_jb1.isChecked(),self.cb_jb2.isChecked()]):
+            mes_about(self,'台湾专家或者门诊专家必须选择一个！')
+            return
+        if self.cb_jb1.isChecked():
 
-        # results = self.session.query(MT_MB_YSKH).filter(MT_MB_YSKH.qdrq == '2018-06-30').all()
-        # tmp = [result.to_dict for result in results]
-        # self.table.load(tmp)
+            # if not self.ccb_jb1.textList():
+            #     mes_about(self,'请选择要筛选的慢病病种！')
+            # else:
+            cols = ['tjbh','xm','xb','nl','sfzh','sjhm','dwmc','ysje','is_gxy','is_gxz','is_gxt','is_gns'
+                ,'is_jzx','glu','is_yc_glu','glu2','is_yc_glu2','hbalc','is_yc_hbalc','ua','is_yc_ua','tch'
+                ,'is_yc_tch','tg','is_yc_tg','hdl','is_yc_hdl','ldl','is_yc_ldl','hbp','is_yc_hbp','lbp','is_yc_lbp']
+            sql = get_mbgl_sql()
+            if self.dg_rq.where_date:
+                sql = sql + self.dg_rq.where_date
+            if self.mg_je.get_where_text():
+                sql = sql + self.mg_je.get_where_text()
+            if self.tj_dw.where_dwbh:
+                sql = sql + ''' AND DWBH = '%s' ''' %self.tj_dw.where_dwbh
+            if self.where_jb:
+                sql = sql + ''' AND %s ''' %' AND '.join(["%s = '%s' " %(key,value) for key,value in self.where_jb.items()])
+            # print(sql)
+            # return
+            results = self.session.execute(sql).fetchall()
+            new_results = [dict(zip(cols,result)) for result in results]
+            self.table_health.load(new_results,self.cols)
+            self.gp_middle.setTitle('疑似列表(%s)' %self.table_health.rowCount())
+            mes_about(self, '检索出 %s 条数据！' %self.table_health.rowCount())
+
+            # results = self.session.query(MT_MB_YSKH).filter(MT_MB_YSKH.qdrq == '2018-06-30').all()
+            # tmp = [result.to_dict for result in results]
+            # self.table.load(tmp)
+        else:
+            # 门诊专家疾病
+            self.on_mzjb_query(self.ccb_jb2.currentText())
 
     # 导出功能
     def on_btn_export(self):
@@ -222,19 +158,119 @@ class Doubtful(Widget):
     # 右键功能
     def onTableMenu(self,pos):
         row_num = -1
-        indexs=self.table.selectionModel().selection().indexes()
+        indexs=self.table_health.selectionModel().selection().indexes()
         if indexs:
             for i in indexs:
                 row_num = i.row()
 
-            menu = QMenu()
-            # item1 = menu.addAction(Icon("短信"), "发送预约短信")
-            # item2 = menu.addAction(Icon("短信"), "编辑预约短信")
-            # item3 = menu.addAction(Icon("预约"), "设置预约客户")
-            # item4 = menu.addAction(Icon("预约"), "电话记录")
-            # item5 = menu.addAction(Icon("预约"), "本次体检结果")
-            # item6 = menu.addAction(Icon("预约"), "历年体检结果")
-            # item7 = menu.addAction(Icon("预约"), "浏览体检报告")
-            # item8 = menu.addAction(Icon("预约"), "下载电子报告")
+        menu = QMenu()
+        item1 = menu.addAction(Icon("报告中心"), "报告禁止查询")
+        item2 = menu.addAction(Icon("报告中心"), "报告恢复查询")
+        # item3 = menu.addAction(Icon("预约"), "设置预约客户")
+        # item4 = menu.addAction(Icon("预约"), "电话记录")
+        # item5 = menu.addAction(Icon("预约"), "本次体检结果")
+        # item6 = menu.addAction(Icon("预约"), "历年体检结果")
+        # item7 = menu.addAction(Icon("预约"), "浏览体检报告")
+        # item8 = menu.addAction(Icon("预约"), "下载电子报告")
 
-            action = menu.exec_(self.table.mapToGlobal(pos))
+        action = menu.exec_(self.table_health.mapToGlobal(pos))
+        if action==item1:
+            tjbh = self.table_health.getCurItemValueOfKey('tjbh')
+            if not tjbh:
+                mes_about(self, '请先选择一个人！')
+                return
+            button = mes_warn(self, '您确认禁止顾客本人查询体检报告吗？')
+            if button == QMessageBox.Yes:
+                result = self.session.query(MT_TJ_Forbidden).filter(MT_TJ_Forbidden.tjbh == tjbh).scalar()
+                if result:
+                    mes_about(self, '该顾客已被禁用！')
+                else:
+                    data_obj = {'tjbh': tjbh, 'operator': self.login_name, 'operatime': cur_datetime()}
+                    data_obj2 = {
+                        'tjbh': tjbh, 'jllx': '0129', 'jlmc': '报告禁止查询', 'mxbh': '',
+                        'czgh': self.login_id, 'czxm': self.login_name, 'czqy': self.login_area,
+                    }
+                    try:
+                        self.session.bulk_insert_mappings(MT_TJ_Forbidden, [data_obj])
+                        self.session.bulk_insert_mappings(MT_TJ_CZJLB, [data_obj2])
+                        self.session.commit()
+                        mes_about(self, '禁止顾客本人查询体检报告操作成功！')
+                    except Exception as e:
+                        self.session.rollback()
+                        mes_about(self, '禁止顾客查询报告操作失败，错误信息：%s' % e)
+        if action == item2:
+            tjbh = self.table_health.getCurItemValueOfKey('tjbh')
+            if not tjbh:
+                mes_about(self, '请先选择一个人！')
+                return
+            button = mes_warn(self, '您确认恢复顾客本人查询体检报告吗？')
+            if button == QMessageBox.Yes:
+                result = self.session.query(MT_TJ_Forbidden).filter(MT_TJ_Forbidden.tjbh == tjbh).scalar()
+                if not result:
+                    mes_about(self, '未找到该体检报告被禁用的记录')
+                else:
+                    data_obj = {
+                        'tjbh': tjbh, 'jllx': '0129', 'jlmc': '报告恢复查询', 'mxbh': '',
+                        'czgh': self.login_id, 'czxm': self.login_name, 'czqy': self.login_area,
+                    }
+                    try:
+                        self.session.query(MT_TJ_Forbidden).filter(MT_TJ_Forbidden.tjbh == tjbh).delete()
+                        self.session.bulk_insert_mappings(MT_TJ_CZJLB, [data_obj])
+                        self.session.commit()
+                        mes_about(self, '恢复顾客本人查询体检报告操作成功！')
+                    except Exception as e:
+                        self.session.rollback()
+                        mes_about(self, '恢复顾客查询报告操作失败，错误信息：%s' % e)
+
+    # 获取门诊心内科、肝病科查询条件
+    def get_jb2_where_str(self):
+        sql = get_base_where(self.dg_rq.where_date)
+        if self.mg_je.get_where_text():
+            sql = sql +  self.mg_je.get_where_text()
+        if self.tj_dw.where_dwbh:
+            sql = sql + ''' AND TJ_TJDJB.DWBH = '%s' ''' % self.tj_dw.where_dwbh
+        sql = sql +' ) '
+        return sql
+
+    def on_mzjb_query(self,mzmc:str):
+        cols = OrderedDict([
+            ('tjzt','状态'),
+            ('tjbh','体检编号'),
+            ('xm','姓名'),
+            ('xb','性别'),
+            ('nl','年龄'),
+            ('sjhm','手机号码'),
+            ('sfzh', '身份证号'),
+            ('tjje', '金额'),
+            ('tjrq', '体检日期'),
+            ('dwmc', '单位名称'),
+            ('ywy', '业务员'),
+            ('xmmc', '项目名称'),
+            ('xmzd', '项目诊断/参考范围'),
+            ('xmjg', '项目结果')
+        ])
+        if mzmc=='心内科':
+            sql = self.get_jb2_where_str() + get_xnk_sql()
+        elif mzmc == '肝病科':
+            sql = self.get_jb2_where_str() + get_gbk_sql()
+        elif mzmc == '泌尿科':
+            sql = self.get_jb2_where_str() + get_mnk_sql()
+        elif mzmc == '妇科':
+            sql = self.get_jb2_where_str() + get_fk_sql()
+        elif mzmc == '心胸外科':
+            sql = self.get_jb2_where_str() + get_xxwk_sql()
+        elif mzmc == '消化内科':
+            sql = self.get_jb2_where_str() + get_xhnk_sql()
+        else:
+            return
+        try:
+            results = self.session.execute(sql)
+            if mzmc == '泌尿科':
+                results = get_clean_result(results)
+            self.table_health.load2(results, cols)
+            self.gp_middle.setTitle('疑似列表(%s)' % self.table_health.rowCount())
+            mes_about(self, '检索出 %s 条数据！' % self.table_health.rowCount())
+        except Exception as e:
+            mes_about(self,'执行查询出错，错误信息：%s' %e)
+
+

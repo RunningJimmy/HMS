@@ -82,3 +82,249 @@ class MT_TJ_BGGL(db.Model):
     bgym = db.Column(db.Integer, nullable=True, default=0)                    # 报告页码，默认0页
     bglj = db.Column(db.String(250), nullable=False)                          # 报告路径 只存储对应PDF、HTML根路径
     bgms = db.Column(db.CHAR(1), nullable=False,default='0')                  # 报告模式 默认HTML 1 PDF
+
+
+def get_report_progress_sum_sql(dwbh):
+    return '''
+            WITH 
+                T1 AS (
+                SELECT TJZT,TJBH,del,QD,SUMOVER,dybj FROM TJ_TJDJB WHERE DWBH ='%s'
+                ),
+                T2 AS (
+                SELECT BGZT,TJBH FROM TJ_BGGL WHERE TJBH IN (SELECT TJBH FROM T1)
+                ),
+                T3 AS (
+                SELECT 
+                    (CASE 
+                        WHEN BGZT ='5' THEN 'tjlq'
+                        WHEN BGZT ='4' THEN 'tjzl'
+                        WHEN BGZT ='3' OR dybj='1' THEN 'tjdy'
+                        WHEN BGZT ='2' THEN 'tjsy'
+                        WHEN BGZT ='0' THEN 'tjzz'
+                        WHEN TJZT ='7' OR (SUMOVER='1' AND (del IS NULL OR del='')) THEN 'tjsh'
+                        WHEN TJZT ='6' OR (SUMOVER='9' AND (del IS NULL OR del='')) THEN 'tjzj'
+                        WHEN TJZT IN ('3','4') OR (QD='1' AND (del IS NULL OR del='')) THEN 'tjqd' 
+                        WHEN TJZT IN ('1','2') OR ((QD IS NULL OR QD='') AND (del IS NULL OR del=''))  THEN 'tjdj'
+                        WHEN TJZT ='0' OR del='1' THEN 'tjqx'
+                        ELSE '' END
+                    ) AS TJZT,T1.TJBH FROM T1 LEFT JOIN T2 ON T1.TJBH=T2.TJBH 
+                )
+
+            SELECT TJZT,COUNT(TJBH) FROM T3 GROUP BY TJZT
+
+    ''' % dwbh
+
+def get_report_progress_sum2_sql(dwbh,tstart,tend):
+    return '''
+            WITH 
+                T1 AS (
+                SELECT TJZT,TJBH,del,QD,SUMOVER,dybj FROM TJ_TJDJB WHERE DWBH ='%s' 
+                AND  (del <> '1' or del is null) and QD='1' and (QDRQ>='%s' and QDRQ<'%s')
+                ),
+                T2 AS (
+                SELECT BGZT,TJBH FROM TJ_BGGL WHERE TJBH IN (SELECT TJBH FROM T1)
+                ),
+                T3 AS (
+                SELECT 
+                    (CASE 
+                        WHEN BGZT ='5' THEN 'tjlq'
+                        WHEN BGZT ='4' THEN 'tjzl'
+                        WHEN BGZT ='3' OR dybj='1' THEN 'tjdy'
+                        WHEN BGZT ='2' THEN 'tjsy'
+                        WHEN BGZT ='0' THEN 'tjzz'
+                        WHEN TJZT ='7' OR (SUMOVER='1' AND (del IS NULL OR del='')) THEN 'tjsh'
+                        WHEN TJZT ='6' OR (SUMOVER='9' AND (del IS NULL OR del='')) THEN 'tjzj'
+                        WHEN TJZT IN ('3','4') OR (QD='1' AND (del IS NULL OR del='')) THEN 'tjqd' 
+                        WHEN TJZT IN ('1','2') OR ((QD IS NULL OR QD='') AND (del IS NULL OR del=''))  THEN 'tjdj'
+                        WHEN TJZT ='0' OR del='1' THEN 'tjqx'
+                        ELSE '' END
+                    ) AS TJZT,T1.TJBH FROM T1 LEFT JOIN T2 ON T1.TJBH=T2.TJBH 
+                )
+
+            SELECT TJZT,COUNT(TJBH) FROM T3 GROUP BY TJZT
+
+    ''' % (dwbh,tstart,tend)
+
+def get_report_progress_sql(bgzt, dwbh, where_tjzt):
+    return '''
+            WITH 
+            T1 AS (
+                SELECT TJZT,TJBH,XM,XB,NL,TJ_TJDAB.SFZH,TJ_TJDAB.SJHM,depart,TJ_TJDJB.DWBH,YSJE,DJRQ,QDRQ,ZJRQ,SHRQ,BGRQ,del,QD,SUMOVER,dybj,jy  FROM TJ_TJDJB INNER JOIN TJ_TJDAB ON TJ_TJDJB.DABH =TJ_TJDAB.DABH AND TJ_TJDJB.DWBH ='%s'
+            ),
+            T2 AS (
+                SELECT BGZT,SYRQ,DYRQ,ZLRQ,LQRQ,TJBH FROM TJ_BGGL WHERE TJBH IN (SELECT TJBH FROM T1)
+            ),
+            T3 AS (
+                SELECT 
+                    (CASE 
+                        WHEN BGZT ='5' THEN 'tjlq'
+                        WHEN BGZT ='4' THEN 'tjzl'
+                        WHEN BGZT ='3' OR dybj='1' THEN 'tjdy'
+                        WHEN BGZT ='2' THEN 'tjsy'
+                        WHEN BGZT ='0' THEN 'tjzz'
+                        WHEN TJZT ='7' OR (SUMOVER='1' AND (del IS NULL OR del='')) THEN 'tjsh'
+                        WHEN TJZT ='6' OR (SUMOVER='9' AND (del IS NULL OR del='')) THEN 'tjzj'
+                        WHEN TJZT IN ('3','4') OR (QD='1' AND (del IS NULL OR del='')) THEN 'tjqd' 
+                        WHEN TJZT IN ('1','2') OR ((QD IS NULL OR QD='') AND (del IS NULL OR del=''))  THEN 'tjdj'
+                        WHEN TJZT ='0' OR del='1' THEN 'tjqx'
+                        ELSE '' END
+                    ) AS TJZT2,
+                    T1.TJBH,XM,XB,NL,DWBH,SFZH,SJHM,depart,YSJE,DJRQ,QDRQ,ZJRQ,SHRQ,BGRQ,SYRQ,DYRQ,ZLRQ,LQRQ,jy FROM T1 LEFT JOIN T2 ON T1.TJBH=T2.TJBH 
+                )
+
+            SELECT
+                '%s',TJBH,XM,(CASE XB WHEN '1' THEN '男' ELSE '女' END) AS XB,NL,SFZH,SJHM,
+                substring(convert(char,QDRQ,120),1,10) AS QDRQ,jy,YSJE,depart,
+                substring(convert(char,DJRQ,120),1,10) AS DJRQ,
+                substring(convert(char,ZJRQ,120),1,10) AS ZJRQ,
+                substring(convert(char,SHRQ,120),1,10) AS SHRQ,
+                substring(convert(char,SYRQ,120),1,10) AS SYRQ,
+                (case 
+                WHEN BGRQ IS NULL THEN substring(convert(char,DYRQ,120),1,10)
+                ELSE substring(convert(char,BGRQ,120),1,10) END )
+                AS DYRQ,
+                substring(convert(char,ZLRQ,120),1,10) AS ZLRQ,
+                substring(convert(char,LQRQ,120),1,10) AS LQRQ,
+            (select MC from TJ_DWDMB where DWBH=T3.DWBH) AS DWMC
+
+            FROM T3 %s
+
+    ''' % (dwbh, bgzt,where_tjzt)
+
+def get_report_progress2_sql(bgzt, dwbh, tjzt,tstart,tend):
+    return '''
+            WITH 
+            T1 AS (
+                SELECT TJZT,TJBH,XM,XB,NL,TJ_TJDAB.SFZH,TJ_TJDAB.SJHM,depart,TJ_TJDJB.DWBH,YSJE,DJRQ,QDRQ,ZJRQ,SHRQ,BGRQ,del,QD,SUMOVER,dybj,jy  FROM TJ_TJDJB INNER JOIN TJ_TJDAB ON TJ_TJDJB.DABH =TJ_TJDAB.DABH AND TJ_TJDJB.DWBH ='%s'
+                AND  (del <> '1' or del is null) and QD='1' and (QDRQ>='%s' and QDRQ<'%s')
+            ),
+            T2 AS (
+                SELECT BGZT,SYRQ,DYRQ,ZLRQ,LQRQ,TJBH FROM TJ_BGGL WHERE TJBH IN (SELECT TJBH FROM T1)
+            ),
+            T3 AS (
+                SELECT 
+                    (CASE 
+                        WHEN BGZT ='5' THEN 'tjlq'
+                        WHEN BGZT ='4' THEN 'tjzl'
+                        WHEN BGZT ='3' OR dybj='1' THEN 'tjdy'
+                        WHEN BGZT ='2' THEN 'tjsy'
+                        WHEN BGZT ='0' THEN 'tjzz'
+                        WHEN TJZT ='7' OR (SUMOVER='1' AND (del IS NULL OR del='')) THEN 'tjsh'
+                        WHEN TJZT ='6' OR (SUMOVER='9' AND (del IS NULL OR del='')) THEN 'tjzj'
+                        WHEN TJZT IN ('3','4') OR (QD='1' AND (del IS NULL OR del='')) THEN 'tjqd' 
+                        WHEN TJZT IN ('1','2') OR ((QD IS NULL OR QD='') AND (del IS NULL OR del=''))  THEN 'tjdj'
+                        WHEN TJZT ='0' OR del='1' THEN 'tjqx'
+                        ELSE '' END
+                    ) AS TJZT2,
+                    T1.TJBH,XM,XB,NL,SFZH,SJHM,depart,DWBH,YSJE,DJRQ,QDRQ,ZJRQ,SHRQ,BGRQ,SYRQ,DYRQ,ZLRQ,LQRQ,jy FROM T1 LEFT JOIN T2 ON T1.TJBH=T2.TJBH 
+                )
+
+            SELECT
+                '%s',TJBH,XM,(CASE XB WHEN '1' THEN '男' ELSE '女' END) AS XB,NL,SFZH,SJHM,
+                substring(convert(char,QDRQ,120),1,10) AS QDRQ,jy,YSJE,depart,
+                substring(convert(char,DJRQ,120),1,10) AS DJRQ,
+                substring(convert(char,ZJRQ,120),1,10) AS ZJRQ,
+                substring(convert(char,SHRQ,120),1,10) AS SHRQ,
+                substring(convert(char,SYRQ,120),1,10) AS SYRQ,
+                (case 
+                WHEN BGRQ IS NULL THEN substring(convert(char,DYRQ,120),1,10)
+                ELSE substring(convert(char,BGRQ,120),1,10) END )
+                AS DYRQ,
+                substring(convert(char,ZLRQ,120),1,10) AS ZLRQ,
+                substring(convert(char,LQRQ,120),1,10) AS LQRQ,
+            (select MC from TJ_DWDMB where DWBH=T3.DWBH) AS DWMC
+
+            FROM T3 %s
+
+    ''' % (dwbh,tstart,tend, bgzt, tjzt)
+
+def get_report_progress_sql2(dwbh):
+    return '''
+        WITH 
+            T1 AS (
+                SELECT TJZT,TJBH,XM,XB,NL,TJ_TJDJB.DWBH,YSJE,DJRQ,QDRQ,ZJRQ,SHRQ,del,QD,SUMOVER,dybj FROM TJ_TJDJB INNER JOIN TJ_TJDAB ON TJ_TJDJB.DABH =TJ_TJDAB.DABH AND TJ_TJDJB.DWBH ='%s'
+            ),
+            T2 AS (
+                SELECT BGZT,SYRQ,DYRQ,ZLRQ,LQRQ,TJBH FROM TJ_BGGL WHERE TJBH IN (SELECT TJBH FROM T1)
+            ),
+            T3 AS (
+                SELECT 
+                    (CASE 
+                        WHEN BGZT ='5' THEN 'tjlq'
+                        WHEN BGZT ='4' THEN 'tjzl'
+                        WHEN BGZT ='3' OR dybj='1' THEN 'tjdy'
+                        WHEN BGZT ='2' THEN 'tjsy'
+                        WHEN BGZT ='0' THEN 'tjzz'
+                        WHEN TJZT ='7' OR (SUMOVER='1' AND (del IS NULL OR del='')) THEN 'tjsh'
+                        WHEN TJZT ='6' OR (SUMOVER='9' AND (del IS NULL OR del='')) THEN 'tjzj'
+                        WHEN TJZT IN ('3','4') OR (QD='1' AND (del IS NULL OR del='')) THEN 'tjqd' 
+                        WHEN TJZT IN ('1','2') OR ((QD IS NULL OR QD='') AND (del IS NULL OR del=''))  THEN 'tjdj'
+                        WHEN TJZT ='0' OR del='1' THEN 'tjqx'
+                        ELSE TJZT END
+                    ) AS TJZT2,
+                    T1.TJBH,XM,XB,NL,DWBH,YSJE,DJRQ,QDRQ,ZJRQ,SHRQ,SYRQ,SYXM,DYRQ,ZLRQ,LQRQ FROM T1 LEFT JOIN T2 ON T1.TJBH=T2.TJBH 
+                )
+
+            SELECT
+                TJBH,XM,(CASE XB WHEN '1' THEN '男' ELSE '女' END) AS XB,NL,YSJE,
+                substring(convert(char,DJRQ,120),1,10) AS DJRQ,
+                substring(convert(char,QDRQ,120),1,10) AS QDRQ,
+                substring(convert(char,ZJRQ,120),1,10) AS ZJRQ,
+                substring(convert(char,SHRQ,120),1,10) AS SHRQ,
+                substring(convert(char,SYRQ,120),1,10) AS SYRQ,
+                substring(convert(char,DYRQ,120),1,10) AS DYRQ,
+                substring(convert(char,ZLRQ,120),1,10) AS ZLRQ,
+                substring(convert(char,LQRQ,120),1,10) AS LQRQ,
+            (select MC from TJ_DWDMB where DWBH=T3.DWBH) AS DWMC
+
+            FROM T3
+
+    ''' % dwbh
+
+# 获取个人体检进度
+def get_user_progress_sql(where):
+    return '''
+            WITH 
+            T1 AS (
+                SELECT TJZT,TJBH,XM,XB,NL,TJ_TJDAB.SFZH,TJ_TJDAB.SJHM,depart,TJ_TJDJB.DWBH,YSJE,DJRQ,QDRQ,ZJRQ,SHRQ,BGRQ,del,QD,SUMOVER,dybj,jy  FROM TJ_TJDJB INNER JOIN TJ_TJDAB ON TJ_TJDJB.DABH =TJ_TJDAB.DABH 
+               %s
+            ),
+            T2 AS (
+                SELECT BGZT,SYRQ,DYRQ,ZLRQ,LQRQ,TJBH FROM TJ_BGGL WHERE TJBH IN (SELECT TJBH FROM T1)
+            ),
+            T3 AS (
+                SELECT 
+                    (CASE 
+                        WHEN BGZT ='5' THEN '已领取'
+                        WHEN BGZT ='4' THEN '已整理'
+                        WHEN BGZT ='3' OR dybj='1' THEN '已打印'
+                        WHEN BGZT ='2' THEN '已审阅'
+                        WHEN BGZT ='0' THEN '追踪中'
+                        WHEN TJZT ='7' OR (SUMOVER='1' AND (del IS NULL OR del='')) THEN '已审核'
+                        WHEN TJZT ='6' OR (SUMOVER='9' AND (del IS NULL OR del='')) THEN '已总检'
+                        WHEN TJZT IN ('3','4') OR (QD='1' AND (del IS NULL OR del='')) THEN '已签到' 
+                        WHEN TJZT IN ('1','2') OR ((QD IS NULL OR QD='') AND (del IS NULL OR del=''))  THEN '已登记'
+                        WHEN TJZT ='0' OR del='1' THEN '已取消'
+                        ELSE '' END
+                    ) AS TJZT2,
+                    T1.TJBH,XM,XB,NL,DWBH,SFZH,SJHM,depart,YSJE,DJRQ,QDRQ,ZJRQ,SHRQ,BGRQ,SYRQ,DYRQ,ZLRQ,LQRQ,jy FROM T1 LEFT JOIN T2 ON T1.TJBH=T2.TJBH 
+                )
+
+            SELECT
+                TJZT2,TJBH,XM,(CASE XB WHEN '1' THEN '男' ELSE '女' END) AS XB,NL,SFZH,SJHM,
+                substring(convert(char,QDRQ,120),1,10) AS QDRQ,jy,YSJE,depart,
+                substring(convert(char,DJRQ,120),1,10) AS DJRQ,
+                substring(convert(char,ZJRQ,120),1,10) AS ZJRQ,
+                substring(convert(char,SHRQ,120),1,10) AS SHRQ,
+                substring(convert(char,SYRQ,120),1,10) AS SYRQ,
+                (case 
+                WHEN BGRQ IS NULL THEN substring(convert(char,DYRQ,120),1,10)
+                ELSE substring(convert(char,BGRQ,120),1,10) END )
+                AS DYRQ,
+                substring(convert(char,ZLRQ,120),1,10) AS ZLRQ,
+                substring(convert(char,LQRQ,120),1,10) AS LQRQ,
+            (select MC from TJ_DWDMB where DWBH=T3.DWBH) AS DWMC
+
+            FROM T3 
+
+    ''' %where

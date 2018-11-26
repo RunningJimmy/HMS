@@ -11,17 +11,21 @@ class PacsResultUI(PacsDialog):
         # self.setWindowFlags(Qt.WindowCloseButtonHint)
         self.setFixedSize(700,600)
         lt_main = QVBoxLayout()
-        # 上 布局
+        # 上布局
         lt_top = QHBoxLayout()
+        gp_top = QGroupBox()
         self.p_tjbh = QTJBH()
         self.btn_query = QPushButton(Icon('query'),'查询')
-        self.btn_receive = QPushButton(Icon('接收'),'强制接收')
+        self.btn_print = QPushButton(Icon('报告打印'), '打印报告')
+        self.btn_receive = QPushButton(Icon('接收'), '强制接收')
+        lt_top.addWidget(QLabel('体检编号：'))
+        lt_top.addWidget(self.p_tjbh)
+        lt_top.addWidget(self.btn_query)
         lt_top.addStretch()
-        # lt_top.addWidget(QLabel('体检编号：'))
-        # lt_top.addWidget(self.p_tjbh)
-        # lt_top.addWidget(self.btn_query)
+        lt_top.addWidget(self.btn_print)
         lt_top.addWidget(self.btn_receive)
-
+        gp_top.setLayout(lt_top)
+        # 中间布局
         lt_middle = QHBoxLayout()
         gp_middle = QGroupBox('检查列表')
         self.inspect_cols = OrderedDict([
@@ -87,7 +91,8 @@ class PacsResultUI(PacsDialog):
         lt_bottom_3.addWidget(QLabel('审核时间：'))
         lt_bottom_3.addWidget(self.shsj)
         gp_bottom_3.setLayout(lt_bottom_3)
-        lt_main.addLayout(lt_top)
+
+        lt_main.addWidget(gp_top)
         lt_main.addWidget(gp_middle)
         lt_main.addWidget(gp_bottom_1)
         lt_main.addWidget(gp_bottom_2)

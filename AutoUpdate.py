@@ -27,11 +27,8 @@ class AutoUpdateUI(QWidget):
         self.initUI()
         self.setBackgroundImage()
         self.setParas(paras)
-        if self.system_name:
-            system = self.system_name
-        else:
-            system = get_system()
-        response = requests.get(self.update_url %(system,self.sys_version))
+
+        response = requests.get(self.update_url %(self.system_name,self.sys_version))
         if response.status_code == 200:
             describe = response.json()['describe']
             self.version = response.json()['version']
@@ -72,9 +69,12 @@ class AutoUpdateUI(QWidget):
 
     def setParas(self,paras:dict):
         self.sys_version = paras.get('system_version',1.0)
-        self.system_name = paras.get('system_platform',None)
+        self.system_name = paras.get('system_platform', None)
+        if not self.system_name:
+            self.system_name = get_system()
+
         self.update_url = paras.get('system_update',"http://10.7.200.101:4009/api/version/%s/%s")
-        self.update_down_url = paras.get('system_update_down', "http://10.7.200.101:4009/api/version_file/%s/%s")
+        self.update_down_url = paras.get('system_update_down', "http://10.7.200.101:4009/api/version_file/%s/%s" ) %(self.system_name,self.sys_version)
 
     def on_pb_progress_start(self):
         self.update_thread = AutoUpdateThread()
@@ -139,11 +139,11 @@ class AutoUpdateThread(QThread):
 
     def run(self):
         while self.runing:
-            url = self.url %(get_system(),self.version)
+            # url = self.url %(get_system(),self.version)
             self.signalCur.emit(True, '正在下载更新包')
             self.signalMaxNum.emit(10)
             self.signalCurNum.emit(5)
-            response = requests.get(url)
+            response = requests.get(self.url)
             if response.status_code == 200:
                 # 本地临时文件是否存在，是则删除
                 dirname, name = os.path.split(os.path.abspath(sys.argv[0]))
@@ -216,11 +216,19 @@ def mes_about(parent,message):
     MessageBox(parent, text=message).exec_()
 
 def get_system():
-    system = platform.platform()
-    if 'Windows-7' in system:
-        return 'win7'
-    else:
+    # 根据系统版本 不靠谱
+    # system = platform.platform()
+    # if 'Windows-7' in system:
+    #     return 'win7'
+    # elif 'Windows-XP' in system:
+    #     return 'winxp'
+    # else:
+    #     return False
+    # 根据python版本 3.4 XP  3.5及以上win7
+    if '3.4' in platform.python_version():
         return 'winxp'
+    else:
+        return 'win7'
 
 class Icon(QIcon):
 

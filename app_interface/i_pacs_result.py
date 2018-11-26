@@ -9,6 +9,9 @@ class PacsResult(PacsResultUI):
         # 绑定信号槽
         self.table_inspect.itemClicked.connect(self.on_table_refresh)
         self.btn_receive.clicked.connect(self.on_btn_receive_click)
+        self.btn_print.clicked.connect(self.on_btn_print_click)
+        self.btn_query.clicked.connect(self.on_btn_query_click)
+        # 特殊变量
         self.painter = None
 
     def on_table_refresh(self,tableWidgetItem):
@@ -43,6 +46,14 @@ class PacsResult(PacsResultUI):
         self.pacs_zd.setText('')
         self.lb_bz.show2(False)
         self.table_inspect.load(datas)
+
+    # 查询
+    def on_btn_query_click(self):
+        mes_about(self, '正在开发中，敬请期待！')
+
+    # 打印
+    def on_btn_print_click(self):
+        mes_about(self,'正在开发中，敬请期待！')
 
     # 强制接收
     def on_btn_receive_click(self):

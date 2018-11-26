@@ -5,11 +5,11 @@ import os
 class BarCodeBuild(object):
 
     option1 = {
-               "module_width":0.1,      # 条形码模块宽度：浮点数。默认值为0.2
-               "module_height":5,       # 条形码模块高度：为浮点。默认值为15
-               "quiet_zone":0.8,          # 左、右边的距离，从边界到第一个（最后）条形码模块，以M为浮点。默认值为6.5。
-               "font_size":10,          # 在PT下的文本大小为整数。默认值为10
-               "text_distance": 0.5,    # 条形码与它下面的文本之间的距离为浮点。默认值为5。
+               "module_width":0.1,      # 条形码模块宽度：浮点数。默认值为0.2 单位为毫米
+               "module_height":5,       # 条形码模块高度：为浮点。默认值为15  单位为毫米
+               "quiet_zone":0.8,          # 左、右边的距离，从边界到第一个（最后）条形码模块，以M为浮点。默认值为6.5。 单位为毫米
+               "font_size":10,          # 在PT下的文本大小为整数。默认值为10 文本字体大小，单位为磅
+               "text_distance": 0.5,    # 条形码与它下面的文本之间的距离为浮点。默认值为5。 单位为毫米
                "center_text":True,      # 条形码下面文本是否居中
                "text":"测试",
                "background":'goldenrod',    # 创建的条形码的背景颜色为字符串。默认为白色 white
@@ -72,7 +72,7 @@ class BarCodeBuild(object):
 
     def create2(self,serialno):
         ean = Code39(serialno, writer=self.tmp, add_checksum=False)
-        return ean.save(os.path.join(self.path,serialno), options=self.option5)
+        return ean.save(os.path.join(self.path,serialno), options=self.option4)
 
     def alter(self,serialno):
         ean = Code39(serialno, writer=self.tmp, add_checksum=False)

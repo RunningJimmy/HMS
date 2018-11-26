@@ -22,6 +22,7 @@ def trans_pacs_pic(tjbh,ksbm,xmbh):
         url = url_config %(tjbh,ksbm,xmbh)
     else:
         url = url_default
+    print(url)
     try:
         response = requests.post(url)
         if response.status_code == 200:
@@ -226,8 +227,13 @@ if __name__=="__main__":
     # # 招工自动审阅完成 生成PDF
     #sql = "SELECT TJ_BGGL.TJBH FROM TJ_BGGL INNER JOIN TJ_TJDJB ON TJ_BGGL.TJBH=TJ_TJDJB.TJBH AND TJ_BGGL.bgzt='1' AND TJ_TJDJB.zhaogong='1' AND TJ_TJDJB.TJLX='1' " \
     #sql = "SELECT TJBH FROM TJ_TJDJB WHERE SHRQ>='2018-07-01' AND SHRQ<'2018-07-10' AND SUMOVER='1' AND zhaogong='0'  AND (del <> '1' or del is null);"
-    sql = "SELECT TJBH FROM TJ_TJDJB WHERE SHRQ>='2018-07-18' AND SHRQ<'2018-08-01' AND SUMOVER='1'  AND (del <> '1' or del is null) " \
-          "AND TJBH NOT IN (SELECT TJBH FROM TJ_BGGL WHERE SHRQ>='2018-07-18' AND SHRQ<'2018-08-01'); "
+    # sql = "SELECT TJBH FROM TJ_TJDJB WHERE SHRQ>='2018-07-18' AND SHRQ<'2018-08-01' AND SUMOVER='1'  AND (del <> '1' or del is null) " \
+    #       "AND TJBH NOT IN (SELECT TJBH FROM TJ_BGGL WHERE SHRQ>='2018-07-18' AND SHRQ<'2018-08-01'); "
+    # 单独处理某单位
+    #sql = "SELECT TJBH FROM TJ_TJDJB WHERE DWBH='16572' AND SUMOVER='1' AND TJBH NOT IN (SELECT TJBH FROM TJ_BGGL) AND SHRQ<'2018-10-01'"
+    # 审阅未打印的重新生成
+    # sql = "SELECT TJBH FROM TJ_BGGL WHERE BGZT='1' AND SHRQ>='2018-10-01';"
+    sql = "SELECT TJBH FROM TJ_BGGL WHERE BGZT='2' AND SHRQ>='2018-10-16' AND SHRQ<'2018-10-17' AND TJBH NOT IN (SELECT TJBH FROM TJ_TJDJB WHERE dwbh IN ('10396','17804','17763')) "
     results = session.execute(sql).fetchall()
     for result in results:
         request_create_report(result[0], 'pdf')

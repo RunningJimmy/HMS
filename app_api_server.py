@@ -62,5 +62,5 @@ if __name__ == '__main__':
     app.logger.info('API(%s:%s)服务启动......' % (HOST, str(PORT)))
     # 运行应用
     # server_on_tornado_run(app,'10.7.200.101',5005)
-    server_on_tornado_run(app, HOST, PORT)
+    server_on_tornado_run(app, HOST, 4000)
 

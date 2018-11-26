@@ -14,7 +14,7 @@ SQL_CDC = '''
 
     TJ_TJDJB a 
     
-    INNER JOIN TJ_TJDAB b ON a.DABH=b.DABH AND (a.del <> '1' or a.del is null) AND a.SUMOVER='1' AND (a.ZJRQ>='%s' AND a.ZJRQ<'%s')
+    INNER JOIN TJ_TJDAB b ON a.DABH=b.DABH AND (a.del <> '1' or a.del is null) AND a.SUMOVER='1' AND (a.QDRQ>='%s' AND a.QDRQ<'%s')
     
     INNER JOIN TJ_TJJLMXB c ON a.TJBH=c.TJBH  
     

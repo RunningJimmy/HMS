@@ -106,6 +106,7 @@ class ReportTrack(ReportTrackUI):
             item9 = menu.addAction(Icon("报告中心"), "浏览PDF报告")
             # item10 = menu.addAction(Icon("发送"), "发送医生总检")
             # item11 = menu.addAction(Icon("发送"), "发送护理审阅")
+            item12 = menu.addAction(Icon("取消"), "取消报告追踪")
             action = menu.exec_(self.table_track.mapToGlobal(pos))
             # 获取变量
             tjbh = self.table_track.getCurItemValueOfKey('tjbh')
@@ -194,6 +195,7 @@ class ReportTrack(ReportTrackUI):
                     except Exception as e:
                         self.session.rollback()
                         mes_about(self, '执行发生错误：%s' % e)
+
             elif action == item7:
                 tjbh = self.table_track.getCurItemValueOfKey('tjbh')
                 bz= self.table_track.getCurItemValueOfKey('bz')
@@ -282,6 +284,32 @@ class ReportTrack(ReportTrackUI):
             #
             #     else:
             #         mes_about(self, "只有审阅退回/审核退回的报告才能使用此功能！")
+            elif action == item12:
+                zzxm = self.table_track.getCurItemValueOfKey('lqry')
+                tjbh = self.table_track.getCurItemValueOfKey('tjbh')
+                if not zzxm:
+                    mes_about(self,'当前报告还未被领取！')
+                    return
+                if self.login_name not in zzxm:
+                    mes_about(self,'只有本人或搭档才能进行取消操作！')
+                    return
+                result = self.session.query(MT_TJ_BGGL).filter(MT_TJ_BGGL.tjbh ==tjbh).scalar()
+                if result:
+                    if result.bgzt=='0':
+                        try:
+                            self.session.query(MT_TJ_BGGL).filter(MT_TJ_BGGL.tjbh == tjbh).delete()
+                            self.session.query(MT_TJ_CZJLB).filer(MT_TJ_CZJLB.tjbh == tjbh,MT_TJ_CZJLB.jllx=='0030').update({
+                                MT_TJ_CZJLB.jllx: '0000',
+                                MT_TJ_CZJLB.bz: '取消报告追踪'
+                            })
+                            self.session.commit()
+                        except Exception as e:
+                            self.session.rollback()
+                            mes_about(self,'取消操作出错，错误信息：%s' %e)
+                    else:
+                        mes_about(self, '该报告已经追踪完成，不能取消！')
+                else:
+                    mes_about(self, '未找到该报告的追踪记录！')
 
     # 手动接收结果
     def on_btn_receive_click(self):
@@ -381,13 +409,17 @@ class ReportTrack(ReportTrackUI):
         if self.lt_where_search.where_dwbh=='00000':
             mes_about(self,'不存在该单位，请重新选择！')
             return
+        if self.lt_where_search.where_dwbh:
+            where_dw = ''' AND TJ_TJDJB.DWBH = '%s' ''' %self.lt_where_search.where_dwbh
+        else:
+            where_dw = ''' AND 1 = 1 '''
         tstart,tend = self.lt_where_search.date_range             # 日期
 
         # 报告状态优先选择
         if self.lt_where_search.where_bgzt_text =='待追踪':
-            sql = get_report_track_sql(tstart, tend)
+            sql = get_report_track_sql(tstart, tend,where_dw)
         elif self.lt_where_search.where_bgzt_text =='追踪中':
-            sql = get_report_tracking_sql(tstart, tend)
+            sql = get_report_tracking_sql(tstart, tend,where_dw)
         elif self.lt_where_search.where_bgzt_text == '待总检':
             sql = get_report_tracked_sql(tstart, tend)
         elif self.lt_where_search.where_bgzt_text == '待审核':
@@ -407,9 +439,9 @@ class ReportTrack(ReportTrackUI):
         if where_tjlx:
             sql = sql +where_tjlx
 
-        where_dwmc = self.lt_where_search.where_dwmc              # 体检单位
-        if where_dwmc:
-            sql = sql + where_dwmc
+        # where_dwmc = self.lt_where_search.where_dwmc              # 体检单位
+        # if where_dwmc:
+        #     sql = sql + where_dwmc
 
         # # 待总检的特殊处理下
         if self.lt_where_search.where_bgzt_text == '待总检':
@@ -431,7 +463,7 @@ class ReportTrack(ReportTrackUI):
                 sql = get_report_syth_sql()
 
 
-        print(sql)
+        # print(sql)
         # 执行查询
         self.execQuery(sql)
         # 进度条
@@ -468,7 +500,7 @@ class ReportTrack(ReportTrackUI):
             self.item_ui.returnPressed.emit(self.cur_tjbh)
 
 
-    #体检系统项目查看
+    #体检系统操作记录查看
     def on_btn_czjl_click(self):
         if not self.operatr_ui:
             self.operatr_ui = OperateUI(self)
@@ -487,11 +519,11 @@ class ReportTrack(ReportTrackUI):
 
     # 电话记录
     def on_btn_phone_click(self):
-        sjhm = self.table_track.getCurItemValueOfKey('sjhm')
         if not self.cur_tjbh:
             mes_about(self, '请先选择一个人！')
             return
         else:
+            sjhm = self.table_track.getCurItemValueOfKey('sjhm')
             if not self.phone_ui:
                 self.phone_ui = PhoneUI(self)
             self.phone_ui.show()

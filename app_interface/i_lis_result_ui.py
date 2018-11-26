@@ -15,15 +15,18 @@ class LisResultUI(LisDialog):
         lt_main = QVBoxLayout()
         # 上 布局
         lt_top = QHBoxLayout()
+        gp_top = QGroupBox()
         self.p_tjbh = QTJBH()
         self.btn_query = QPushButton(Icon('query'),'查询')
+        self.btn_print = QPushButton(Icon('报告打印'), '打印报告')
         self.btn_receive = QPushButton(Icon('接收'),'强制接收')
+        lt_top.addWidget(QLabel('体检编号：'))
+        lt_top.addWidget(self.p_tjbh)
+        lt_top.addWidget(self.btn_query)
         lt_top.addStretch()
-        # lt_top.addWidget(QLabel('体检编号：'))
-        # lt_top.addWidget(self.p_tjbh)
-        # lt_top.addWidget(self.btn_query)
+        lt_top.addWidget(self.btn_print)
         lt_top.addWidget(self.btn_receive)
-
+        gp_top.setLayout(lt_top)
         lt_middle = QHBoxLayout()
         gp_middle = QGroupBox('检验列表')
         self.inspect_master_cols = OrderedDict([
@@ -73,7 +76,9 @@ class LisResultUI(LisDialog):
         lt_bottom.addWidget(QLabel('审核时间：'))
         lt_bottom.addWidget(self.shsj)
         gp_bottom.setLayout(lt_bottom)
-        lt_main.addLayout(lt_top)
+
+        # 添加布局
+        lt_main.addWidget(gp_top)
         lt_main.addWidget(gp_middle)
         lt_main.addWidget(gp_bottom)
         self.setLayout(lt_main)

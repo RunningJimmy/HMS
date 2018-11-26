@@ -111,10 +111,11 @@ class ReportOrder(GolParasMixin,ReportOrderUI):
     def on_table_detail(self,QTableWidgetItem):
         col = QTableWidgetItem.column()
         tjzt = list(self.table_report_progress_cols.keys())[col]
+        tjzt_value = self.table_report_progress_cols[tjzt]
         if tjzt=='sum':
             sql = get_report_progress_sql2(self.report_dwmc.where_dwbh)
         else:
-            sql = get_report_progress_sql(self.report_dwmc.where_dwbh, tjzt)
+            sql = get_report_progress_sql(tjzt_value,self.report_dwmc.where_dwbh, tjzt)
         results = self.session.execute(sql).fetchall()
         self.table_report_detail.load(results)
         col_name = list(self.table_report_progress_cols.values())[col]
@@ -231,8 +232,8 @@ class ReportOrder(GolParasMixin,ReportOrderUI):
 
     def on_btn_review_click(self):
         # 判断状态
-        if '已审核' not in self.gp_right_bottom.title():
-            mes_about(self,'医生审核完成的报告，才可进行护理三审，请重新选择！')
+        if not ('已审核' in self.gp_right_bottom.title() or '已审阅' in self.gp_right_bottom.title()):
+            mes_about(self,'已审核/已审阅的报告才能进入审阅功能！')
             return
         # 是否选择了报告
         rows = self.table_report_detail.isSelectRows()
@@ -241,6 +242,6 @@ class ReportOrder(GolParasMixin,ReportOrderUI):
             return
         #
         ui = ReportReviewFullScreen(self)
-        ui.opened.emit(self.table_report_review.cur_data_set, self.table_report_review.currentIndex().row())
+        ui.opened.emit(self.table_report_detail.cur_data_set, self.table_report_detail.currentIndex().row())
         ui.showMaximized()
 

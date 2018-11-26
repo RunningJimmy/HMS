@@ -1,15 +1,23 @@
-from flask import send_file,make_response,request,jsonify,abort,url_for
+from flask import send_file,make_response,request,jsonify,abort,url_for,render_template,send_from_directory
+from flask_wtf import FlaskForm
+from wtforms import StringField, SubmitField
+from wtforms.validators import DataRequired
+from flask_ckeditor import CKEditor, CKEditorField, upload_fail, upload_success
 from app_api.exception import *
 from app_api.model import *
 import zeep,json,base64,os,ujson,time,urllib.parse,requests
 import mimetypes,subprocess
 from utils import gol,str2
 from app_api.dbconn import *
-import win32api
+import win32api,shutil
 import win32print
 
 # 初始化视图
 def init_views(app,db,print_queue=None,report_queue=None):
+
+    app.secret_key = 'secret string'
+
+    ckeditor = CKEditor(app)
 
     '''
     :param app:         应用程序本身
@@ -19,14 +27,132 @@ def init_views(app,db,print_queue=None,report_queue=None):
     def static_create():
         return url_for('static', filename='/css/report.css')
 
+    @app.route('/editor', methods=['GET', 'POST'])
+    def index():
+        form = PostForm()
+        if form.validate_on_submit():
+            title = form.title.data
+            body = form.body.data
+            # You may need to store the data in database here
+            return render_template('post.html', title=title, body=body)
+        return render_template('index.html', form=form)
+
+    @app.route('/files/<filename>')
+    def uploaded_files(filename):
+        path = app.config['UPLOADED_PATH']
+        return send_from_directory(path, filename)
+
+    @app.route('/upload', methods=['POST'])
+    def upload():
+        f = request.files.get('upload')
+        extension = f.filename.split('.')[1].lower()
+        if extension not in ['jpg', 'gif', 'png', 'jpeg']:
+            return upload_fail(message='Image only!')
+        f.save(os.path.join(app.config['UPLOADED_PATH'], f.filename))
+        url = url_for('uploaded_files', filename=f.filename)
+        return upload_success(url=url)
+
+    # 获取用户名
+    @app.route('/api/user/get/<string:user_id>', methods=['GET'])
+    def get_user_name(user_id):
+        sql = "select YHMC from TJ_DWFZR where YHID='%s' AND YXBZ='1'; " %user_id
+        result = db.session.execute(sql).fetchone()
+        if result:
+            return ujson.dumps(result)
+        else:
+            abort(404)
+
+    # 验证用户
+    @app.route('/api/user/validate/<string:user_id>/<string:user_pd>', methods=['POST'])
+    def validate_user(user_id,user_pd):
+        sql = "select YHID from TJ_DWFZR where YHID='%s' AND YHMM='%s' AND YXBZ='1'; " %(user_id,user_pd)
+        sql2 = "select (select mc from TJ_DWDMB WHERE DWBH=TJ_DWFZRSQ.DWBH) AS DWMC,DWBH from TJ_DWFZRSQ where YHID='%s'; " %user_id
+        result = db.session.execute(sql).fetchone()
+        if result:
+            results = db.session.execute(sql2).fetchall()
+            return ujson.dumps(dict(results))
+        else:
+            abort(404)
+
+    # 获取单位进度
+    @app.route('/api/dwjd/get/<string:dwbh>', methods=['GET'])
+    def get_dwjd_all(dwbh):
+        print(' %s：客户端(%s)：单位(%s)进度请求！无额外参数。' % (cur_datetime(), request.remote_addr, dwbh))
+        sql = get_report_progress_sum_sql(dwbh)
+        requests = db.session.execute(sql).fetchall()
+        if requests:
+            return ujson.dumps(requests)
+        else:
+            abort(404)
+
+    # 获取一段时间内单位体检进度
+    @app.route('/api/dwjd/all/<string:dwbh>/<string:tstart>/<string:tend>', methods=['GET'])
+    def get_dwjd_all_ofdate(dwbh,tstart,tend):
+        print(' %s：客户端(%s)：单位(%s)进度请求！额外参数时间：%s, %s' % (cur_datetime(), request.remote_addr, dwbh, tstart,tend))
+        sql = get_report_progress_sum2_sql(dwbh,tstart,tend)
+        # print(sql)
+        requests = db.session.execute(sql).fetchall()
+        if requests:
+            return ujson.dumps(requests)
+        else:
+            abort(404)
+
+    # 获取个人体检进度
+    @app.route('/api/grjd/get/<string:login_id>/<string:search_t>/<string:search_v>', methods=['GET'])
+    def get_grjd_tjzt(login_id, search_t, search_v):
+        print(' %s：客户端(%s)：个人体检进度请求！' % (cur_datetime(), request.remote_addr))
+        if search_t == 'tjbh':
+            where = ''' AND TJ_TJDJB.DWBH IN (SELECT DWBH FROM TJ_DWFZRSQ WHERE YHID='%s') AND TJ_TJDJB.TJBH='%s' ''' %(login_id,search_v)
+        elif search_t == 'xm':
+            where = ''' AND TJ_TJDJB.DWBH IN (SELECT DWBH FROM TJ_DWFZRSQ WHERE YHID='%s') AND TJ_TJDAB.XM='%s' ''' % (login_id, search_v)
+        else:
+            where = ''' AND TJ_TJDJB.DWBH IN (SELECT DWBH FROM TJ_DWFZRSQ WHERE YHID='%s') AND TJ_TJDAB.SFZH='%s' ''' %(login_id,search_v)
+        sql = get_user_progress_sql(where)
+        requests = db.session.execute(sql).fetchall()
+        if requests:
+            return ujson.dumps(requests)
+        else:
+            abort(404)
+
+    # 获取单位进度详细
+    @app.route('/api/dwjd/get/<string:dwbh>/<string:tjzt>/<string:ctjzt>', methods=['GET'])
+    def get_dwjd_tjzt(dwbh,tjzt,ctjzt):
+        print(' %s：客户端(%s)：单位(%s)，(%s)进度请求！无额外参数。' % (cur_datetime(), request.remote_addr, dwbh,ctjzt))
+        if tjzt =='sum':
+            tjzt_where = ''' WHERE 1 = 1 '''
+        else:
+            tjzt_where = ''' WHERE TJZT2='%s' ''' %tjzt
+        sql = get_report_progress_sql(ctjzt, dwbh, tjzt_where)
+        # print(sql)
+        requests = db.session.execute(sql).fetchall()
+        if requests:
+            return ujson.dumps(requests)
+        else:
+            abort(404)
+
+    # 获取指定时间内单位进度详细
+    @app.route('/api/dwjd/get/<string:dwbh>/<string:tjzt>/<string:ctjzt>/<string:tstart>/<string:tend>', methods=['GET'])
+    def get_dwjd_tjzt_ofdate(dwbh, tjzt, ctjzt,tstart,tend):
+        print(' %s：客户端(%s)：单位(%s)，(%s)进度请求！额外参数：%s，%s' % (cur_datetime(), request.remote_addr, dwbh, ctjzt,tstart,tend))
+        if tjzt =='sum':
+            tjzt_where = ''' WHERE 1 = 1 '''
+        else:
+            tjzt_where = ''' WHERE TJZT2='%s' ''' %tjzt
+        sql = get_report_progress2_sql(ctjzt, dwbh, tjzt_where,tstart,tend)
+        requests = db.session.execute(sql).fetchall()
+        if requests:
+            return ujson.dumps(requests)
+        else:
+            abort(404)
+
     # 获取彩超、内镜图像
-    @app.route('/api/pacs/pic/<string:tjbh>/<string:ksbm>/<string:xmbh>', methods=['POST'])
+    @app.route('/api/pacs/pic/<string:tjbh>/<string:ksbm>/<string:xmbh>', methods=['GET'])
     def get_pacs_pic(tjbh, ksbm,xmbh):
         url = "http://10.8.200.220:7059/WebGetFileView.asmx?WSDL"
         client = zeep.Client(url)
+        tmp = client.service.f_GetUISFilesByTJ_IID(tjbh + xmbh)
         try:
-            result = json.loads(client.service.f_GetUISFilesByTJ_IID(tjbh + xmbh))
-            #filenames = []
+            result = json.loads(tmp)
             if result['IsSuccess'] == 'true':
                 sql = "DELETE FROM TJ_PACS_PIC WHERE tjbh='%s' and zhbh ='%s';" % (tjbh, xmbh)
                 db.session.execute(sql)
@@ -44,11 +170,12 @@ def init_views(app,db,print_queue=None,report_queue=None):
                         tjbh,ksbm,pic_name,pic_name,xmbh,pic_name,pic_pk
                     )
                     db.session.execute(sql)
-                    # filenames.append(filename)
                 return ujson.dumps({'code': 1, 'mes': '图片传输成功', 'data': ''})
-            abort(404)
+            else:
+                print("B超图像接收失败!")
+                abort(404)
         except Exception as e:
-            print(e)
+            print("B超图像接收失败，源数据：%s" %tmp)
             abort(404)
 
     #二维码生成
@@ -185,13 +312,15 @@ def init_views(app,db,print_queue=None,report_queue=None):
         # 当前
         result = db.session.query(MT_TJ_BGGL).filter(MT_TJ_BGGL.tjbh == tjbh).scalar()
         if result:
-            filename = os.path.join(result.bglj,"%s.pdf" %tjbh)
-            if os.path.exists(filename):
-                # 返回下载
-                response = make_response(send_file(filename, as_attachment=True))
-                response.headers['Content-Type'] = mimetypes.guess_type(os.path.basename(filename))[0]
-                response.headers['Content-Disposition'] = 'attachment; filename={}'.format(os.path.basename(filename))
-                return response
+            if result.bglj:
+                filename = os.path.join(result.bglj,"%s.pdf" %tjbh)
+                if os.path.exists(filename):
+                    update_czjl(db.session,tjbh,request.remote_addr)
+                    # 返回下载
+                    response = make_response(send_file(filename, as_attachment=True))
+                    response.headers['Content-Type'] = mimetypes.guess_type(os.path.basename(filename))[0]
+                    response.headers['Content-Disposition'] = 'attachment; filename={}'.format(os.path.basename(filename))
+                    return response
 
         # 历史
         session = gol.get_value('tj_cxk')
@@ -199,6 +328,7 @@ def init_views(app,db,print_queue=None,report_queue=None):
         if result:
             filename = os.path.join('D:/pdf/',result.PDFURL)
             if os.path.exists(filename):
+                update_czjl(db.session, tjbh, request.remote_addr)
                 #返回下载
                 response = make_response(send_file(filename, as_attachment=True))
                 response.headers['Content-Type'] = mimetypes.guess_type(os.path.basename(filename))[0]
@@ -209,6 +339,67 @@ def init_views(app,db,print_queue=None,report_queue=None):
         url = "http://10.8.200.201:4000/api/file/down/%s/%s" %(tjbh,'report')
         return api_file_down(url)
 
+    # PDF 报告预览，用于外网PC客户端
+    @app.route('/api/report/show/pdf/<int:tjbh>', methods=['POST'])
+    def report_show(tjbh):
+        print(' %s：外网客户端(%s)：%s报告预览请求！' % (cur_datetime(), request.remote_addr, tjbh))
+        tmp_path = app.config['UPLOAD_FOLDER_TMP']
+        tmp_filename = os.path.join(tmp_path, "%s.pdf" % tjbh)
+        if len(str(tjbh)) == 8:
+            tjbh = '%09d' % tjbh
+        elif len(str(tjbh)) == 9:
+            tjbh = str(tjbh)
+        else:
+            abort(404)
+
+        result = db.session.query(MT_TJ_BGGL).filter(MT_TJ_BGGL.tjbh == tjbh).scalar()
+        if result:
+            if result.bglj:
+                filename = os.path.join(result.bglj,"%s.pdf" %tjbh)
+                if os.path.exists(filename):
+                    shutil.copy2(filename, tmp_filename)
+                    return ujson.dumps({'code': 1, 'mes': '处理成功', 'data': ''})
+
+        # 历史
+        session = gol.get_value('tj_cxk')
+        result = session.query(MT_TJ_PDFRUL).filter(MT_TJ_PDFRUL.TJBH == tjbh).order_by(
+            MT_TJ_PDFRUL.CREATETIME.desc()).scalar()
+        if result:
+            filename = os.path.join('D:/pdf/', result.PDFURL)
+            if os.path.exists(filename):
+                shutil.copy2(filename, tmp_filename)
+                return ujson.dumps({'code': 1, 'mes': '处理成功', 'data': ''})
+
+        abort(404)
+
+    # PDF 报告打印记录
+    @app.route('/api/report/print2/pdf/<int:tjbh>/<string:login_id>/<string:login_name>', methods=['POST'])
+    def report_print2(tjbh,login_id,login_name):
+        print(' %s：客户端(%s)：%s报告打印完成记录请求！' % (cur_datetime(), request.remote_addr, tjbh))
+        result = db.session.query(MT_TJ_BGGL).filter(MT_TJ_BGGL.tjbh == tjbh).scalar()
+        if result:
+            db.session.query(MT_TJ_BGGL).filter(MT_TJ_BGGL.tjbh == tjbh).update(
+                {
+                    MT_TJ_BGGL.dyrq: cur_datetime(),
+                    MT_TJ_BGGL.dyfs: '3',
+                    MT_TJ_BGGL.dygh: login_id,
+                    MT_TJ_BGGL.dyxm: login_name,
+                    MT_TJ_BGGL.dycs: MT_TJ_BGGL.dycs + 1,
+                    MT_TJ_BGGL.bgzt: MT_TJ_BGGL.bgzt if int(MT_TJ_BGGL.bgzt)>3 else '3',
+                    MT_TJ_BGGL.dyzt: None
+                }
+            )
+
+        sql = "INSERT TJ_CZJLB(JLLX,TJBH,MXBH,CZGH,CZSJ,CZQY,CZXM,JLMC)VALUES(" \
+              "'0038','%s','','%s','%s','%s','%s','报告网上打印')" % (
+            tjbh,login_id,cur_datetime(),request.remote_addr,login_name)
+
+        try:
+            db.session.execute(sql)
+        except Exception as e:
+            print(e)
+
+        return ujson.dumps({'code': 1, 'mes': '处理成功', 'data': ''})
 
     # PDF 报告打印，用户发起
     @app.route('/api/report/print/pdf/<int:tjbh>/<string:printer>', methods=['POST'])
@@ -334,7 +525,7 @@ def init_views(app,db,print_queue=None,report_queue=None):
         else:
             abort(404)
 
-    # 程序更新
+    # 程序文件下载更新
     @app.route('/api/version_file/<string:platform>/<float:version>', methods=['GET'])
     def update_file(platform,version):
         print(' %s：(%s)客户端(%s)：版本文件下载请求！当前版本号：%s' % (cur_datetime(),platform,request.remote_addr, str(version)))
@@ -342,8 +533,9 @@ def init_views(app,db,print_queue=None,report_queue=None):
             platform_name ='1'
         else:
             platform_name = '0'
-        result = db.session.query(MT_TJ_UPDATE).filter(MT_TJ_UPDATE.version >version,MT_TJ_UPDATE.platform==platform_name).scalar()
-        if result:
+        results = db.session.query(MT_TJ_UPDATE).filter(MT_TJ_UPDATE.version >version,MT_TJ_UPDATE.platform==platform_name).order_by(MT_TJ_UPDATE.version.asc()).all()
+        if results:
+            result = results[0]
             response = make_response(send_file(result.ufile, as_attachment=True))
             response.headers['Content-Type'] = mimetypes.guess_type(result.ufile)[0]
             response.headers['Content-Disposition'] = 'attachment; filename={}'.format(result.ufile)
@@ -351,7 +543,27 @@ def init_views(app,db,print_queue=None,report_queue=None):
         else:
             abort(404)
 
-    # 程序更新
+    # 外网程序文件下载更新
+    @app.route('/api2/version_file/<string:platform>/<float:version>', methods=['GET'])
+    def update_file2(platform, version):
+        print(' %s：(%s)外网客户端(%s)：版本文件下载请求！当前版本号：%s' % (cur_datetime(), platform, request.remote_addr, str(version)))
+        # if platform == 'win7':
+        #     platform_name = '1'
+        # else:
+        #     platform_name = '0'
+        results = db.session.query(MT_TJ_UPDATE).filter(MT_TJ_UPDATE.version > version,
+                                                        MT_TJ_UPDATE.platform ==None,
+                                                        ).order_by(MT_TJ_UPDATE.version.asc()).all()
+        if results:
+            result = results[0]
+            response = make_response(send_file(result.ufile, as_attachment=True))
+            response.headers['Content-Type'] = mimetypes.guess_type(result.ufile)[0]
+            response.headers['Content-Disposition'] = 'attachment; filename={}'.format(result.ufile)
+            return response
+        else:
+            abort(404)
+
+    # 程序更新说明
     @app.route('/api/version/<string:platform>/<float:version>', methods=['GET'])
     def update_version(platform, version):
         print(' %s：(%s)客户端(%s)：版本更新请求！当前版本号：%s' % (cur_datetime(), platform, request.remote_addr, str(version)))
@@ -359,9 +571,27 @@ def init_views(app,db,print_queue=None,report_queue=None):
             platform_name = '1'
         else:
             platform_name = '0'
-        result = db.session.query(MT_TJ_UPDATE).filter(MT_TJ_UPDATE.version > version,
-                                                       MT_TJ_UPDATE.platform == platform_name).scalar()
-        if result:
+        results = db.session.query(MT_TJ_UPDATE).filter(MT_TJ_UPDATE.version > version,
+                                                       MT_TJ_UPDATE.platform == platform_name).order_by(MT_TJ_UPDATE.version.asc()).all()
+        if results:
+            result =results[0]
+            return ujson.dumps({'version': result.version, 'describe': str2(result.describe)})
+        else:
+            abort(404)
+
+    # 程序更新说明
+    @app.route('/api2/version/<string:platform>/<float:version>', methods=['GET'])
+    def update_version2(platform, version):
+        print(' %s：(%s)客户端(%s)：版本更新请求！当前版本号：%s' % (cur_datetime(), platform, request.remote_addr, str(version)))
+        # if platform == 'win7':
+        #     platform_name = '1'
+        # else:
+        #     platform_name = '0'
+        results = db.session.query(MT_TJ_UPDATE).filter(MT_TJ_UPDATE.version > version,
+                                                        MT_TJ_UPDATE.platform == None).order_by(
+            MT_TJ_UPDATE.version.asc()).all()
+        if results:
+            result = results[0]
             return ujson.dumps({'version': result.version, 'describe': str2(result.describe)})
         else:
             abort(404)
@@ -390,7 +620,6 @@ def init_views(app,db,print_queue=None,report_queue=None):
         response = jsonify(e.to_dict())
         response.status_code = e.status_code
         return response
-
 
 # 获得当日的保存目录
 def get_cur_path(dirname):
@@ -443,7 +672,6 @@ def api_file_down(url):
     else:
         abort(404)
 
-
 def print_pdf_gsprint(filename,printer=None):
     if not printer:
         printer = win32print.GetDefaultPrinter()
@@ -471,3 +699,41 @@ def request_get(url,save_file=None):
             return False
     else:
         return False
+
+
+def update_czjl(session,tjbh,addr):
+    if '10.8.102.' or '10.8.103.' or '10.8.104.' or '10.7.103.' or '10.8.200' in addr:
+        jllx = '0036'
+        jlmc = '报告下载'
+    else:
+        jllx = '0039'
+        jlmc = '报告网上下载'
+
+    sql = "INSERT TJ_CZJLB(JLLX,TJBH,MXBH,CZGH,CZSJ,CZQY,CZXM,JLMC)VALUES('%s','%s','','','%s','%s','','%s')" %(jllx,tjbh,cur_datetime(),addr,jlmc)
+
+    try:
+        session.execute(sql)
+        # session.commit()
+    except Exception as e:
+        print(e)
+
+def update_print_record(session,tjbh,login_id,login_name,addr):
+    if '10.8.102.' or '10.8.103.' or '10.8.104.' or '10.7.103.' or '10.8.200' in addr:
+        jllx = '0038'
+        jlmc = '报告网上打印'
+    else:
+        jllx = '0039'
+        jlmc = '报告网上下载'
+
+    sql = "INSERT TJ_CZJLB(JLLX,TJBH,MXBH,CZGH,CZSJ,CZQY,CZXM,JLMC)VALUES('%s','%s','','','%s','%s','','%s')" %(jllx,tjbh,cur_datetime(),addr,jlmc)
+
+    try:
+        session.execute(sql)
+        # session.commit()
+    except Exception as e:
+        print(e)
+
+class PostForm(FlaskForm):
+    title = StringField('Title')
+    body = CKEditorField('Body', validators=[DataRequired()])
+    submit = SubmitField()

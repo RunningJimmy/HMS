@@ -74,6 +74,10 @@ class ReportReview(ReportReviewUI):
     # 批量审阅
     def on_btn_review_batch_click(self):
         rows = self.table_report_review.isSelectRows()
+        if len(rows)>=200:
+            if self.login_id!='BSSA':
+                mes_about(self,"批量审阅请不要超过200个/次，避免影响其他业务！")
+                return
         button = mes_warn(self, "温馨提示：批量审阅只适用于招工类型的报告！\n 您确认自动审阅当前选择的 %s 份体检报告？" %len(rows))
         if button != QMessageBox.Yes:
             return
@@ -81,7 +85,7 @@ class ReportReview(ReportReviewUI):
         for row in rows:
             tjbh = self.table_report_review.getItemValueOfKey(row,'tjbh')
             tjlx = self.table_report_review.getItemValueOfKey(row,'tjlx')
-            if tjlx in ['招工','从业'] :
+            if tjlx in ['招工','从业','职业病'] :
                 if request_create_report(tjbh, 'pdf'):
                     count = count + 1
 
@@ -146,7 +150,6 @@ class ReportReview(ReportReviewUI):
         self.cur_row = QModelIndex.row()
         # 更新title
         self.gp_right.setTitle('报告预览   体检编号：%s  姓名：%s 性别：%s  年龄：%s' %(tjbh,xm,xb,nl))
-        self.gp_right.setStyleSheet('''font: 75 12pt '微软雅黑';color: rgb(0,128,0);''')
         # 未审阅则打开HTML 页面
         url = gol.get_value('api_report_preview') %('html',tjbh)
         self.wv_report_equip.load(url)

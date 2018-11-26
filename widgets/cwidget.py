@@ -819,17 +819,45 @@ class ReportEquipTable(TableWidget):
         # 字典载入
         for row_index, row_data in enumerate(datas):
             self.insertRow(row_index)  # 插入一行
-            for col_index, col_name in enumerate(heads.keys()):
-                item = QTableWidgetItem(row_data[col_name])
+            for col_index, col_value in enumerate(row_data):
+                if col_index == 0:
+                    item = QTableWidgetItem(str2(col_value))
+                    col_value = str2(col_value)
+                    if col_value == '已小结':
+                        item.setBackground(QColor("#008000"))
+                    elif col_value in ['已检查', '已抽血', '已留样']:
+                        item.setBackground(QColor("#f0e68c"))
+                    elif col_value in ['核实', '未定义']:
+                        item.setBackground(QColor("#FF0000"))
+                    elif col_value == '已拒检':
+                        item.setBackground(QColor("#008000"))
+                    elif col_value == '已接收':
+                        item.setBackground(QColor("#b0c4de"))
+                    elif col_value == '已回写':
+                        item.setBackground(QColor("#1e90ff"))
+                    elif col_value == '已登记':
+                        item.setBackground(QColor("#b0c4de"))
+                elif col_index ==len(self.heads)-1:
+                    if col_value:
+                        item = QTableWidgetItem(col_value.replace(r'D:/activefile', ''))
+                    else:
+                        item = QTableWidgetItem('')
+                else:
+                    item = QTableWidgetItem(str2(col_value))
                 item.setTextAlignment(Qt.AlignCenter)
                 self.setItem(row_index, col_index, item)
         # 布局
-        self.setColumnWidth(0, 70)  # 设备名称
-        self.setColumnWidth(1, 70)  # 体检编号
-        self.setColumnWidth(2, 50)  # 姓名
-        self.setColumnWidth(3, 80)  # 检查日期
-        self.setColumnWidth(4, 70)  # 检查姓名
-        self.setColumnWidth(5, 100)  # 检查区域
+        self.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeToContents)
+        self.setColumnWidth(1, 70)  # 设备名称
+        self.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeToContents)   #体检编号
+        self.setColumnWidth(3, 50)  # 姓名
+        self.setColumnWidth(4, 40)  # 性别
+        self.setColumnWidth(5, 40)  # 年龄
+        self.setColumnWidth(6, 70)  # 区域
+        self.setColumnWidth(7, 70)  # 报告日期
+        self.setColumnWidth(8, 70)  # 报告医生
+        self.setColumnWidth(9, 70)  # 检查日期
+        self.setColumnWidth(10, 70)  # 检查医生
         self.horizontalHeader().setStretchLastSection(True)
 
 # 报告打印列表
@@ -893,6 +921,47 @@ class ReportTrackTable(TableWidget):
             self.setColumnWidth(14, 70)     # 签到日期
             self.horizontalHeader().setStretchLastSection(True)
 
+# 报告打印列表
+class VipTable(TableWidget):
+
+    tjqy = None  # 体检区域
+    tjlx = None  # 体检类型
+
+    def __init__(self, heads, parent=None):
+        super(VipTable, self).__init__(heads, parent)
+
+    # 具体载入逻辑实现
+    def load_set(self, datas, heads=None):
+        # list 实现
+        for row_index, row_data in enumerate(datas):
+            # 插入一行
+            self.insertRow(row_index)
+            for col_index, col_value in enumerate(row_data):
+                item = QTableWidgetItem(str2(col_value))
+                self.setItem(row_index, col_index, item)
+
+        # 特殊设置
+        if datas:
+            # self.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)         #所有列
+            # self.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeToContents)
+            # self.horizontalHeader().setMinimumSectionSize(60)
+            # self.horizontalHeader().setMaximumSectionSize(300)
+            self.setColumnWidth(0, 60)  # 结果周期
+            self.setColumnWidth(1, 60)  # 追踪进度
+            self.setColumnWidth(2, 60)  # 追踪状态
+            self.setColumnWidth(3, 50)  # 追踪人
+            self.setColumnWidth(4, 60)  # 体检状态
+            self.setColumnWidth(5, 50)  # 类型
+            self.setColumnWidth(6, 60)  # 区域
+            self.setColumnWidth(7, 70)  # 体检编号
+            self.setColumnWidth(8, 60)  # 姓名
+            self.setColumnWidth(9, 30)  # 性别
+            self.setColumnWidth(10, 30)  # 年龄
+            self.setColumnWidth(11, 120)  # 身份证号
+            self.setColumnWidth(12, 80)  # 手机号码
+            self.setColumnWidth(13, 180)  # 单位编号
+            self.setColumnWidth(14, 70)  # 签到日期
+            self.horizontalHeader().setStretchLastSection(True)
 
 # 慢病疑似筛选列表
 class SlowHealthTable(TableWidget):
@@ -939,9 +1008,56 @@ class SlowHealthTable(TableWidget):
         self.setColumnWidth(6, 60)      # 体检金额
         self.horizontalHeader().setStretchLastSection(True)
 
+    # 重新实现load
+    def load2(self,datas,heads):
+        self.setSortingEnabled(False) #查询前，关闭排序，避免显示空白，BUG
+        if not heads:
+            heads = self.heads
+            # 保留原来的行，清空内容
+            self.clearContents()
+        else:
+            self.heads = heads
+            # 连行头一起清空
+            self.clear()
+        self.setRowCount(0)  # 清空行
+        self.setColumnCount(len(heads))
+        self.setHorizontalHeaderLabels(heads.values())  # 行表头
+
+        # 具体实现逻辑
+        self.load_set2(datas,heads)
+        # 恢复公共设置
+        self.setSortingEnabled(True)  # 查询后设置True，开启排序
 
 
+    def load_set2(self,datas,heads):
+        # list 实现
+        for row_index, row_data in enumerate(datas):
+            # 插入一行
+            self.insertRow(row_index)
+            for col_index, col_value in enumerate(row_data):
+                item = QTableWidgetItem(str2(col_value))
+                item.setTextAlignment(Qt.AlignCenter)
+                if col_index==0:
+                    if str2(col_value)=='已审核':
+                        item.setBackground(QColor("#008000"))
+                    elif str2(col_value)=='待审核':
+                        item.setBackground(QColor("#f0e68c"))
+                    else:
+                        item.setBackground(QColor("#FF0000"))
+                elif col_index in [9,10,12,13]:
+                    item.setTextAlignment(Qt.AlignLeft)
+                self.setItem(row_index, col_index, item)
 
+        self.setColumnWidth(0, 50)  # 报告状态
+        self.setColumnWidth(1, 70)  # 体检编号
+        self.setColumnWidth(2, 50)  # 姓名
+        self.setColumnWidth(3, 40)  # 性别
+        self.setColumnWidth(4, 40)  # 年龄
+        self.setColumnWidth(5, 80)  # 手机号码
+        self.setColumnWidth(6, 130)  # 身份证号
+        self.setColumnWidth(7, 60)  # 体检金额
+        self.setColumnWidth(12, 130)  # 体检金额
+        self.horizontalHeader().setStretchLastSection(True)
 
 # 检查表格
 class CheckTable(TableWidget):
@@ -1510,6 +1626,12 @@ class ReportStateGroup(QHBoxLayout):
         self.is_check.stateChanged.disconnect()
         self.is_check.setDisabled(True)
 
+    @property
+    def xmzt(self):
+        if self.cb_report_state.currentText()=='已审核':
+            return True
+        else:
+            return False
 
     @property
     def text(self):
@@ -1891,7 +2013,6 @@ class DateGroup(QHBoxLayout):
 
     def setCurrentText(self,p_str):
         self.jsrq.setCurrentText(p_str)
-
 
     @property
     def where_date(self):
@@ -2631,6 +2752,23 @@ class EquipTypeLayout(QHBoxLayout):
             else:
                 return '00'
 
+    def get_equip_type2(self):
+        if self.cb_equip_type.currentText()=='所有':
+            return False
+        else:
+            if self.cb_equip_type.currentText()=='心电图':
+                return '0806'
+            elif self.cb_equip_type.currentText()=='电测听':
+                return '0310'
+            elif self.cb_equip_type.currentText()=='骨密度':
+                return '501576'
+            elif self.cb_equip_type.currentText()=='人体成分':
+                return '5402'
+            elif self.cb_equip_type.currentText()=='超声骨密度':
+                return '1000074'
+            else:
+                return False
+
     def on_cb_check(self, p_int):
         if p_int:
             self.cb_equip_type.setDisabled(False)
@@ -2773,13 +2911,13 @@ class ReadChinaIdCard_UI(QDialog):
         self.lb_message.setText(message)
 
     def closeEvent(self, *args, **kwargs):
-        super(ReadChinaIdCard_UI, self).closeEvent(*args, **kwargs)
         try:
             if self.read_card_thread:
                 self.read_card_thread.stop()
                 self.read_card_thread = None
         except Exception as e:
             print(e)
+        super(ReadChinaIdCard_UI, self).closeEvent(*args, **kwargs)
 
 class ReadThread(QThread):
 

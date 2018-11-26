@@ -1,7 +1,7 @@
 from .model import *
 from widgets.cwidget import *
 from widgets.utils import CefWidget
-from .report_item_ui import ItemsStateUI
+from .report_item_ui import ItemsStateUI,OperateUI
 from utils import gol,api_print,request_get,print_pdf_gsprint
 from utils import cur_datetime,request_create_report,report_sms_content,sms_api
 
@@ -22,6 +22,7 @@ class ReportReviewFullScreen(Dialog):
         self.btn_next.clicked.connect(self.on_btn_next_click)
         self.btn_fullscreen.clicked.connect(self.on_btn_fullscreen_click)
         self.btn_item.clicked.connect(self.on_btn_item_click)
+        self.btn_czjl.clicked.connect(self.on_btn_czjl_click)
         self.btn_pic.clicked.connect(self.on_btn_pic_click)
         self.btn_reload.clicked.connect(self.on_btn_reload_click)
         self.btn_rebuild.clicked.connect(self.on_btn_rebuild_click)
@@ -33,6 +34,7 @@ class ReportReviewFullScreen(Dialog):
         self.cur_tjbh = None
         self.cur_data = None
         self.item_ui = None
+        self.operatr_ui = None
 
     # 退回
     def on_btn_cancle_click(self,p_str):
@@ -87,7 +89,7 @@ class ReportReviewFullScreen(Dialog):
             mes_about(self, '当前是最后一份报告')
 
     def initData(self,datas,index):
-        print(len(datas),index)
+        # print(len(datas),index)
         self.datas=datas
         self.cur_index=index
         self.open_page(datas[self.cur_index])
@@ -96,6 +98,14 @@ class ReportReviewFullScreen(Dialog):
     # 放射检查项目接收
     def on_btn_pic_click(self):
         pass
+
+    #体检系统操作记录查看
+    def on_btn_czjl_click(self):
+        if not self.operatr_ui:
+            self.operatr_ui = OperateUI(self)
+        self.operatr_ui.show()
+        if self.cur_tjbh:
+            self.operatr_ui.returnPressed.emit(self.cur_tjbh)
 
     def on_btn_reload_click(self):
         self.wv_report_equip.reload()
@@ -141,6 +151,7 @@ class ReportReviewFullScreen(Dialog):
         self.btn_next = QPushButton(Icon('向右'),'下一个')
         self.btn_item = QPushButton(Icon('项目'), '项目查看')
         self.btn_pic = QPushButton(Icon('图片'), '图像接收')
+        self.btn_czjl = QPushButton(Icon('操作'), '处理记录')
         self.btn_reload = QPushButton(Icon('刷新'), '刷新报告')
         self.btn_rebuild = QPushButton(Icon('刷新'), '重新生成')
         lable = QLabel('审阅完成：')

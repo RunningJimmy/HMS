@@ -553,7 +553,7 @@ class PdfData(object):
             # 病理
             if result.ksbm.strip() == '0026':
                 if result.picpath:
-                    file_remote = result.picpath.replace('\\', '/').lstrip('//')
+                    file_remote = str2(result.picpath).replace('\\', '/').lstrip('//')
                     is_done, error = hander_pis.down(file_remote, file_local)
                     if is_done:
                         if not self.pic.get(result.zhbh, 0):
@@ -563,6 +563,8 @@ class PdfData(object):
                             self.pic[result.zhbh].append(file_local.replace(self.html_path,''))
                         else:
                             self.pic[result.zhbh].append(file_local)
+                    else:
+                        print("%s：接收病理项目图片出错,图片路径：%s" %(result.tjbh,file_remote))
                 else:
                     # 缺图
                     print('%s：(%s)病理科室：项目(%s)不存在图片！' %(cur_datetime(),self.tjbh,result.zhbh))
@@ -941,7 +943,6 @@ class MT_TJ_BGGL(BaseModel):
 def get_film_num(tjbh):
     return '''
         SELECT 
-
         (CASE 
         WHEN LBBM IN ('51','61') THEN 'MRI'
         WHEN LBBM = '28' THEN 'CT'
@@ -952,9 +953,7 @@ def get_film_num(tjbh):
         WHEN LBBM = '28' THEN JPSL
         WHEN LBBM = '49' THEN JPSL
         ELSE 0 END) AS JPSL
-
-        FROM (SELECT XMBH FROM TJ_TJJLMXB  WHERE tjbh='%s' AND SFZH='1' AND qzjs<>'1' ) AS A
-
+        FROM (SELECT XMBH FROM TJ_TJJLMXB  WHERE tjbh='%s' AND SFZH='1' AND (qzjs IS NULL OR qzjs='') ) AS A
         INNER JOIN (SELECT XMBH,JPSL,LBBM FROM TJ_XMDM WHERE jpsl is NOT NULL) AS B ON A.XMBH=B.XMBH
     ''' % tjbh
 
@@ -993,5 +992,5 @@ if __name__ =='__main__':
     # for result in results:
     #     q.put({'tjbh': result[0], 'action': 'pdf'})
     # q.put({'tjbh': '166647427', 'action': 'pdf'})
-    q.put({'tjbh': '174560844', 'action': 'pdf'})
+    q.put({'tjbh': '108071306', 'action': 'pdf'})
     report_run(q)

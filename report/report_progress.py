@@ -32,10 +32,11 @@ class ReportProgress(Widget):
     def on_table_detail(self,QTableWidgetItem):
         col = QTableWidgetItem.column()
         tjzt = list(self.table_report_progress_cols.keys())[col]
+        tjzt_value = self.table_report_progress_cols[tjzt]
         if tjzt=='sum':
             sql = get_report_progress_sql2(self.report_dwmc.where_dwbh)
         else:
-            sql = get_report_progress_sql(self.report_dwmc.where_dwbh, tjzt)
+            sql = get_report_progress_sql(tjzt_value,self.report_dwmc.where_dwbh, tjzt)
         results = self.session.execute(sql).fetchall()
         self.table_report_detail.load(results)
         col_name = list(self.table_report_progress_cols.values())[col]
@@ -197,30 +198,41 @@ class ReportProgressTable(TableWidget):
 
 class ReportDetailTable(TableWidget):
 
+    cur_data_set = []
+
     def __init__(self, heads, parent=None):
         super(ReportDetailTable, self).__init__(heads, parent)
 
     # 具体载入逻辑实现
     def load_set(self, datas, heads=None):
+        self.cur_data_set = []
         # list 实现
         for row_index, row_data in enumerate(datas):
             # 插入一行
+            tmp = []
             self.insertRow(row_index)
             for col_index, col_value in enumerate(row_data):
-                if col_index in [1,2,3,4,len(self.heads)-1]:
+                if col_index in [0,2,3,4,5,11,len(self.heads)-1]:
                     item = QTableWidgetItem(str2(col_value))
+                    tmp.append(str2(col_value))
                 else:
                     item = QTableWidgetItem(col_value)
+                    tmp.append(col_value)
                 item.setTextAlignment(Qt.AlignCenter)
                 self.setItem(row_index, col_index, item)
 
-            self.setColumnWidth(0, 70)
-            self.setColumnWidth(1, 60)
-            self.setColumnWidth(2, 40)
-            self.setColumnWidth(3, 40)
-            self.setColumnWidth(4, 70)
-            self.setColumnWidth(5, 80)
-            self.horizontalHeader().setStretchLastSection(True)
+            self.cur_data_set.append(tmp)
+
+        self.setColumnWidth(0, 50)
+        self.setColumnWidth(1, 70)
+        self.setColumnWidth(2, 60)
+        self.setColumnWidth(3, 40)
+        self.setColumnWidth(4, 40)
+        self.setColumnWidth(5, 70)
+        self.setColumnWidth(6, 80)
+        self.horizontalHeader().setStretchLastSection(True)
+
+
 
 # 等待过程中的进度动态图
 class ProgressDialog(QDialog):

@@ -161,6 +161,7 @@ class ReportOrderUI(UI):
         self.gp_right_bottom = QGroupBox('详细列表（0）')
         # 关注
         self.table_report_detail_cols = OrderedDict([
+            ('tjzt', '状态'),
             ('tjbh', '体检编号'),
             ('xm', '姓名'),
             ('xb', '性别'),
@@ -170,7 +171,8 @@ class ReportOrderUI(UI):
             ('qdrq', '签到日期'),
             ('zjrq', '总检日期'),
             ('shrq', '审核日期'),
-            ('syrq', '三审日期'),
+            ('syrq', '审阅日期'),
+            ('syxm', '审阅护士'),
             ('dyrq', '打印日期'),
             ('zlrq', '整理日期'),
             ('lqrq', '领取日期'),

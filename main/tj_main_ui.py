@@ -172,8 +172,16 @@ class TJ_Main_UI(QMainWindow):
     def on_status_widget_show(self,p_str:str):
         self.statusBar().on_change_mes(p_str)
 
-    def closeEvent(self, *args, **kwargs):
-        super(TJ_Main_UI, self).closeEvent(*args, **kwargs)
+    def closeEvent(self, QEvent):
+
+        button = mes_warn(self, "温馨提示：您确认退出系统吗？")
+        if button != QMessageBox.Yes:
+            QEvent.ignore()
+            return
+        else:
+            QEvent.accept()
+
+        super(TJ_Main_UI, self).closeEvent(QEvent)
         try:
             if hasattr(self, 'SampleManager'):
                 getattr(self, 'SampleManager').close()

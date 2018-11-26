@@ -9,7 +9,7 @@ else:
     from PyQt5.QtWebKit import *
     from PyQt5.QtWebKitWidgets import *
 
-import multiprocessing,requests,platform,ctypes
+import multiprocessing,requests,ctypes
 from multiprocessing import Process, Queue
 from importlib import import_module
 from utils.envir import *
@@ -33,14 +33,19 @@ def equip_ui(ui,app):
 def start_run():
     from main import Login_UI
     from widgets import CefApplication
-    from cefpython3 import cefpython as cef
+    try:
+        from cefpython3 import cefpython as cef
+    except Exception as e:
+        ctypes.windll.user32.MessageBoxA(0, '动态库：cefpython3 载入失败！'.encode('gb2312'), '明州体检'.encode('gb2312'), 0)
+        cef = None
     from PyQt5.QtWidgets import QSplashScreen
     from PyQt5.QtGui import QPixmap
     import sys
     ##########################################
     #app = QApplication(sys.argv)
-    sys.excepthook = cef.ExceptHook
-    cef.Initialize()
+    if cef:
+        sys.excepthook = cef.ExceptHook
+        cef.Initialize()
     app = CefApplication(sys.argv)
     splash = QSplashScreen(QPixmap("login.png"))
     # 是否通过用户密码验证登陆
@@ -84,8 +89,8 @@ def start_run():
         from app_selfhelp import selfHelpManager,SelfHelpMachine
         ui = SelfHelpMachine()
         main_ui(ui,app)
-
-    cef.Shutdown()
+    if cef:
+        cef.Shutdown()
 
 
 

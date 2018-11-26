@@ -49,9 +49,6 @@ class EquipUI(Dialog):
         url = gol.get_value('api_equip_show','')
         if url:
             self.wv_report_equip.load(url %path)
-
-            # self.wv_report_equip.show()
-
         else:
             mes_about(self,'未配置：api_equip_show 参数！')
 
@@ -93,6 +90,7 @@ class EquipUI(Dialog):
         lt_bottom = QHBoxLayout()
         gp_bottom = QGroupBox('报告预览')
         self.wv_report_equip = WebView()
+        # self.wv_report_equip = CefWidget(self)
         lt_bottom.addWidget(self.wv_report_equip)
         gp_bottom.setLayout(lt_bottom)
         # 添加布局

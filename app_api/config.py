@@ -25,6 +25,7 @@ def create_app():
     app.config['UPLOAD_FOLDER_EQUIP'] = gol.get_value("SQLALCHEMY_UPLOAD_FOLDER_EQUIP")
     app.config['UPLOAD_FOLDER_REPORT'] = gol.get_value("SQLALCHEMY_UPLOAD_FOLDER_REPORT")
     app.config['UPLOAD_FOLDER_UPDATE'] = gol.get_value("SQLALCHEMY_UPLOAD_FOLDER_UPDATE")
+    app.config['UPLOAD_FOLDER_TMP'] = gol.get_value("SQLALCHEMY_UPLOAD_FOLDER_TMP")
 
     # 日志配置
     # handler = TimedRotatingFileHandler(filename='api_server.log',when='d',interval=1,backupCount=10)

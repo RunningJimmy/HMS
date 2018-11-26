@@ -10,10 +10,14 @@ except Exception as e:
     cv2 = None
 from collections import OrderedDict
 import pandas as pd
-from utils.base import desktop
+import winreg
 from queue import Queue
 import numpy as np
 
+# 获取桌面地址
+def desktop():
+    key = winreg.OpenKey(winreg.HKEY_CURRENT_USER,r'Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders',)
+    return winreg.QueryValueEx(key, "Desktop")[0]
 
 def singleton(cls):
     '''
@@ -190,6 +194,7 @@ class TableWidget(QTableWidget):
             # 保留原来的行，清空内容
             self.clearContents()
         else:
+            self.heads = heads
             # 连行头一起清空
             self.clear()
         self.setRowCount(0)  # 清空行
@@ -306,10 +311,7 @@ class TableWidget(QTableWidget):
             mes_about(self, '没有内容！')
 
     def setSaveFileName(self):
-        fileName, _ = QFileDialog.getSaveFileName(self, "保存文件",
-                                                  desktop(),
-                                                  "Excel 2007 Files (*.xlsx)",
-                                                  options=QFileDialog.DontUseNativeDialog)
+        fileName, _ = QFileDialog.getSaveFileName(self, "保存文件",desktop(),"Excel 2007 Files (*.xlsx)",options=QFileDialog.DontUseNativeDialog)
         if fileName:
             return '%s.xlsx' % fileName
 
@@ -1028,10 +1030,158 @@ class PopWidget(QDialog):
     #     # self.ptimer = None
     #     self.close()
 
+# 复选多选框
+class CheckComboBox(QComboBox):
+
+    def __init__(self, items,edit=True,delimiter=';'):
+
+        super(CheckComboBox, self).__init__()
+        self.select=""
+        self.delimiter=delimiter
+        self.items = items
+        ############################################
+        self.lineEdit = QLineEdit()
+        self.lineEdit.setReadOnly(edit)
+        self.lineEdit.textChanged.connect(self.onTextChanged)
+        # self.lineEdit.setText(self.all_name)
+        self.listWidget = QListWidget()
+
+        for i,j in enumerate(self.items):
+            item=QListWidgetItem()
+            #item.setData(Qt.UserRole, j)
+            checkBox=QCheckBox(j)
+            self.listWidget.addItem(item)
+            self.listWidget.setItemWidget(item,checkBox)
+            checkBox.stateChanged.connect(self.onStateChanged)
+
+        self.setModel(self.listWidget.model())
+        self.setView(self.listWidget)
+        self.setLineEdit(self.lineEdit)
+
+        self.setEditable(True)
+
+    def onStateChanged(self,state:int):
+        selectedContent=""
+        control=QObject.sender(self)
+        # print(control.text())
+        ########### 全选 ##############################
+        # if control.text()==self.all_name:
+        #     if control.isChecked():
+        #         print('选中')
+        #     else:
+        #         print('未选中')
+        ########### 获取 ###############################
+        for i in range(self.listWidget.count()):           #遍历
+            item=self.listWidget.item(i)                   #获得item
+            checkBox=self.listWidget.itemWidget(item)      #找到item对应widget
+            if checkBox.isChecked():
+
+                if not selectedContent:
+                    selectedContent = checkBox.text()
+                else:
+                    selectedContent = selectedContent+self.delimiter+checkBox.text()
+
+        self.select=selectedContent
+        # print(selectedContent)
+        self.setCurrentText(selectedContent)
+
+    def onTextChanged(self,text:str):
+        #self.lineEdit.setText(text)
+        '''
+        点击空白处，下拉列表会进行收回，QLineEdit的数据将会被自动清空
+        '''
+        self.lineEdit.setText(self.select)
+
+    def setPlaceholderText(self,text:str):
+        self.lineEdit.setPlaceholderText(text)
+
+    # def setCompleter(self,QCompleter):
+    #
+    #     self.lineEdit.setCompleter(QCompleter)
+
+    def textList(self):
+        if self.select:
+            return self.select.split("%s" %self.delimiter)
+
+    def mousePressEvent(self,QMouseEvent):
+        super(CheckComboBox,self).mousePressEvent(QMouseEvent)
+        # print(2222)
+
+class ComboCheckBox(QComboBox):
+
+    def __init__(self,items):
+        super(ComboCheckBox,self).__init__()
+        self.items=items
+        self.items.insert(0,'全部')
+        self.row_num=len(self.items)
+        # 选择的行数
+        self.row_num_sel=0
+        # QCheckBox 容器
+        self.cb_boxs=[]
+        # 展示内容
+        self.le_show=QLineEdit()
+        self.le_show.setReadOnly(True)
+        self.lw_lists=QListWidget()
+        self.addQCheckBox(0)
+        self.cb_boxs[0].stateChanged.connect(self.All)
+        for i in range(1,self.row_num):
+            self.addQCheckBox(i)
+            self.cb_boxs[i].stateChanged.connect(self.show)
+        self.setModel(self.lw_lists.model())
+        self.setView(self.lw_lists)
+        self.setLineEdit(self.le_show)
+
+        # 绑定信号槽
+
+    def addQCheckBox(self,i):
+        self.cb_boxs.append(QCheckBox())
+        qItem=QListWidgetItem(self.lw_lists)
+        self.cb_boxs[i].setText(self.items[i])
+        self.lw_lists.setItemWidget(qItem,self.cb_boxs[i])
+
+    def Selectlist(self):
+        Outputlist=[]
+        for i in range(1,self.row_num):
+            if self.cb_boxs[i].isChecked()==True:
+                Outputlist.append(self.cb_boxs[i].text())
+        self.row_num_sel=len(Outputlist)
+        return Outputlist
+
+    def show(self):
+        show=''
+        Outputlist=self.Selectlist()
+        self.le_show.setReadOnly(False)
+        self.le_show.clear()
+        for i in Outputlist:
+            show+=i+';'
+        if self.row_num_sel==0:
+            self.cb_boxs[0].setCheckState(0)
+        elif self.row_num_sel==self.row_num-1:
+            self.cb_boxs[0].setCheckState(2)
+        else:
+            self.cb_boxs[0].setCheckState(1)
+        self.le_show.setText(show)
+        self.le_show.setReadOnly(True)
+
+    def All(self,zhuangtai):
+        if zhuangtai==2:
+            for i in range(1,self.row_num):
+                self.cb_boxs[i].setChecked(True)
+        elif zhuangtai==1:
+            if self.row_num_sel==0:
+                self.cb_boxs[0].setCheckState(2)
+        elif zhuangtai==0:
+            self.clear()
+
+    def clear(self):
+        for i in range(self.row_num):
+            self.cb_boxs[i].setChecked(False)
+
+
 if __name__ == "__main__":
     import sys
     app = QApplication(sys.argv)
-    w = Window()
+    w = CheckComboBox(['测试1','测试2','测试3','测试4'])
     w.show()
     sys.exit(app.exec_())
 

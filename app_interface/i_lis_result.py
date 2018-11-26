@@ -8,6 +8,8 @@ class LisResult(LisResultUI):
         super(LisResult,self).__init__('检验系统',parent)
         # 绑定信号槽
         self.table_inspect_master.itemClicked.connect(self.on_table_show_detail)
+        self.btn_print.clicked.connect(self.on_btn_print_click)
+        self.btn_query.clicked.connect(self.on_btn_query_click)
         # 右侧详细结果 字典
         self.detail_datas = None
         self.btn_receive.clicked.connect(self.on_btn_receive_click)
@@ -46,6 +48,14 @@ class LisResult(LisResultUI):
         self.bgsj.setText(bgrq)
         self.shys.setText(shys)
         self.shsj.setText(shrq)
+
+    # 查询
+    def on_btn_query_click(self):
+        mes_about(self, '正在开发中，敬请期待！')
+
+    # 打印
+    def on_btn_print_click(self):
+        mes_about(self,'正在开发中，敬请期待！')
 
     # 强制接收
     def on_btn_receive_click(self):

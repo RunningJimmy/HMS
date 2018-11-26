@@ -1,4 +1,3 @@
-from widgets.bweb import *
 from .model import *
 from widgets import QBrowser
 from .common import *
@@ -90,6 +89,7 @@ class ReportReviewUI(Widget):
         lt_right = QHBoxLayout()
         lt_right.addWidget(self.wv_report_equip)
         self.gp_right = QGroupBox('报告预览')
+        self.gp_right.setStyleSheet('''font: 75 12pt '微软雅黑';color: rgb(0,128,0);''')
         self.gp_right.setLayout(lt_right)
         lt_main.addLayout(lt_left,1)
         lt_main.addWidget(self.gp_right,2)

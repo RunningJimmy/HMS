@@ -15,6 +15,7 @@ def bulk_insert(session,datas):
     try:
         session.bulk_insert_mappings(MT_MB_YSKH, datas)
         session.commit()
+        print('批量插入%s 行数据' %len(datas))
     except Exception as e:
         session.rollback()
         print('批量插入失败！错误代码：%s' %e)   # Cannot insert duplicate key row
@@ -201,7 +202,7 @@ if __name__ =="__main__":
     engine = create_engine('mssql+pymssql://bsuser:admin2389@10.8.200.201:1433/tjxt', encoding='utf8', echo=False)
     session = sessionmaker(bind=engine)()
     #  '2018-01-10','2018-01-21'
-    results = session.execute(SQL_NCD %('2018-11-14','2018-11-15')).fetchall()
+    results = session.execute(SQL_NCD %('2018-11-20','2018-11-27')).fetchall()
     count = 0
     #ryxx = {'tjbh':'','xm':'','xb':'','nl':0,'sjhm':'','sfzh':'','dwbh':'','dwmc':'','addr':'','ysje':0.00,
     #       'djrq':'','tjrq':'','qdrq':'','zjrq':'','shrq':'','zjys':'','shys':''}
@@ -249,7 +250,7 @@ if __name__ =="__main__":
 
     if tmp:
         bulk_insert(session,tmp)
-        print('插入记录：%s 行！' % str(len(tmp)))
+        # print('插入记录：%s 行！' % str(len(tmp)))
 
     #session.commit()
         #raise  EOFError
