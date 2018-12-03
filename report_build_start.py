@@ -144,6 +144,7 @@ def report_run(queue):
                     ######################## 写入总检、审核医生签名及公章 ########################
                     cachet['zjys'] = os.path.join(sign_img,'%s.png' %i_user['zjys'])
                     cachet['shys'] = os.path.join(sign_img,'%s.png' %i_user['shys'])
+                    cachet['shys2'] = os.path.join(sign_img, '060601006.png')
                     if i_user['syys']:
                         cachet['syys'] = os.path.join(sign_img,'%s.png' %i_user['syys'])
                     else:
@@ -992,5 +993,5 @@ if __name__ =='__main__':
     # for result in results:
     #     q.put({'tjbh': result[0], 'action': 'pdf'})
     # q.put({'tjbh': '166647427', 'action': 'pdf'})
-    q.put({'tjbh': '108071306', 'action': 'pdf'})
+    q.put({'tjbh': '165612099', 'action': 'pdf'})
     report_run(q)

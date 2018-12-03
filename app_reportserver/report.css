@@ -428,14 +428,6 @@ thead{
     /* display: table-row-group;         /* 解决 表头重复和文字重叠的问题. */
 }
 
-thead2{
-    text-align:left;
-    page-break-inside: avoid !important;
-    /*display:table-header-group; */
-    border-bottom:3px solid #000;
-    display: table-row-group;         /* 解决 表头重复和文字重叠的问题. */
-}
-
 /*表格 数据行 */
 tbody{
     align:left;

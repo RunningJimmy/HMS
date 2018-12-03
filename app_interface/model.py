@@ -1,5 +1,64 @@
 from utils.bmodel import *
 
+class MT_TJ_XQGL(BaseModel):
+
+    __tablename__ = 'TJ_XQGL'
+
+    vstate = {
+        '0':'已提交',
+        '1':'已审核',
+        '2':'已审批' ,
+        '3':'开发中' ,
+        '4':'已验收'
+    }
+
+    DID = Column(Integer, primary_key=True, autoincrement=True)
+    state = Column(CHAR(1), nullable=True)          # 需求状态
+    dname = Column(VARCHAR(50), nullable=True)      # 需求名称
+    submiter = Column(VARCHAR(10), nullable=True)      #
+    submit_time = Column(DateTime, nullable=True)
+    expect_date = Column(VARCHAR(10), nullable=True)
+    question = Column(TEXT, nullable=True)
+    demand = Column(TEXT, nullable=True)
+    system = Column(VARCHAR(20), nullable=False)
+    module = Column(VARCHAR(20), nullable=False)
+    level = Column(VARCHAR(20), nullable=False)
+    shxm = Column(VARCHAR(10), nullable=False)
+    shsj = Column(DateTime, nullable=False)
+    spxm = Column(VARCHAR(10), nullable=False)
+    spsj = Column(DateTime, nullable=False)
+    kfxm = Column(VARCHAR(10), nullable=False)
+    kfsj = Column(DateTime, nullable=False)
+    jjfa = Column(VARCHAR(200), nullable=False)
+    gzxm = Column(VARCHAR(10), nullable=False)
+    gzsj = Column(DateTime, nullable=False)
+    ysxm = Column(VARCHAR(10), nullable=False)
+    yssj = Column(DateTime, nullable=False)
+    yspj = Column(TEXT, nullable=False)
+
+    @property
+    def to_dict(self):
+        return {
+            'did': str(getattr(self, "DID")),
+            "state":self.vstate[getattr(self, "state", '0')],
+            'dname': str2(getattr(self, "dname", '')),
+            'submiter': str2(getattr(self, "submiter", '')),
+            'submit_time': str2(getattr(self, "submit_time", ''))[0:19],
+            'system': str2(getattr(self, "system", '')),
+            'module': str2(getattr(self, "module", '')),
+            'level': str2(getattr(self, "level", '')),
+            'shxm': str2(getattr(self, "shxm", '')),
+            'shsj': str2(getattr(self, "shsj", ''))[0:19],
+            'spxm': str2(getattr(self, "shxm", '')),
+            'spsj': str2(getattr(self, "shsj", ''))[0:19],
+            'kfxm': str2(getattr(self, "shxm", '')),
+            'kfsj': str2(getattr(self, "shsj", ''))[0:19],
+            'gzxm': str2(getattr(self, "shxm", '')),
+            'gzsj': str2(getattr(self, "shsj", ''))[0:19],
+            'ysxm': str2(getattr(self, "shxm", '')),
+            'yssj': str2(getattr(self, "shsj", ''))[0:19]
+        }
+
 # 电话记录 实际应该同步 TJ_CZJLB 此表为过渡
 class MT_TJ_DHGTJLB(BaseModel):
 

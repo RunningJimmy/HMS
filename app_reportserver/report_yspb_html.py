@@ -26,7 +26,7 @@ pdf_html_yspb_page='''
                     <td colspan="2" class="td_pb">日　　期</td>
                     <td class="td_pb">科　　室</td>
                     <td class="td_pb">专　家</td>
-                    <td class="td_pb">职称</td>
+                    <td class="td_pb">职务</td>
                 </tr>
                 <tr class="tr_pb">
                     <td rowspan="2" class="td_pb2">星期一　下午</td>
@@ -42,11 +42,17 @@ pdf_html_yspb_page='''
                     <td class="td_pb">主任</td>
                 </tr>
                 <tr class="tr_pb">
-                    <td class="td_pb2">星期二　下午</td>
+                    <td rowspan="2"  class="td_pb2">星期二　下午</td>
                     <td class="td_pb2">14:00-16:00</td>
                     <td class="td_pb">心&nbsp;&nbsp;内&nbsp;&nbsp;科</td>
                     <td class="td_pb">吴海宏</td>
                     <td class="td_pb">主任</td>
+                </tr>
+                <tr class="tr_pb">
+                    <td class="td_pb2">14:00-16:00</td>
+                    <td class="td_pb">泌尿外科</td>
+                    <td class="td_pb">温海涛</td>
+                    <td class="td_pb">院长</td>
                 </tr>
                 <tr class="tr_pb">
                     <td rowspan="2"  class="td_pb2">星期三　下午</td>

@@ -162,6 +162,7 @@ class CollectBlood(GolParasMixin,CollectBlood_UI):
             btn_name = result[2]        # 条码对应项目组
             btn_state = result[-2]      # 条码状态：是否已抽、已采集
             btn_state2 = result[-1]      # 条码状态：是否已拒检
+            print(btn_name,btn_state2)
             # 生成按钮
             if not btn_state:
                 filename=self.barCodeBuild.create(btn_no)       # 采集过就变色

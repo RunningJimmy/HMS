@@ -173,7 +173,6 @@ class TJ_Main_UI(QMainWindow):
         self.statusBar().on_change_mes(p_str)
 
     def closeEvent(self, QEvent):
-
         button = mes_warn(self, "温馨提示：您确认退出系统吗？")
         if button != QMessageBox.Yes:
             QEvent.ignore()
@@ -228,6 +227,25 @@ class AutoUpdateThread(QThread):
             except Exception as e:
                 print(e)
             time.sleep(self.timer)
+
+# 程序错误监控线程
+class MonitorThread(QThread):
+
+    # 定义信号,定义参数为str类型
+    signalPost = pyqtSignal(str,str)     # 更新界面
+    signalExit = pyqtSignal()
+
+    def __init__(self,timer=1):
+        super(MonitorThread, self).__init__()
+        self.running = False
+        self.timer = timer
+
+    def stop(self):
+        self.running = False
+
+    def run(self):
+        pass
+        # observer = Observer()
 
 
 class UpdateDialog(QDialog):

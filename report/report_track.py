@@ -3,6 +3,7 @@ from app_interface import *
 from .report_item_ui import ItemsStateUI,OperateUI
 from .report_track_thread import *
 from widgets.cwidget import *
+from widgets.pic_widget import PicWidget
 from .report_track_ui import ReportTrackUI
 from utils import api_file_down,cur_datetime
 import webbrowser
@@ -342,13 +343,14 @@ class ReportTrack(ReportTrackUI):
                                 'czgh': self.login_id, 'czxm': self.login_name, 'czqy': self.login_area,
                                 'jlnr': '%s -> %s，%s：已处理 -> 医生审核，处理意见：%s' %(zzzt,cur_datetime(),self.login_name,str(text))
                                 }
+                    sql2 = "UPDATE TJ_BGGL SET BGZT='0',BGTH=NULL,SYGH=NULL,SYXM=NULL,SHRQ=NULL,SYBZ=NULL,GCBZ=NULL WHERE TJBH='%s';" % tjbh
                 else:
                     sql1 = "UPDATE TJ_TJDJB SET TJZT='7' WHERE TJBH='%s';" % tjbh
                     data_obj = {'jllx': '0123', 'jlmc': '报告退回处理', 'tjbh': tjbh, 'mxbh': '',
                                 'czgh': self.login_id, 'czxm': self.login_name, 'czqy': self.login_area,
                                 'jlnr': '%s -> %s，%s：已处理 -> 护理审阅，处理意见：%s' %(zzzt,cur_datetime(),self.login_name,str(text))
                                 }
-                sql2 = "UPDATE TJ_BGGL SET BGZT='1',BGTH=NULL,SYGH=NULL,SYXM=NULL,SHRQ=NULL,SYBZ=NULL WHERE TJBH='%s';" % tjbh
+                    sql2 = "UPDATE TJ_BGGL SET BGZT='1',BGTH=NULL,SYGH=NULL,SYXM=NULL,SHRQ=NULL,SYBZ=NULL,GCBZ=NULL WHERE TJBH='%s';" % tjbh
                 try:
                     self.session.execute(sql1)
                     self.session.execute(sql2)
@@ -367,13 +369,14 @@ class ReportTrack(ReportTrackUI):
 
     # 查看导检单
     def on_btn_djd_click(self):
-        result = self.session.query(MT_TJ_PHOTO_ZYD).filter(MT_TJ_PHOTO_ZYD.tjbh == self.cur_tjbh).scalar()
-        if result:
-            if result.picture_zyd:
-                if not self.zyd_ui:
-                    self.zyd_ui = ZYDDialog()
-                self.zyd_ui.setData(result.picture_zyd)
-                self.zyd_ui.show()
+        results = self.session.query(MT_TJ_PHOTO_ZYD).filter(MT_TJ_PHOTO_ZYD.tjbh == self.cur_tjbh).order_by(MT_TJ_PHOTO_ZYD.tpid).all()
+        if results:
+            if not self.zyd_ui:
+                self.zyd_ui = PicWidget(self)
+            datas = [result.picture_zyd for result in results]
+            self.zyd_ui.setWindowTitle('导检单，共计%s张' %len(datas))
+            self.zyd_ui.open_new.emit(datas,len(datas))
+            self.zyd_ui.show()
         else:
             mes_about(self, '该人导检单未拍照！')
 
@@ -461,7 +464,6 @@ class ReportTrack(ReportTrackUI):
                 sql = get_report_shth_sql()
             else:
                 sql = get_report_syth_sql()
-
 
         # print(sql)
         # 执行查询
@@ -1375,4 +1377,3 @@ class ItemTable(TableWidget):
         self.setColumnWidth(1, 60)
         self.setColumnWidth(2, 180)
         self.horizontalHeader().setStretchLastSection(True)
-

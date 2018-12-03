@@ -20,10 +20,10 @@ def select_1(zd,jy):
 
 def select(result:list):
     if result[-1] == '140049':
-        if float2(result[-4]) > 6:
+        if float2(result[-4]) > 10:
             return True
     elif result[-1] in ['120058','130059']:
-        if float2(result[-4]) >= 10:
+        if float2(result[-4]) >= 5:
             return True
     else:
         if select_1(str2(result[-3]), str2(result[-2])):
@@ -48,7 +48,7 @@ if __name__ =="__main__":
     # 泌尿科
     engine = create_engine('mssql+pymssql://bsuser:admin2389@10.8.200.201:1433/tjxt', encoding='utf8', echo=False)
     session = sessionmaker(bind=engine)()
-    results = session.execute(SQL_CDC %('2018-11-13','2018-11-17')).fetchall()
+    results = session.execute(SQL_CDC %('2018-11-20','2018-11-23')).fetchall()
 
     datas = []
     cols = ['tjbh', 'xm', 'xb', 'nl', 'sjhm', 'sfzh', 'addr', 'dwmc', 'ysje', 'qdrq', 'xmmc', 'xmjg', 'xmzd', 'jy']

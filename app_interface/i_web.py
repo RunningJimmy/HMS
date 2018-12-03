@@ -8,7 +8,6 @@ class OaUI(BrowserWidget):
         self.show()
         self.initUI()
 
-
     def initUI(self):
         lt_main = QHBoxLayout()
         self.browser = CefWidget(self)
@@ -18,7 +17,6 @@ class OaUI(BrowserWidget):
     # 载入必须在整体控件show后面，不是仅仅show后面
     def load(self):
         self.browser.embedBrowser("http://sso.auxgroup.com/login?service=https://newoa.auxgroup.com/index.jsp")
-
 
 class PhonePlatUI(BrowserWidget):
 

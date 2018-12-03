@@ -88,6 +88,13 @@ def mes_warn(parent,message):
     button = QMessageBox.warning(parent,"明州体检", message,QMessageBox.Yes | QMessageBox.No)
     return button
 
+class Line(QFrame):
+
+    def __init__(self):
+        super(Line,self).__init__()
+        self.setFrameShape(QFrame.VLine)
+        self.setFrameShadow(QFrame.Sunken)
+
 # def mes_about(parent,message):
 #     MessageBox(self, text=mes).exec_()
 #     QMessageBox.about(parent, '明州体检', message)
@@ -341,6 +348,7 @@ class ArrowButton2(QPushButton):
         self.setObjectName(name)
 
 class BrowserWidget(QWidget):
+
     status = False  # 是否被打开
 
     def __init__(self,parent=None):

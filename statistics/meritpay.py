@@ -6,7 +6,7 @@ class DN_MeritPay(DirTabWidget):
     def __init__(self):
         self.nodes = ['护理绩效']
         super(DN_MeritPay,self).__init__('医护绩效',self.nodes)
-        self.addTab('护理绩效')
+        # self.addTab('护理绩效')
 
     def addTab(self, title):
         super(DN_MeritPay, self).addTab(title)
@@ -14,3 +14,7 @@ class DN_MeritPay(DirTabWidget):
             from .achievements_nurse import AchievementsNurse
             self.achieve_nurse = AchievementsNurse()
             self.rwidget.addPage(self.achieve_nurse, Icon(title), title)
+        elif title == '医生绩效':
+            from .achievements_doctor import AchievementsDoctor
+            self.achieve_doctor = AchievementsDoctor()
+            self.rwidget.addPage(self.achieve_doctor, Icon(title), title)

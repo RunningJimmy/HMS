@@ -1,8 +1,8 @@
 from flask import send_file,make_response,request,jsonify,abort,url_for,render_template,send_from_directory
-from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
-from wtforms.validators import DataRequired
-from flask_ckeditor import CKEditor, CKEditorField, upload_fail, upload_success
+# from flask_wtf import FlaskForm
+# from wtforms import StringField, SubmitField
+# from wtforms.validators import DataRequired
+# from flask_ckeditor import CKEditor, CKEditorField, upload_fail, upload_success
 from app_api.exception import *
 from app_api.model import *
 import zeep,json,base64,os,ujson,time,urllib.parse,requests
@@ -17,7 +17,7 @@ def init_views(app,db,print_queue=None,report_queue=None):
 
     app.secret_key = 'secret string'
 
-    ckeditor = CKEditor(app)
+    # ckeditor = CKEditor(app)
 
     '''
     :param app:         应用程序本身
@@ -27,32 +27,78 @@ def init_views(app,db,print_queue=None,report_queue=None):
     def static_create():
         return url_for('static', filename='/css/report.css')
 
-    @app.route('/editor', methods=['GET', 'POST'])
-    def index():
-        form = PostForm()
-        if form.validate_on_submit():
-            title = form.title.data
-            body = form.body.data
-            # You may need to store the data in database here
-            return render_template('post.html', title=title, body=body)
-        return render_template('index.html', form=form)
+    # @app.route('/editor', methods=['GET', 'POST'])
+    # def index():
+    #     form = PostForm()
+    #     if form.validate_on_submit():
+    #         title = form.title.data
+    #         body = form.body.data
+    #         # You may need to store the data in database here
+    #         return render_template('post.html', title=title, body=body)
+    #     return render_template('index.html', form=form)
+    #
+    # @app.route('/files/<filename>')
+    # def uploaded_files(filename):
+    #     path = app.config['UPLOADED_PATH']
+    #     return send_from_directory(path, filename)
+    #
+    # @app.route('/upload', methods=['POST'])
+    # def upload():
+    #     f = request.files.get('upload')
+    #     extension = f.filename.split('.')[1].lower()
+    #     if extension not in ['jpg', 'gif', 'png', 'jpeg']:
+    #         return upload_fail(message='Image only!')
+    #     f.save(os.path.join(app.config['UPLOADED_PATH'], f.filename))
+    #     url = url_for('uploaded_files', filename=f.filename)
+    #     return upload_success(url=url)
 
-    @app.route('/files/<filename>')
-    def uploaded_files(filename):
-        path = app.config['UPLOADED_PATH']
-        return send_from_directory(path, filename)
+    # 外出体检API 用户名获取
+    @app.route('/api/wctj/user/<string:user_id>', methods=['GET'])
+    def wctj_get_user(user_id):
+        print('外出服务 %s,客户端(%s)，获取用户名请求！参数：%s' % (cur_datetime(), request.remote_addr,user_id))
+        sql = "SELECT YHMC FROM SS_OPERATE_USER WHERE YHDM='%s' AND XTSB='101'; " %user_id
+        result = db.session.execute(sql).fetchone()
+        if result:
+            return ujson.dumps(str2(result[0]))
+        else:
+            abort(404)
 
-    @app.route('/upload', methods=['POST'])
-    def upload():
-        f = request.files.get('upload')
-        extension = f.filename.split('.')[1].lower()
-        if extension not in ['jpg', 'gif', 'png', 'jpeg']:
-            return upload_fail(message='Image only!')
-        f.save(os.path.join(app.config['UPLOADED_PATH'], f.filename))
-        url = url_for('uploaded_files', filename=f.filename)
-        return upload_success(url=url)
+    # 外出体检API 验证用户 通过则获取权限科室 和 外出单位信息
+    @app.route('/api/wctj/user/validate/<string:user_id>/<string:user_pd>', methods=['POST'])
+    def wctj_validate_user(user_id, user_pd):
+        sql1 = "SELECT YHMC FROM SS_OPERATE_USER WHERE YHDM='%s' AND YHKL='%s' AND XTSB='101'; " %(user_id,user_pd)
+        sql2 ="SELECT KSBM FROM TJ_YGQSKS WHERE YGGH = '%s';" %user_id
+        sql3 = "SELECT MC,DWBH,PYJM FROM TJ_DWDMB WHERE sfwc='1'; "
+        result = db.session.execute(sql1).fetchone()
+        if result:
+            tmp = {}
+            dwmc_bh = {}
+            dwmc_py = {}
+            results = db.session.execute(sql2).fetchall()
+            tmp['ksbm'] = [i[0] for i in results]
+            results = db.session.execute(sql3).fetchall()
+            if results:
+                for result in results:
+                    dwmc_bh[result[1]] = str2(result[0])
+                    dwmc_py[result[2].lower()] = str2(result[0])
+            tmp['dwmc_bh'] = dwmc_bh
+            tmp['dwmc_py'] = dwmc_py
+            return ujson.dumps(tmp)
+        else:
+            abort(404)
 
-    # 获取用户名
+    # 外出体检API 获取外出单位信息
+    @app.route('/api/wctj/dwmc', methods=['GET'])
+    def wctj_get_dwmc():
+        print('外出服务 %s,客户端(%s)，获取单位信息请求！参数：无。' % (cur_datetime(), request.remote_addr))
+        sql = "SELECT MC,DWBH FROM TJ_DWDMB WHERE sfwc='1' ; "
+        results = db.session.execute(sql).fetchall()
+        if results:
+            return ujson.dumps(dict([(str2(result[0]),result[1]) for result in results]))
+        else:
+            abort(404)
+
+    # 获取报告批量下载用户名
     @app.route('/api/user/get/<string:user_id>', methods=['GET'])
     def get_user_name(user_id):
         sql = "select YHMC from TJ_DWFZR where YHID='%s' AND YXBZ='1'; " %user_id
@@ -62,7 +108,7 @@ def init_views(app,db,print_queue=None,report_queue=None):
         else:
             abort(404)
 
-    # 验证用户
+    # 验证报告批量下载用户
     @app.route('/api/user/validate/<string:user_id>/<string:user_pd>', methods=['POST'])
     def validate_user(user_id,user_pd):
         sql = "select YHID from TJ_DWFZR where YHID='%s' AND YHMM='%s' AND YXBZ='1'; " %(user_id,user_pd)
@@ -75,7 +121,7 @@ def init_views(app,db,print_queue=None,report_queue=None):
             abort(404)
 
     # 获取单位进度
-    @app.route('/api/dwjd/get/<string:dwbh>', methods=['GET'])
+    @app.route('/api/dwjd/all/<string:dwbh>', methods=['GET'])
     def get_dwjd_all(dwbh):
         print(' %s：客户端(%s)：单位(%s)进度请求！无额外参数。' % (cur_datetime(), request.remote_addr, dwbh))
         sql = get_report_progress_sum_sql(dwbh)
@@ -146,8 +192,9 @@ def init_views(app,db,print_queue=None,report_queue=None):
             abort(404)
 
     # 获取彩超、内镜图像
-    @app.route('/api/pacs/pic/<string:tjbh>/<string:ksbm>/<string:xmbh>', methods=['GET'])
+    @app.route('/api/pacs/pic/<string:tjbh>/<string:ksbm>/<string:xmbh>', methods=['GET','POST'])
     def get_pacs_pic(tjbh, ksbm,xmbh):
+        print(' %s：客户端(%s)：检查图像接收请求！参数 tjbh(%s)，ksbm(%s)，xmbh(%s)' % (cur_datetime(), request.remote_addr, tjbh, ksbm,xmbh))
         url = "http://10.8.200.220:7059/WebGetFileView.asmx?WSDL"
         client = zeep.Client(url)
         tmp = client.service.f_GetUISFilesByTJ_IID(tjbh + xmbh)
@@ -733,7 +780,7 @@ def update_print_record(session,tjbh,login_id,login_name,addr):
     except Exception as e:
         print(e)
 
-class PostForm(FlaskForm):
-    title = StringField('Title')
-    body = CKEditorField('Body', validators=[DataRequired()])
-    submit = SubmitField()
+# class PostForm(FlaskForm):
+#     title = StringField('Title')
+#     body = CKEditorField('Body', validators=[DataRequired()])
+#     submit = SubmitField()

@@ -13,6 +13,16 @@ BaseModel = declarative_base()
 2）MV_ 表示视图   其中 M表示model  V表示view
 '''
 
+#代码字典
+class MT_GY_DMZD(BaseModel):
+
+    __tablename__ = 'GY_DMZD'
+
+    dmlb = Column(NUMERIC(4),primary_key=True)
+    dmsb = Column(NUMERIC(8), primary_key=True)
+    srdm = Column(VARCHAR(10),nullable=False)
+    dmmc = Column(VARCHAR(40),nullable=False)
+
 #用户代码表
 class MT_TJ_YGDM(BaseModel):
 
@@ -157,11 +167,11 @@ class MT_TJ_PACS_PIC(BaseModel):
     ID = Column(Integer, primary_key=True, autoincrement=True)
     tjbh = Column(String(16),nullable=True)
     ksbm = Column(CHAR(6),nullable=True)
-    picpath = Column(String(200),nullable=False)
-    picname = Column(String(100),nullable=False)
+    picpath = Column(String(220),nullable=False)
+    picname = Column(String(220),nullable=False)
     zhbh = Column(String(16), nullable=False)
     flag = Column(CHAR(1), nullable=False)
-    path = Column(String(100), nullable=False)
+    path = Column(String(220), nullable=False)
     pk = Column(String(30), nullable=False)
     ftp_bz = Column(CHAR(1), nullable=False)
 

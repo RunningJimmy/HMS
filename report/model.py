@@ -1302,6 +1302,7 @@ class MT_TJ_PHOTO_ZYD(BaseModel):
 
     __tablename__ = 'TJ_PHOTO_ZYD'
 
+    ID = Column(INTEGER, primary_key=True)
     tjbh = Column(String(16), primary_key=True)                         # 体检编号
     picture_zyd = Column(BLOB, nullable=True)
     tpid = Column(INTEGER, nullable=True)

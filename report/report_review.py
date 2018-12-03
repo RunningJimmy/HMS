@@ -279,13 +279,10 @@ class ReportReview(ReportReviewUI):
                     if request_create_report(p2_str, 'html'):
                         mes_about(self,"生成HTML报告成功！")
 
-
                 elif str2(result.tjzt)=='已审阅':
                     mes_about(self,"当前报告已审阅，不应该出现此选项！")
                 else:
                     mes_about(self,'该顾客体检状态(%s)，只有医生审核后才能进行报告审阅！' %str2(result.tjzt))
-
-
 
     # 审阅/取消审阅
     def on_btn_review_click(self,syzt:bool,num:int):

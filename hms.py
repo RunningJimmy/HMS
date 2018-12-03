@@ -44,7 +44,7 @@ def start_run():
     ##########################################
     #app = QApplication(sys.argv)
     if cef:
-        sys.excepthook = cef.ExceptHook
+        # sys.excepthook = cef.ExceptHook
         cef.Initialize()
     app = CefApplication(sys.argv)
     splash = QSplashScreen(QPixmap("login.png"))
@@ -91,9 +91,6 @@ def start_run():
         main_ui(ui,app)
     if cef:
         cef.Shutdown()
-
-
-
 
 def run_exe(module,function):
     module_class = getattr(import_module(module), function)
@@ -157,7 +154,7 @@ def is_update(url,log):
 if __name__=="__main__":
     import cgitb
     # 非pycharm编辑器可用输出错误
-    #sys.excepthook = cgitb.Hook(1, None, 5, sys.stderr, 'text')
+    # sys.excepthook = cgitb.Hook(1, None, 5, sys.stderr, 'text')
     cgitb.enable(logdir="./error/",format="text")
     multiprocessing.freeze_support()
     # 启动主进程

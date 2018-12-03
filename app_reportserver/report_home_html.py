@@ -16,10 +16,17 @@ pdf_html_home_page= '''
 <div class="user">
     <div class="user_tag">
         <table class="user_table">
-            <tr>
-                <td class="user_td_label">姓名：</td>
-                <td class="user_td_value">${user['xm']}</td>
-            </tr>
+            % if user['film']:
+                <tr>
+                    <td class="user_td_label">姓名：</td>
+                    <td class="user_td_value">${user['xm']}&nbsp;&nbsp;<img src=${user['film']} /></td>
+                </tr>
+            % else:  
+                <tr>
+                    <td class="user_td_label">姓名：</td>
+                    <td class="user_td_value">${user['xm']}</td>
+                </tr>
+            % endif 
             <tr>
                 <td class="user_td_label">ID号：</td>
                 <td class="user_td_value"><img src=${user['tm']} /></td>
@@ -43,13 +50,7 @@ pdf_html_home_page= '''
             <tr>
                 <td class="user_td_label">日期：</td>
                 <td class="user_td_value">${user['qdrq']}</td>
-            </tr> 
-            % if user['film']:
-                <tr>
-                    <td class="user_td_label">胶片：</td>
-                    <td class="user_td_value"><img src=${user['film']} /></td>
-                </tr>   
-            % endif         
+            </tr>        
         </table>
     </div>
 </div>

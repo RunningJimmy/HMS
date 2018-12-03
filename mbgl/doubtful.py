@@ -15,7 +15,7 @@ class Doubtful(DoubtfulUI):
     def __init__(self):
         super(Doubtful,self).__init__()
         # 绑定信号
-        self.ccb_jb1.currentTextChanged.connect()
+        # self.ccb_jb1.currentTextChanged.connect()
         self.gp_quick_search.returnPressed.connect(self.on_quick_search)  # 快速检索
         self.table_health.itemClicked.connect(self.on_table_set)
         self.btn_export.clicked.connect(self.on_btn_export_click)

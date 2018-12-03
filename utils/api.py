@@ -233,11 +233,11 @@ if __name__=="__main__":
     #sql = "SELECT TJBH FROM TJ_TJDJB WHERE DWBH='16572' AND SUMOVER='1' AND TJBH NOT IN (SELECT TJBH FROM TJ_BGGL) AND SHRQ<'2018-10-01'"
     # 审阅未打印的重新生成
     # sql = "SELECT TJBH FROM TJ_BGGL WHERE BGZT='1' AND SHRQ>='2018-10-01';"
-    sql = "SELECT TJBH FROM TJ_BGGL WHERE BGZT='2' AND SHRQ>='2018-10-16' AND SHRQ<'2018-10-17' AND TJBH NOT IN (SELECT TJBH FROM TJ_TJDJB WHERE dwbh IN ('10396','17804','17763')) "
-    results = session.execute(sql).fetchall()
-    for result in results:
-        request_create_report(result[0], 'pdf')
+    # sql = "SELECT TJBH FROM TJ_BGGL WHERE BGZT='2' AND SHRQ>='2018-10-16' AND SHRQ<'2018-10-17' AND TJBH NOT IN (SELECT TJBH FROM TJ_TJDJB WHERE dwbh IN ('10396','17804','17763')) "
+    # results = session.execute(sql).fetchall()
+    # for result in results:
+    #     request_create_report(result[0], 'pdf')
         #request_create_report(result[0], 'pdf')
     #print(get_barcode_wx('测试5','330227199902040663','13736093866'))
-    # request_create_report('176570130','pdf')
+    request_create_report('174560844','pdf')
     #request_post_wx()

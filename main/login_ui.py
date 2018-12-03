@@ -13,6 +13,7 @@ class Login_UI(QDialog):
         self.initUI()
 
     def initParas(self):
+        # 验证方式
         self.login_title = gol.get_value('login_title', '明州体检')
         self.lgoin_width = gol.get_value('login_width',500)
         self.login_height = gol.get_value('login_height',400)
@@ -40,26 +41,26 @@ class Login_UI(QDialog):
         self.widget.setPalette(palette)
         self.widget.setAutoFillBackground(True)
 
-        mainLayout = QVBoxLayout(self)
-        mainLayout.setAlignment(Qt.AlignCenter)
+        lt_main = QVBoxLayout(self)
+        lt_main.setAlignment(Qt.AlignCenter)
         layout = QFormLayout()
         layout.setLabelAlignment(Qt.AlignRight)
         layout.setFormAlignment(Qt.AlignHCenter|Qt.AlignVCenter)
         # 用户ID
-        self.userid   = LineEdit(None,"", LineEdit.SUCCESS_STYLE)
+        self.lb_user_id   = LineEdit(None,"", LineEdit.SUCCESS_STYLE)
         regx=QRegExp("[a-zA-Z0-9]+$")
-        validator=QRegExpValidator(regx,self.userid)
-        self.userid.setValidator(validator)              #根据正则做限制，只能输入数字
-        self.userid.setMaximumWidth(200)
-        # self.userid.setFocusPolicy(Qt.ClickFocus)
+        validator=QRegExpValidator(regx,self.lb_user_id)
+        self.lb_user_id.setValidator(validator)              #根据正则做限制，只能输入数字
+        self.lb_user_id.setMaximumWidth(200)
+        # self.lb_user_id.setFocusPolicy(Qt.ClickFocus)
         # 用户姓名
-        self.user = LineEdit(None,"", LineEdit.SUCCESS_STYLE)
-        self.user.setDisabled(True)
-        self.user.setMaximumWidth(200)
+        self.lb_user_name = LineEdit(None,"", LineEdit.SUCCESS_STYLE)
+        self.lb_user_name.setDisabled(True)
+        self.lb_user_name.setMaximumWidth(200)
         # 用户密码
-        self.passwd = LineEdit(None,"", LineEdit.SUCCESS_STYLE)
-        self.passwd.setMaximumWidth(200)
-        self.passwd.setEchoMode(QLineEdit.Password)
+        self.lb_user_pd = LineEdit(None,"", LineEdit.SUCCESS_STYLE)
+        self.lb_user_pd.setMaximumWidth(200)
+        self.lb_user_pd.setEchoMode(QLineEdit.Password)
         # 是否自动填充
         self.is_rem=QCheckBox("记住最近登录")
         self.is_rem.setStyleSheet(self.login_font)
@@ -78,8 +79,8 @@ class Login_UI(QDialog):
         else:
             self.is_rem.setChecked(True)
             # 自动填充最近登录信息
-            self.userid.setText(str(gol.get_value('login_user_id', 'BSSA')))
-            self.user.setText(gol.get_value('login_user_name', '管理员'))
+            self.lb_user_id.setText(str(gol.get_value('login_user_id', 'BSSA')))
+            self.lb_user_name.setText(gol.get_value('login_user_name', '管理员'))
 
         if gol.get_value('system_is_equip',0)==0:
             self.is_equip.setChecked(False)
@@ -93,9 +94,9 @@ class Login_UI(QDialog):
         layout0.addStretch()
         login_user = "                       "
         layout.addWidget(QLabel(""))
-        layout.addRow(QLabel("账户："), self.userid)
-        layout.addRow(login_user,self.user)
-        layout.addRow(QLabel("密码："), self.passwd)
+        layout.addRow(QLabel("账户："), self.lb_user_id)
+        layout.addRow(login_user,self.lb_user_name)
+        layout.addRow(QLabel("密码："), self.lb_user_pd)
         layout.addRow(QLabel(""), layout0)
         layout.setHorizontalSpacing(10)
         layout.setVerticalSpacing(10)
@@ -110,47 +111,49 @@ class Login_UI(QDialog):
         # self.buttonBox.buttons()[1].setFocusPolicy(Qt.NoFocus)
 
         # 对登录进行限制
-        if self.user.text():
+        if self.lb_user_name.text():
             self.buttonBox.buttons()[0].setEnabled(True)
         else:
             self.buttonBox.buttons()[0].setEnabled(False)
 
-        self.userid.textEdited.connect(self.set_empty)
-        self.userid.editingFinished.connect(self.user_get)
+        self.lb_user_id.textEdited.connect(self.set_empty)
+        self.lb_user_id.editingFinished.connect(self.user_get)
         self.is_equip.stateChanged.connect(self.on_equip_change)
         self.buttonBox.accepted.connect(self.login)
         self.buttonBox.rejected.connect(self.reject)
 
-        mainLayout.addSpacing(30)
-        mainLayout.addLayout(layout)
-        mainLayout.addSpacing(20)
-        mainLayout.addWidget(self.buttonBox)
-        self.setLayout(mainLayout)
+        lt_main.addSpacing(30)
+        lt_main.addLayout(layout)
+        lt_main.addSpacing(20)
+        lt_main.addWidget(self.buttonBox)
+        self.setLayout(lt_main)
 
     def on_equip_change(self,p_int):
         gol.set_value("system_is_equip",p_int)
 
     def user_get(self):
-        userid = self.userid.text()
-        if userid:
-            try:
-                result = self.session.query(MT_TJ_USER).filter(MT_TJ_USER.xtsb=='101',MT_TJ_USER.yhdm==userid).scalar()
-                if result:
-                    self.user.setText(str2(result.yhmc))
-                    self.buttonBox.buttons()[0].setEnabled(True)
-            except Exception as e:
-                mes_about(self,"连接体检数据库失败！请检查网络！错误信息：%s" %e)
+        user_id = self.lb_user_id.text()
+        if not user_id:
+            mes_about(self,"请输入账户！")
+            return
+        try:
+            result = self.session.query(MT_TJ_USER).filter(MT_TJ_USER.xtsb=='101',MT_TJ_USER.yhdm==user_id).scalar()
+            if result:
+                self.lb_user_name.setText(str2(result.yhmc))
+                self.buttonBox.buttons()[0].setEnabled(True)
+        except Exception as e:
+            mes_about(self,"读取数据库失败！错误信息：%s" %e)
 
     def set_empty(self,p_str):
-        self.userid.setText(p_str.upper())
-        self.user.setText("")
+        self.lb_user_id.setText(p_str.upper())
+        self.lb_user_name.setText("")
         self.buttonBox.buttons()[0].setEnabled(False)
 
     # 验证密码
     def login(self):
-        _user_id=self.userid.text()
-        _user_name = self.user.text()
-        _user_pwd=self.passwd.text()
+        _user_id=self.lb_user_id.text()
+        _user_name = self.lb_user_name.text()
+        _user_pwd=self.lb_user_pd.text()
         if _user_id:
             try:
                 result = self.session.query(MT_TJ_USER).filter(MT_TJ_USER.xtsb == '101', MT_TJ_USER.yhdm == _user_id).filter(or_(MT_TJ_USER.yhkl==_user_pwd,MT_TJ_USER.yhkl==None)).scalar()
