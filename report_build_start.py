@@ -248,7 +248,7 @@ class buildBodyHtml(object):
 
     # 写入体检结果项目
     def write_items(self,items):
-        # from app_reportserver.report_items import write_item_test
+        from app_reportserver.report_items import write_item_test
         # write_item_test(items)
         self.html_obj.write(Template2(pdf_html_item_page).render(items=items))
 
@@ -962,7 +962,7 @@ if __name__ =='__main__':
     import cgitb
     # 非pycharm编辑器可用输出错误
     #sys.excepthook = cgitb.Hook(1, None, 5, sys.stderr, 'text')
-    cgitb.enable(logdir="./error/",format="text")
+    # cgitb.enable(logdir="./error/",format="text")
     from utils.dbconn import get_tjxt_session
     from queue import Queue
     session = get_tjxt_session(
@@ -993,5 +993,5 @@ if __name__ =='__main__':
     # for result in results:
     #     q.put({'tjbh': result[0], 'action': 'pdf'})
     # q.put({'tjbh': '166647427', 'action': 'pdf'})
-    q.put({'tjbh': '165612099', 'action': 'pdf'})
+    q.put({'tjbh': '108261638', 'action': 'pdf'})
     report_run(q)

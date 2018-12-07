@@ -140,6 +140,9 @@ class ReportPrint(ReportPrintUI):
     # 打印
     def on_btn_print_click(self):
         qdrq = self.table_print.getCurItemValueOfKey('qdrq')
+        if not qdrq:
+            mes_about(self,"该顾客还未体检，无报告可下打印！")
+            return
         bgzt = self.table_print.getCurItemValueOfKey('bgzt')
         if not date_compare(qdrq,'2018-10-01'):
             if bgzt in ['','已审核']:
@@ -290,6 +293,9 @@ class ReportPrint(ReportPrintUI):
     # 下载
     def on_btn_down_click(self):
         qdrq = self.table_print.getCurItemValueOfKey('qdrq')
+        if not qdrq:
+            mes_about(self,"该顾客还未体检，无报告可下载！")
+            return
         bgzt = self.table_print.getCurItemValueOfKey('bgzt')
         if not date_compare(qdrq,'2018-10-01'):
             if bgzt in ['','已审核']:

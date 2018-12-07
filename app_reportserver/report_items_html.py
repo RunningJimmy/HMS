@@ -66,9 +66,9 @@ pdf_html_item_page = '''
                         <td colspan="4">
                         <%
                             if jcjl[zhxms[item]]['shrq']:
-                                jl = "检验医生：%s &nbsp;&nbsp;检验日期：%s &nbsp;&nbsp;&nbsp;&nbsp;审核医生：%s &nbsp;&nbsp;审核日期：%s" %(jcjl[zhxms[item]]['jcys'],jcjl[zhxms[item]]['jcrq'],jcjl[zhxms[item]]['shys'],jcjl[zhxms[item]]['shrq'])
+                                jl = "检验：%s &nbsp;&nbsp;检验日期：%s &nbsp;&nbsp;&nbsp;&nbsp;审核：%s &nbsp;&nbsp;审核日期：%s" %(jcjl[zhxms[item]]['jcys'],jcjl[zhxms[item]]['jcrq'],jcjl[zhxms[item]]['shys'],jcjl[zhxms[item]]['shrq'])
                             else:
-                                jl = "检查医生：%s &nbsp;&nbsp;检查日期：%s " %(jcjl[zhxms[item]]['jcys'],jcjl[zhxms[item]]['jcrq'])
+                                jl = "检查：%s &nbsp;&nbsp;检查日期：%s " %(jcjl[zhxms[item]]['jcys'],jcjl[zhxms[item]]['jcrq'])
                         %>
                         ${jl}
                         </td>
@@ -129,9 +129,9 @@ pdf_html_item_page = '''
                         <td colspan="4">
                         <%
                             if jcjl[zhxms[item]]['shrq']:
-                                jl = "检验医生：%s &nbsp;&nbsp;检验日期：%s &nbsp;&nbsp;&nbsp;&nbsp;审核医生：%s &nbsp;&nbsp;审核日期：%s" %(jcjl[zhxms[item]]['jcys'],jcjl[zhxms[item]]['jcrq'],jcjl[zhxms[item]]['shys'],jcjl[zhxms[item]]['shrq'])
+                                jl = "检验：%s &nbsp;&nbsp;检验日期：%s &nbsp;&nbsp;&nbsp;&nbsp;审核：%s &nbsp;&nbsp;审核日期：%s" %(jcjl[zhxms[item]]['jcys'],jcjl[zhxms[item]]['jcrq'],jcjl[zhxms[item]]['shys'],jcjl[zhxms[item]]['shrq'])
                             else:
-                                jl = "检查医生：%s &nbsp;&nbsp;检查日期：%s " %(jcjl[zhxms[item]]['jcys'],jcjl[zhxms[item]]['jcrq'])
+                                jl = "检查：%s &nbsp;&nbsp;检查日期：%s " %(jcjl[zhxms[item]]['jcys'],jcjl[zhxms[item]]['jcrq'])
                         %>
                         ${jl}
                         </td>
@@ -208,9 +208,9 @@ pdf_html_item_page = '''
                             <td colspan="4">
                             <%
                                 if jcjl[zhxms[item]]['shrq']:
-                                    jl = "检验医生：%s &nbsp;&nbsp;检验日期：%s &nbsp;&nbsp;&nbsp;&nbsp;审核医生：%s &nbsp;&nbsp;审核日期：%s" %(jcjl[zhxms[item]]['jcys'],jcjl[zhxms[item]]['jcrq'],jcjl[zhxms[item]]['shys'],jcjl[zhxms[item]]['shrq'])
+                                    jl = "检验：%s &nbsp;&nbsp;检验日期：%s &nbsp;&nbsp;&nbsp;&nbsp;审核：%s &nbsp;&nbsp;审核日期：%s" %(jcjl[zhxms[item]]['jcys'],jcjl[zhxms[item]]['jcrq'],jcjl[zhxms[item]]['shys'],jcjl[zhxms[item]]['shrq'])
                                 else:
-                                    jl = "检查医生：%s &nbsp;&nbsp;检查日期：%s " %(jcjl[zhxms[item]]['jcys'],jcjl[zhxms[item]]['jcrq'])
+                                    jl = "检查：%s &nbsp;&nbsp;检查日期：%s " %(jcjl[zhxms[item]]['jcys'],jcjl[zhxms[item]]['jcrq'])
                             %>
                             ${jl}
                             </td>

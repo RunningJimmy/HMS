@@ -42,7 +42,7 @@ class DoubtfulUI(Widget):
         search_group = QGroupBox('条件检索')
         search_layout = QGridLayout()
         self.cb_jb1 = QCheckBox('台湾专家：')
-        # self.ccb_jb1 = CheckComboBox(list(self.jbbm_1.keys()))
+        #self.ccb_jb1 = CheckComboBox(list(self.jbbm_1.keys()))
         self.ccb_jb1 = ComboCheckBox(list(self.jbbm_1.keys()))
         self.ccb_jb1.setMinimumWidth(150)
         self.cb_jb2 = QCheckBox('本院专家：')

@@ -190,6 +190,25 @@ class Login_UI(QDialog):
                 config_write("custom.ini", "system", system)
                 self.log.info('写入配置(custom.ini)文件成功')
                 self.log.info("用户：%s(%s) 登陆成功！" %(_user_name,_user_id))
+                # 写入登录记录，获取主键ID
+                login_obj = MT_TJ_LOGIN(
+                    login_id = _user_id,
+                    login_name =_user_name,
+                    login_area = gol.get_value('login_area', ''),
+                    login_ip = gol.get_value('host_ip', ''),
+                    login_host = gol.get_value('host_name', ''),
+                    login_in = gol.get_value('login_time', '')
+                )
+                try:
+                    self.session.add(login_obj)
+                    # 先写入数据库，但是不提交 ,此时可获取自增ID
+                    self.session.flush()
+                    gol.set_value('login_lid', login_obj.lid)
+                    self.session.commit()
+                except Exception as e:
+                    self.session.rollback()
+                    mes_about(self, '执行发生错误：%s' % e)
+                # 跳转
                 self.accept()
             else:
                 if _user_name:

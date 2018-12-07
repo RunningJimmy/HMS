@@ -15,9 +15,12 @@ class StatusLabel(QLabel):
 #状态栏
 class StatusBar(QStatusBar):
 
+    online_showed = pyqtSignal(int,int)
+
     def __init__(self):
         super(StatusBar,self).__init__()
         self.initUI()
+        self.online_showed.connect(self.on_login_info_show)
         #定时器
         self.timer = QTimer(self)
         self.timer.start(1000)
@@ -30,6 +33,8 @@ class StatusBar(QStatusBar):
         self.lb_hostname = StatusLabel('主机：%s ' % gol.get_value('host_name','未获取到'))
         self.lb_hostip = StatusLabel('IP：%s ' % gol.get_value('host_ip','未获取到'))
         self.lb_room = StatusLabel('房间：%s ' % gol.get_value('login_area', '未获取到'))
+        self.lb_count_login = StatusLabel('登录用户：')
+        self.lb_count_online = StatusLabel('在线用户：')
         self.lb_handle_mes = StatusLabel()
         self.lb_login_time = StatusLabel(' 登录时间：%s ' % gol.get_value('login_time',''))
         self.lb_cur_time = StatusLabel()
@@ -39,7 +44,9 @@ class StatusBar(QStatusBar):
         self.addWidget(self.lb_hostname)
         self.addWidget(self.lb_hostip)
         self.addWidget(self.lb_room)
-        self.addWidget(self.lb_handle_mes)
+        self.addWidget(self.lb_count_login)
+        self.addWidget(self.lb_count_online)
+        # self.addWidget(self.lb_handle_mes)
         self.addPermanentWidget(self.lb_login_time)
         self.addPermanentWidget(self.lb_cur_time)
 
@@ -49,6 +56,11 @@ class StatusBar(QStatusBar):
 
     def on_change_mes(self,p_str):
         self.handle_mes.setText(p_str)
+
+    # 动态刷新在线人数
+    def on_login_info_show(self,login:int,online:int):
+        self.lb_count_login.setText('登录用户：%s 人' %str(login))
+        self.lb_count_online.setText('在线用户：%s 人' % str(online))
 
 #工具栏
 class ToolBar(QToolBar):

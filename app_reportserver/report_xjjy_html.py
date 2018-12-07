@@ -68,6 +68,7 @@ pdf_html_cachet_page2 ='''
     <%
         zjys = cachet['zjys'] 
         shys = cachet['shys'] 
+        shys2 = cachet['shys2']
         syys = cachet['syys'] 
         warn = cachet['warn'] 
     %>

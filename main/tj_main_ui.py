@@ -1,7 +1,8 @@
 import requests
 from main.main_ui import *
+from .model import *
 from utils import gol
-from utils.base import cur_date,get_system
+from utils.base import cur_date,cur_datetime,get_system
 # 动态模块需加入，打包工具无法检测自省模块，要不然需以源码形式跑
 # 采血留样 管理
 from lis import SampleManager
@@ -49,6 +50,7 @@ class TJ_Main_UI(QMainWindow):
             self.timer_update_thread = AutoUpdateThread(600)
             self.timer_update_thread.setTask(self.url)
             self.timer_update_thread.signalPost.connect(self.update_mes, type=Qt.QueuedConnection)
+            self.timer_update_thread.signalCount.connect(self.online_count_show, type=Qt.QueuedConnection)
             self.timer_update_thread.start()
 
     # 初始化界面
@@ -72,6 +74,9 @@ class TJ_Main_UI(QMainWindow):
         self.update_timer = gol.get_value('update_timer',360)
         self.user_menu_sid = gol.get_value('menu_sid',5001)
         self.login_id = gol.get_value('login_user_id')
+        self.session = gol.get_value('tjxt_session_local', '')
+        self.login_name = gol.get_value('login_user_name', '')
+        self.login_time = gol.get_value('login_time', '')
         sys_version = gol.get_value('system_version', 1.0)
         update_url = gol.get_value('system_update', "http://10.7.200.101:5005/api/version/%s/%s")
         self.url = update_url % (get_system(), sys_version)
@@ -86,7 +91,6 @@ class TJ_Main_UI(QMainWindow):
     def openWidget(self,action):
         module = action.module
         class_name = action.cls_name   # 必须在上一句后面，因为才赋值
-        #print(module,class_name)
         if module and class_name:
             # if class_name=='DN_MeritPay' and self.login_id=='BSSA':
             #     mes_about(self,"对不起，您没有该功能权限，请联系管理员！")
@@ -108,19 +112,7 @@ class TJ_Main_UI(QMainWindow):
             # # 未关闭
             getattr(self, class_name).setFocus()
         else:
-            print(44444444444)
-
-    # #打开OA，临时解决 无法最大化的问题
-    # def open_oa(self):
-    #     if not hasattr(self, "widget1"):
-    #         self.widget1 = OaUI('OA办公')
-    #         self.mdiArea.addSubWindow(self.widget1)
-    #         self.widget1.showMaximized()
-    #     elif self.widget1.status:   #窗口被关闭了
-    #         self.widget1 = Detail_UI(ToolButton1)
-    #         self.mdiArea.addSubWindow(self.widget1)
-    #         self.widget1.showMaximized()
-    #     self.widget1.setFocus()
+            mes_about(self,"该模块不存在，请联系管理员！")
 
     # 注销
     def login_out(self):
@@ -169,8 +161,8 @@ class TJ_Main_UI(QMainWindow):
             # log.info("准备更新程序，启动更新进程失败，错误信息：%s" % e)
             return
 
-    def on_status_widget_show(self,p_str:str):
-        self.statusBar().on_change_mes(p_str)
+    def online_count_show(self,p1_int,p2_int):
+        self.statusBar().on_login_info_show(p1_int,p2_int)
 
     def closeEvent(self, QEvent):
         button = mes_warn(self, "温馨提示：您确认退出系统吗？")
@@ -179,6 +171,16 @@ class TJ_Main_UI(QMainWindow):
             return
         else:
             QEvent.accept()
+        try:
+            self.session.query(MT_TJ_LOGIN).filter(MT_TJ_LOGIN.login_id == self.login_id,
+                                                   MT_TJ_LOGIN.lid == gol.get_value('login_lid',0)
+                                                   ).update({
+                MT_TJ_LOGIN.login_out:cur_datetime()
+            })
+            self.session.commit()
+        except Exception as e:
+            self.session.rollback()
+            mes_about(self, '执行发生错误：%s' % e)
 
         super(TJ_Main_UI, self).closeEvent(QEvent)
         try:
@@ -195,38 +197,50 @@ class TJ_Main_UI(QMainWindow):
 class AutoUpdateThread(QThread):
 
     # 定义信号,定义参数为str类型
-    signalPost = pyqtSignal(str,str)     # 更新界面
+    signalPost = pyqtSignal(str, str)     # 更新界面
+    signalCount = pyqtSignal(int, int)  # 更新界面
     signalExit = pyqtSignal()
 
     def __init__(self,timer=360):
         super(AutoUpdateThread, self).__init__()
         self.running = False
         self.timer = timer
-        # self.api_url = gol.get_value('api_version') % str(gol.get_value('system_version'))
-        # self.update_path = '%s/%s' %(gol.get_value('app_path') ,gol.get_value('update_path'))   # 更新目录
+        self.session = gol.get_value("tjxt_session_local")
 
     def setTask(self,url):
         self.url = url
         self.running = True
+        self.count = 0
 
     def stop(self):
         self.running = False
 
     def run(self):
         while self.running:
-            try:
-                response = requests.get(self.url)
-                if response.status_code == 200:
-                    describe = response.json()['describe']
-                    version = response.json()['version']
-                    self.signalPost.emit(str(version),describe)
-                # 先下载到本地，提示是否更新
-                # result = request_get(self.api_url,os.path.join(self.update_path,'%s.rar' %cur_date()))
-                # if result:
-                #     self.signalPost.emit('程序已有新版，单击YES后将自动更新完成！')
-            except Exception as e:
-                print(e)
-            time.sleep(self.timer)
+            if self.count==0:
+                try:
+                    print("请求")
+                    response = requests.get(self.url)
+                    if response.status_code == 200:
+                        describe = response.json()['describe']
+                        version = response.json()['version']
+                        self.signalPost.emit(str(version),describe)
+                except Exception as e:
+                    print(e)
+
+            # count_login = 0
+            # count_online = 0
+            count_login = self.session.query(func.count(distinct(MT_TJ_LOGIN.login_id))).filter(MT_TJ_LOGIN.login_in >= cur_date()).scalar()
+            count_online = self.session.query(func.count(distinct(MT_TJ_LOGIN.login_id))).filter(MT_TJ_LOGIN.login_in >= cur_date(),
+                                                                                                 MT_TJ_LOGIN.login_out==None).scalar()
+            self.signalCount.emit(count_login,count_online)
+
+            time.sleep(30)
+            if self.count==30:
+                self.count = 0
+            else:
+                self.count = self.count + 1
+            # time.sleep(self.timer)
 
 # 程序错误监控线程
 class MonitorThread(QThread):
