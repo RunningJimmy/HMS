@@ -3,6 +3,7 @@ from .model import *
 from .report_item_ui import ItemsStateUI
 from utils import request_get,print_pdf_gsprint,cur_datetime,request_create_report
 from widgets.bweb import WebView
+from statistics import SumRankOrder
 import webbrowser
 from .common import *
 from widgets import QBrowser
@@ -20,6 +21,7 @@ class ReportPrint(ReportPrintUI):
         self.btn_receive.clicked.connect(self.on_btn_receive_click)
         self.btn_order.clicked.connect(self.on_btn_order_click)
         self.btn_rebuild.clicked.connect(self.on_btn_rebuild_click)
+        self.btn_statistics.clicked.connect(self.on_btn_statistics_click)
         # 右键、双击、单击
         self.table_print.setContextMenuPolicy(Qt.CustomContextMenu)  ######允许右键产生子菜单
         self.table_print.customContextMenuRequested.connect(self.onTableMenu)   ####右键菜单
@@ -680,6 +682,12 @@ class ReportPrint(ReportPrintUI):
         self.browser.open_url.emit(title, url)
         self.browser.show()
 
+    # 打开排行榜
+    def on_btn_statistics_click(self):
+        ui = SumRankOrder(self)
+        ui.opened.emit()
+        ui.exec_()
+
 class PdfDialog(QDialog):
 
     urlChange = pyqtSignal(str)
@@ -1098,3 +1106,4 @@ def date_compare(date1:str,date2:str):
     s_time = time.mktime(time.strptime(date1,'%Y-%m-%d'))
     t_time = time.mktime(time.strptime(date2,'%Y-%m-%d'))
     return int(s_time) - int(t_time)
+

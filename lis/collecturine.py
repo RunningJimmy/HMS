@@ -195,10 +195,15 @@ class CollectUrine(CollectUrine_UI):
         if not btn_type:
             self.data_obj['jllx'] = '0010'
             self.data_obj['jlmc'] = '抽血'
+            zxzt = '4'
+        else:
+            self.data_obj['jllx'] = '0011'
+            self.data_obj['jlmc'] = '留样'
+            zxzt = '5'
         try:
             self.session.bulk_insert_mappings(MT_TJ_CZJLB, [self.data_obj])
             self.session.query(MT_TJ_TJJLMXB).filter(MT_TJ_TJJLMXB.tjbh == btn_tjbh,
-                                                     MT_TJ_TJJLMXB.tmbh1 == btn_no).update({MT_TJ_TJJLMXB.zxpb: '5'})
+                                                     MT_TJ_TJJLMXB.tmbh1 == btn_no).update({MT_TJ_TJJLMXB.zxpb: zxzt})
             self.session.commit()
         except Exception as e:
             mes_about(self,'插入 TJ_CZJLB 记录失败！错误代码：%s' %e)

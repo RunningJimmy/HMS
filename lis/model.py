@@ -5,6 +5,17 @@ import time
 def cur_datetime():
     return time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(int(time.time())))
 
+def cur_time():
+    return time.strftime("%Y-%m-%d %H:%M", time.localtime(int(time.time())))
+
+def cur_date(count=0):
+    interval = 86400
+    return time.strftime("%Y-%m-%d", time.localtime(int(time.time())+count*interval))
+
+def cur_date2():
+    date = time.strftime("%Y%m%d", time.localtime(int(time.time())))
+    return date[2:]
+
 class MV_CX_ALL(BaseModel):
 
     __tablename__ = 'V_CX_ALL'

@@ -8,14 +8,21 @@ import time
 
 class StatusLabel(QLabel):
 
+    # 哪个标签被单击了
+    clicked = pyqtSignal(str)
+
     def __init__(self,p_str=None,parent=None):
         super(StatusLabel,self).__init__(p_str,parent)
         self.setStyleSheet('''font: 75 11pt \"微软雅黑\";color: rgb(255, 255, 255);''')
+
+    def mousePressEvent(self, QMouseEvent):
+        self.clicked.emit(self.text())
 
 #状态栏
 class StatusBar(QStatusBar):
 
     online_showed = pyqtSignal(int,int)
+    label_clicked = pyqtSignal(str)
 
     def __init__(self):
         super(StatusBar,self).__init__()
@@ -28,13 +35,18 @@ class StatusBar(QStatusBar):
 
     # 初始化界面
     def initUI(self):
-        self.lb_version = StatusLabel('版本：V%s' %gol.get_value('system_version',''))
+        self.lb_version = StatusLabel('版本：v%s' %gol.get_value('system_version',''))
+        self.lb_version.clicked.connect(self.label_clicked)
         self.lb_login = StatusLabel('用户：%s '%gol.get_value('login_user_name',''))
+        self.lb_login.clicked.connect(self.label_clicked)
         self.lb_hostname = StatusLabel('主机：%s ' % gol.get_value('host_name','未获取到'))
         self.lb_hostip = StatusLabel('IP：%s ' % gol.get_value('host_ip','未获取到'))
         self.lb_room = StatusLabel('房间：%s ' % gol.get_value('login_area', '未获取到'))
-        self.lb_count_login = StatusLabel('登录用户：')
-        self.lb_count_online = StatusLabel('在线用户：')
+        self.lb_room.clicked.connect(self.label_clicked)
+        self.lb_count_login = StatusLabel('登录：')
+        self.lb_count_login.clicked.connect(self.label_clicked)
+        self.lb_count_online = StatusLabel('在线：')
+        self.lb_count_online.clicked.connect(self.label_clicked)
         self.lb_handle_mes = StatusLabel()
         self.lb_login_time = StatusLabel(' 登录时间：%s ' % gol.get_value('login_time',''))
         self.lb_cur_time = StatusLabel()
@@ -59,8 +71,12 @@ class StatusBar(QStatusBar):
 
     # 动态刷新在线人数
     def on_login_info_show(self,login:int,online:int):
-        self.lb_count_login.setText('登录用户：%s 人' %str(login))
-        self.lb_count_online.setText('在线用户：%s 人' % str(online))
+        self.lb_count_login.setText('登录：%s 人' %str(login))
+        self.lb_count_online.setText('在线：%s 人' % str(online))
+
+    def set_lable_text(self,p1_str):
+        self.lb_room.setText('房间：%s '%p1_str)
+
 
 #工具栏
 class ToolBar(QToolBar):

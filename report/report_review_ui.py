@@ -28,8 +28,9 @@ class ReportReviewUI(Widget):
         self.btn_review_mode2 = ToolButton(Icon('全屏'), '大屏审阅')
 
         self.gp_where_search = BaseCondiSearchGroup(1)
-        self.gp_where_search.setText('审核日期')
-        self.gp_where_search.setNoChoice()
+        self.gp_where_search.addDateItems(['签到日期','审核日期'])
+        self.gp_where_search.setText('签到日期')
+        # self.gp_where_search.setNoChoice()
         # 报告状态
         self.cb_report_state = ReportStateGroup()
         self.cb_report_state.addStates(['所有','未审阅','已审阅','老未打/新未审'])

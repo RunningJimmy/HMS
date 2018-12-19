@@ -663,7 +663,7 @@ class CollectHandoverTable(TableWidget):
                         # 已签收
                         else:
                             self.collect_simple['yqs'] = self.collect_simple['yqs'] + row_data[4]
-                    print(self.collect_simple)
+                    # print(self.collect_simple)
                     self.collect_simples.append(self.collect_simple)
                 # 历史修改
                 # if col_index ==3:   #试管颜色
@@ -2287,6 +2287,12 @@ class BaseCondiSearchGroup(QGroupBox):
     def setText(self,p_str):
         self.s_date.jsrq.setCurrentText(p_str)
 
+    def getText(self):
+        return self.s_date.jsrq.currentText()
+
+    def addDateItems(self,dates:list):
+        self.s_date.jsrq.clear()
+        self.s_date.jsrq.addItems(dates)
 
 # 公共条件搜索
 # 日期：签到、收单、总检、审核、审阅

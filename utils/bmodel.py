@@ -13,6 +13,30 @@ BaseModel = declarative_base()
 2）MV_ 表示视图   其中 M表示model  V表示view
 '''
 
+#用户登录信息表
+class MT_TJ_LOGIN(BaseModel):
+
+    __tablename__ = 'TJ_LOGIN'
+
+    lid= Column(Integer, primary_key=True, autoincrement=True)
+    login_id = Column(VARCHAR(10),nullable=True)
+    login_name = Column(VARCHAR(10),nullable=True)
+    login_area = Column(VARCHAR(20),nullable=True)
+    login_in = Column(DateTime,nullable=True)
+    login_out = Column(DateTime, nullable=False)
+    login_interval = Column(INTEGER, nullable=False)
+    login_ip = Column(VARCHAR(15), nullable=True)
+    login_host = Column(VARCHAR(50), nullable=True)
+
+    def to_dict(self):
+        return {
+            'login_name':getattr(self, "login_name"),
+            'login_area': getattr(self, "login_area"),
+            'login_in': getattr(self, "login_in"),
+            'login_ip': getattr(self, "login_ip"),
+            'login_host': getattr(self, "login_host")
+        }
+
 #代码字典
 class MT_GY_DMZD(BaseModel):
 
@@ -30,6 +54,17 @@ class MT_TJ_YGDM(BaseModel):
 
     yggh = Column(VARCHAR(20),primary_key=True)
     ygxm = Column(VARCHAR(40),nullable=False)
+
+
+#自增表
+class MT_GY_IDENTITY(BaseModel):
+
+    __tablename__ = 'GY_IDENTITY'
+
+    tname = Column(VARCHAR(30),primary_key=True)
+    value = Column(Numeric(18),nullable=True)
+    origin_value = Column(INTEGER, nullable=True)
+    inc_value = Column(INTEGER, nullable=True)
 
 
 #用户科室表
@@ -234,6 +269,15 @@ class MT_TJ_CZJLB(BaseModel):
     jssj = Column(DateTime, nullable=False)                                 # 签收时间
     sjfs = Column(VARCHAR(20), nullable=False)                              # 送检人员
 
+    @property
+    def is_done(self):
+        return {
+            'tmzt':True if getattr(self, "jjsj") else False,
+            'sgys': str2(getattr(self, "bz")),
+            'tjbh': getattr(self, "tjbh"),
+            'tmbh': getattr(self, "mxbh"),
+            'xmhz': str2(getattr(self, "jlnr"))
+        }
 
     @property
     def to_dict(self):
@@ -252,6 +296,7 @@ class MT_TJ_CZJLB(BaseModel):
             'jsxm': str2(getattr(self, "jsxm")),
             'jssj': self.jssj_value,
             'sjfs': str2(getattr(self, "sjfs")),
+            'tmxm': str2(getattr(self, "jlnr")),
             'ck':'查看'
         }
 

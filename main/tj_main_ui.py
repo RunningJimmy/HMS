@@ -1,7 +1,7 @@
 import requests
-from main.main_ui import *
+from .main_ui import *
 from .model import *
-from utils import gol
+from utils import gol,config_write
 from utils.base import cur_date,cur_datetime,get_system
 # 动态模块需加入，打包工具无法检测自省模块，要不然需以源码形式跑
 # 采血留样 管理
@@ -17,7 +17,7 @@ from result import ResultManager
 # 加入VIP 管理
 from vip import VipManager
 # 加入绩效
-from statistics import DN_MeritPay
+from statistics import DN_MeritPay,LoginUserUI,LoginInUI
 # 体检登记
 from register import RegisterManager
 # OA
@@ -45,6 +45,8 @@ class TJ_Main_UI(QMainWindow):
         else:
             mes_about(self,'用户登录默认界面配置不正确或者未开放，按钮SID是%s' %str(self.user_menu_sid))
 
+        # 绑定信号槽
+        self.statusBar().label_clicked.connect(self.on_status_bar_click)
         # 启动自动更新线程
         if self.update_auto:
             self.timer_update_thread = AutoUpdateThread(600)
@@ -52,6 +54,7 @@ class TJ_Main_UI(QMainWindow):
             self.timer_update_thread.signalPost.connect(self.update_mes, type=Qt.QueuedConnection)
             self.timer_update_thread.signalCount.connect(self.online_count_show, type=Qt.QueuedConnection)
             self.timer_update_thread.start()
+
 
     # 初始化界面
     def initUI(self):
@@ -86,6 +89,33 @@ class TJ_Main_UI(QMainWindow):
 
     def initMenuBar(self):
         self.setMenuBar(MenuBar(self))
+
+    # 状态栏标签被点击
+    def on_status_bar_click(self,p1_str):
+        if '登录' in p1_str:
+            ui = LoginUserUI(self)
+            ui.opened.emit()
+            ui.exec_()
+        elif '在线' in p1_str:
+            ui = LoginInUI(self)
+            ui.opened.emit(cur_date())
+            ui.exec_()
+        elif '房间' in p1_str:
+            text, ok = QInputDialog.getText(self, '明州体检', '房间名称更改：', QLineEdit.Normal, '')
+            if ok and text:
+                # 写入配置
+                login_cfg={"area":text}
+                config_write("custom.ini", "login", login_cfg)
+                # 刷新缓存
+                gol.set_value('login_area',text)
+                # 刷新UI
+                self.statusBar().set_lable_text(text)
+        elif '版本' in p1_str:
+            print("查看版本记录")
+        elif '用户' in p1_str:
+            text, ok = QInputDialog.getText(self, '明州体检', '密码更改：', QLineEdit.Normal, '')
+            if ok and text:
+                print(text)
 
     # 打开中央窗口
     def openWidget(self,action):
@@ -161,6 +191,7 @@ class TJ_Main_UI(QMainWindow):
             # log.info("准备更新程序，启动更新进程失败，错误信息：%s" % e)
             return
 
+    # 定时刷新登录用户、在线用户
     def online_count_show(self,p1_int,p2_int):
         self.statusBar().on_login_info_show(p1_int,p2_int)
 

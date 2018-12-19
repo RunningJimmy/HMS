@@ -23,6 +23,7 @@ class BarCodeBuild(object):
                "font_size":10,          # 在PT下的文本大小为整数。默认值为10
                "text_distance": 0.5,    # 条形码与它下面的文本之间的距离为浮点。默认值为5。
                "center_text":True,      # 条形码下面文本是否居中
+               "write_text":True,
                "text":"测试",
                "background":'white',    # 创建的条形码的背景颜色为字符串。默认为白色 white
                "foreground":'black'     # 创建的条形码的前景颜色为字符串。默认为黑色 black
@@ -79,7 +80,7 @@ class BarCodeBuild(object):
         return ean.save(os.path.join(self.path,serialno), options=self.option1)
 
 if __name__=="__main__":
-    bc= BarCodeBuild()
+    bc= BarCodeBuild(path=r'C:/Users/Administrator/Desktop/')
     print(bc.create('123456789'))
 
 

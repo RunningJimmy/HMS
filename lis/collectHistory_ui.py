@@ -58,7 +58,7 @@ class CollectHistory_UI(Widget):
                                 ("czqy", "采集区域"),
                                 ("jjxm", "交接护士"),
                                 ("jjsj", "交接时间"),
-                                ("sjfs", "送检人员"),
+                                ("sjfs", "封盘条码"),
                                 ("jsxm", "签收人员"),
                                 ("jssj", "签收时间"),
                                 ("ck", "")

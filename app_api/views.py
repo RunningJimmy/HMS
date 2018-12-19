@@ -11,6 +11,8 @@ from utils import gol,str2
 from app_api.dbconn import *
 import win32api,shutil
 import win32print
+from pyecharts import Bar
+from collections import OrderedDict
 
 # 初始化视图
 def init_views(app,db,print_queue=None,report_queue=None):
@@ -51,6 +53,17 @@ def init_views(app,db,print_queue=None,report_queue=None):
     #     f.save(os.path.join(app.config['UPLOADED_PATH'], f.filename))
     #     url = url_for('uploaded_files', filename=f.filename)
     #     return upload_success(url=url)
+
+    @app.route('/api/chart/<string:title>/<string:start>/<string:end>')
+    def chart_show(title,start,end):
+        datas = get_datas(db.session,title,start,end)
+        bar = build_chart(title,datas)
+        ret_html = render_template('pyecharts.html',
+                                   myechart=bar.render_embed(),
+                                   mytitle=u"明州体检",
+                                   host='/static',
+                                   script_list=bar.get_js_dependencies())
+        return ret_html
 
     # 外出体检API 用户名获取
     @app.route('/api/wctj/user/<string:user_id>', methods=['GET'])
@@ -780,7 +793,47 @@ def update_print_record(session,tjbh,login_id,login_name,addr):
     except Exception as e:
         print(e)
 
-# class PostForm(FlaskForm):
-#     title = StringField('Title')
-#     body = CKEditorField('Body', validators=[DataRequired()])
-#     submit = SubmitField()
+# 构建图
+def build_chart(title: str, datas: dict):
+    axis_x = [str2(key) for key in datas.keys()]
+    axis_y = list(datas.values())
+    bar = Bar()
+    # 通用配置项都在add()中进行配置 具体见官网 http://pyecharts.org/#/
+    bar.add(title, axis_x, axis_y, is_more_utils=True, xaxis_rotate=90)
+    return bar
+
+def get_datas(session,title,tstart,tend):
+    if title == '报告审阅':
+        sql = "SELECT SYXM,COUNT(SYXM) AS RC FROM TJ_BGGL WHERE SYRQ>='%s' AND SYRQ<'%s' AND SYXM IS NOT NULL GROUP BY SYXM ORDER BY COUNT(SYXM) ASC;" % (
+        tstart, tend)
+    elif title == '报告打印':
+        sql = "SELECT DYXM,COUNT(DYXM) AS RC FROM TJ_BGGL WHERE DYRQ>='%s' AND DYRQ<'%s' AND DYXM IS NOT NULL GROUP BY DYXM ORDER BY COUNT(DYXM) ASC;" % (
+        tstart, tend)
+    elif title == "报告整理":
+        sql = "SELECT ZLXM,COUNT(ZLXM) AS RC FROM TJ_BGGL WHERE ZLRQ>='%s' AND ZLRQ<'%s' AND ZLXM IS NOT NULL GROUP BY ZLXM ORDER BY COUNT(ZLXM) ASC;" % (
+        tstart, tend)
+    elif title == "报告追踪":
+        sql = "SELECT CZXM,COUNT(CZXM) AS RC FROM TJ_CZJLB WHERE CZSJ>='%s' AND CZSJ<'%s' AND JLLX='0030' GROUP BY CZXM ORDER BY COUNT(CZXM); " % (
+        tstart, tend)
+    elif title == "样本采集":
+        sql = "SELECT CZXM,COUNT(CZXM) AS RC FROM TJ_CZJLB WHERE CZSJ>='%s' AND CZSJ<'%s' AND JLLX='0010' GROUP BY CZXM ORDER BY COUNT(CZXM); " % (
+        tstart, tend)
+    elif title == "呼气检查":
+        sql = "SELECT CZXM,COUNT(CZXM) AS RC FROM TJ_CZJLB WHERE CZSJ>='%s' AND CZSJ<'%s' AND JLLX='0026' AND SJFS='4' GROUP BY CZXM ORDER BY COUNT(CZXM); " % (
+        tstart, tend)
+    elif title == "心电图检查":
+        sql = "SELECT CZXM,COUNT(CZXM) AS RC FROM TJ_CZJLB WHERE CZSJ>='%s' AND CZSJ<'%s' AND JLLX='0021' GROUP BY CZXM ORDER BY COUNT(CZXM); " % (
+        tstart, tend)
+    elif title == "骨密度检查":
+        sql = "SELECT CZXM,COUNT(CZXM) AS RC FROM TJ_CZJLB WHERE CZSJ>='%s' AND CZSJ<'%s' AND JLLX='0020' GROUP BY CZXM ORDER BY COUNT(CZXM); " % (
+        tstart, tend)
+
+    elif title == '登录人数':
+        sql = ''' SELECT login_date,COUNT(login_name) as rc 
+        FROM (SELECT DISTINCT substring(convert(char,login_in,120),1,10) as login_date, login_name from TJ_LOGIN WHERE login_in>='%s' AND login_in<'%s'
+        ) AS tmp GROUP BY login_date ''' %(tstart, tend)
+    else:
+        sql =None
+        return
+    results = session.execute(sql).fetchall()
+    return OrderedDict(results)

@@ -238,7 +238,7 @@ class CollectHandover(CollectHandover_UI):
                                                                  ).all()
 
         self.table_handover_detail.load((result.detail for result in results))
-        self.gp_middle_right.setTitle('样本采集明细(%s)' %self.table_handover_detail.rowCount(),)
+        self.gp_middle_right.setTitle('样本采集明细(%s)' %self.table_handover_detail.rowCount())
 
     # 获取 待交接、待签收、完成 详情
     def on_btn_query_detail(self,data1:dict,data2:dict,data3:dict):

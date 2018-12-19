@@ -204,6 +204,15 @@ def request_create_report(tjbh,filetype='html'):
         print('API：%s 上传请求失败！' % url)
         return False
 
+def request_chart_get(title,tstart,tend):
+    default_url = "http://10.7.200.101:5005/api/chart/%s/%s/%s" %(title,tstart,tend)
+    config_url = gol.get_value('api_chart_show',None)
+    if config_url:
+        url = config_url  %(title,tstart,tend)
+    else:
+        url = default_url
+    response = requests.get(url)
+    return response
 
 
 

@@ -5,7 +5,7 @@ from utils import gol
 class SampleManager(DirTabWidget):
 
     def __init__(self):
-        nodes= ['抽血采集','留样采集','样本交接','历史查询']
+        nodes= ['抽血采集','留样采集','样本签收','历史交接','历史采集']
         super(SampleManager,self).__init__('采血台',nodes)
         default_menu_name = gol.get_value('menu_child_name','')
         if default_menu_name in nodes:
@@ -23,15 +23,20 @@ class SampleManager(DirTabWidget):
             widget=CollectUrine()
             self.rwidget.addPage(widget,Icon(title),title)
 
-        elif title=='样本交接':
+        elif title=='样本签收':
+            from lis.collectSignFor import CollectSignFor
+            widget=CollectSignFor()
+            self.rwidget.addPage(widget,Icon("样本交接"),title)
+
+        elif title=='历史交接':
             from lis.collectHandover import CollectHandover
             widget=CollectHandover()
-            self.rwidget.addPage(widget,Icon(title),title)
+            self.rwidget.addPage(widget,Icon("样本交接"),title)
 
-        elif title=='历史查询':
+        elif title=='历史采集':
             from lis.collectHistory import CollectHistory
             widget=CollectHistory()
-            self.rwidget.addPage(widget,Icon(title),title)
+            self.rwidget.addPage(widget,Icon("历史查询"),title)
 
     def closeEvent(self, *args, **kwargs):
         super(SampleManager, self).closeEvent(*args, **kwargs)

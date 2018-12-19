@@ -13,11 +13,17 @@ class CollectBlood(GolParasMixin,CollectBlood_UI):
         super(CollectBlood,self).__init__("采血台")
         self.init()
         self.initParas()
-        self.serialno.returnPressed.connect(self.serialno_validate)
+        # 绑定信号槽
+        self.le_serialno.returnPressed.connect(self.serialno_validate)
         self.btn_take_photo.clicked.connect(self.on_btn_photo_take)
+        self.btn_handover.clicked.connect(self.on_btn_handover_click)
+        self.blood_table.doubleClicked.connect(self.on_blood_table_click)
 
     # 初始化 页面参数
     def initParas(self):
+        # 黄管、紫红管 采集每到100个 自动弹窗打印提醒 其他管子到不了100管，手工封盘打印
+        self.pipe_yellow = 0
+        self.pipe_red = 0
         # 上传队列
         self.queue_upload = Queue()
         # 条码横向排列个数 默认5
@@ -33,7 +39,8 @@ class CollectBlood(GolParasMixin,CollectBlood_UI):
         # 待插入的 数据对象
         self.data_obj = {'jllx':'0010','jlmc':'抽血','tjbh':'','mxbh':'',
                          'czgh':self.login_id,'czxm':self.login_name,'czqy':self.login_area,'jlnr':None,'bz':None}
-
+        # 是否打开摄像头
+        self.timer_upload_thread = None
         if self.camera:
             if self.camera.cap.isOpened():
                 # 如果摄像头打开了，则开启上传线程
@@ -41,8 +48,37 @@ class CollectBlood(GolParasMixin,CollectBlood_UI):
                     #self.timer_upload_thread.signalUploadState.connect(self.refresh_upload_state, type=Qt.QueuedConnection)
                     self.timer_upload_thread.start()
 
+        # 是否打开本人当日采血清单
+        results = self.session.query(MT_TJ_CZJLB).filter(MT_TJ_CZJLB.jllx=='0010',
+                                                         MT_TJ_CZJLB.czsj>=cur_date(),
+                                                         MT_TJ_CZJLB.czgh==self.login_id).all()
+
+        self.blood_table.load([result.is_done for result in results])
+        self.pipe_yellow,self.pipe_red = self.blood_table.get_num
+        # print(self.pipe_yellow,self.pipe_red)
+        if self.pipe_yellow-100 >= 0 or self.pipe_red-100 >= 0:
+            mes_about(self,"当前采血列表有试管超过100管，请进行封盘条码打印！")
+            self.on_btn_handover_click()
+        self.left_middle_gp.setTitle('采血列表（%s）' % str(self.blood_table.rowCount()))
+
+    # 双击查看
+    def on_blood_table_click(self,QModelIndex):
+        tjbh = self.blood_table.getItemValueOfKey(QModelIndex.row(),'tjbh')
+        if self.user_id.text()==tjbh:
+            return
+        self.le_serialno.setText(tjbh)
+        self.cb_is_photo.setChecked(False)
+        self.serialno_validate()
+        self.cb_is_photo.setChecked(True)
+
+    # 打开样本交接
+    def on_btn_handover_click(self):
+        collect_handle_ui = CollectHandleUI(self)
+        collect_handle_ui.query.emit(self.login_id)
+        collect_handle_ui.exec_()
+
     def serialno_validate(self):
-        hm = self.serialno.text()
+        hm = self.le_serialno.text()
         if len(hm)<9:
             mes_about(self, "请输入正确的体检编号/条码编号！")
 
@@ -64,9 +100,9 @@ class CollectBlood(GolParasMixin,CollectBlood_UI):
                 if hm in list(self.all_serialno.keys()):
                     # 是同一人
                     button = self.all_serialno[hm]
-                    self.refreshSerial(button)
-                    self.on_blood_table_insert(button)
-                    self.serialno.setText('')
+                    if self.refreshSerial(button):
+                        self.on_blood_table_insert(button)
+                    self.le_serialno.setText('')
                     return
             # self.all_serialno 为空 说明 还未刷单，刚打开
             # hm not in list(self.all_serialno.keys()) 说明 不是同一个人
@@ -76,8 +112,8 @@ class CollectBlood(GolParasMixin,CollectBlood_UI):
                 if self.refresh_ryxx(tjbh):
                     self.refreshAllSerialNo(tjbh)
                     button = self.all_serialno[hm]
-                    self.refreshSerial(button)
-                    self.on_blood_table_insert(button)
+                    if self.refreshSerial(button):
+                        self.on_blood_table_insert(button)
                     # 拍照 是否应该获取历史拍照记录
                     try:
                         if self.cb_is_photo.isChecked():
@@ -87,7 +123,7 @@ class CollectBlood(GolParasMixin,CollectBlood_UI):
             else:
                 mes_about(self,'请输入正确的体检编号/条码编号！')
 
-        self.serialno.setText('')
+        self.le_serialno.setText('')
 
     # 刷新数据
     def refresh_ryxx(self,tjbh):
@@ -126,7 +162,7 @@ class CollectBlood(GolParasMixin,CollectBlood_UI):
                 message = message + '该顾客有餐后血糖（OGTT），请您提醒：先留尿，再喝糖水！ \r\n'
             if message:
                 self.widget3 = PreviewWidget(message)
-                self.serialno.setFocus()
+                self.le_serialno.setFocus()
             return True
         else:
             mes_about(self,'请输入正确的体检编号/条码编号！')
@@ -162,7 +198,7 @@ class CollectBlood(GolParasMixin,CollectBlood_UI):
             btn_name = result[2]        # 条码对应项目组
             btn_state = result[-2]      # 条码状态：是否已抽、已采集
             btn_state2 = result[-1]      # 条码状态：是否已拒检
-            print(btn_name,btn_state2)
+            # print(btn_name,btn_state2)
             # 生成按钮
             if not btn_state:
                 filename=self.barCodeBuild.create(btn_no)       # 采集过就变色
@@ -226,17 +262,17 @@ class CollectBlood(GolParasMixin,CollectBlood_UI):
         self.layout3.setHorizontalSpacing(10)               # 设置水平间距
         self.layout3.setVerticalSpacing(10)                 # 设置垂直间距
         self.layout3.setContentsMargins(10, 10, 10, 10)     # 设置外间距
-        self.layout3.setColumnStretch(size, 1)                 # 设置列宽，添加空白项的
+        self.layout3.setColumnStretch(size, 1)              # 设置列宽，添加空白项的
 
         self.layout4.setHorizontalSpacing(10)               # 设置水平间距
         self.layout4.setVerticalSpacing(10)                 # 设置垂直间距
         self.layout4.setContentsMargins(10, 10, 10, 10)     # 设置外间距
-        self.layout4.setColumnStretch(size, 1)                 # 设置列宽，添加空白项的
+        self.layout4.setColumnStretch(size, 1)              # 设置列宽，添加空白项的
 
         self.layout5.setHorizontalSpacing(10)               # 设置水平间距
         self.layout5.setVerticalSpacing(10)                 # 设置垂直间距
         self.layout5.setContentsMargins(10, 10, 10, 10)     # 设置外间距
-        self.layout5.setColumnStretch(size, 1)                 # 设置列宽，添加空白项的
+        self.layout5.setColumnStretch(size, 1)              # 设置列宽，添加空白项的
 
         self.ser_all.setText("%s" % str(tm_num))
         self.ser_cx.setText("%s" % str(cx_num))
@@ -249,11 +285,14 @@ class CollectBlood(GolParasMixin,CollectBlood_UI):
     def refreshSerial(self,button):
         # 已采集
         if button.collectState:
-            dialog = mes_warn(self, '该条码已采集，是否重新扫码采集？')
-            if dialog == QMessageBox.Yes:
-                self.refreshSerialNo(button)
+            mes_about(self, '该条码已采集！')
+            return False
+            # dialog = mes_warn(self, '该条码已采集，是否重新扫码采集？')
+            # if dialog == QMessageBox.Yes:
+            #     self.refreshSerialNo(button)
         else:
             self.refreshSerialNo(button)
+            return True
 
     # 刷新 条形码 UI
     # 刷新 数据：采集状态，采集时间、采集人、采集地点
@@ -312,9 +351,14 @@ class CollectBlood(GolParasMixin,CollectBlood_UI):
         if btn_type:
             self.data_obj['jllx'] = '0011'
             self.data_obj['jlmc'] = '留样'
+            zxzt = '5'
+        else:
+            self.data_obj['jllx'] = '0010'
+            self.data_obj['jlmc'] = '抽血'
+            zxzt = '4'
         try:
             self.session.bulk_insert_mappings(MT_TJ_CZJLB, [self.data_obj])
-            self.session.query(MT_TJ_TJJLMXB).filter(MT_TJ_TJJLMXB.tjbh == self.user_id.text(),MT_TJ_TJJLMXB.tmbh1 == btn_no).update({MT_TJ_TJJLMXB.zxpb:'4'})
+            self.session.query(MT_TJ_TJJLMXB).filter(MT_TJ_TJJLMXB.tjbh == self.user_id.text(),MT_TJ_TJJLMXB.tmbh1 == btn_no).update({MT_TJ_TJJLMXB.zxpb:zxzt})
             self.session.commit()
         except Exception as e:
             self.session.rollback()
@@ -377,9 +421,16 @@ class CollectBlood(GolParasMixin,CollectBlood_UI):
 
     # 刷新采血列表
     def on_blood_table_insert(self,button:SerialNoButton):
-        data=['已抽血',button.collectNo,self.user_id.text(),self.user_name.text(),self.user_sex.text(),self.user_age.text(),button.collectTxt]
+        data=[button.collectColor,button.collectNo,button.collectTJBH,button.collectTxt]
         self.blood_table.insert(data)
-        self.left_down_gp.setTitle('采血列表（%s）' % str(self.blood_table.rowCount()))
+        self.left_middle_gp.setTitle('采血列表（%s）' % str(self.blood_table.rowCount()))
+        # 特殊定制 封盘功能
+        if button.collectColor=='黄管':
+            self.pipe_yellow = self.pipe_yellow + 1
+        elif button.collectColor == '紫红管':
+            self.pipe_red = self.pipe_red + 1
+        if self.pipe_yellow == 100 or self.pipe_red==100:
+            self.on_btn_handover_click()
 
     def closeEvent(self, *args, **kwargs):
         try:

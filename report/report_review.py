@@ -105,7 +105,12 @@ class ReportReview(ReportReviewUI):
             return
         # 日期范围 必选
         tstart,tend = self.gp_where_search.date_range
-        sql = get_report_review_sql(tstart,tend)
+        print(self.gp_where_search.getText())
+        if self.gp_where_search.getText() =='审核日期':
+            where_str = ''' (c.shrq>='%s' AND c.shrq<'%s') ''' %(tstart,tend)
+        else:
+            where_str = ''' (a.qdrq>='%s' AND a.qdrq<'%s' AND a.SUMOVER ='1') ''' % (tstart, tend)
+        sql = get_report_review_sql(where_str)
         # 报告状态
         if self.cb_report_state.where_state:
             sql = sql + self.cb_report_state.where_state
@@ -129,7 +134,7 @@ class ReportReview(ReportReviewUI):
         except Exception as e:
             results = []
             mes_about(self,'执行SQL：%s 出错，错误信息：%s' %(sql,e))
-
+        # print(sql)
         self.table_report_review.load(results)
         self.gp_table.setTitle('审阅列表（%s）' %self.table_report_review.rowCount())
         mes_about(self, '检索出数据%s条' % self.table_report_review.rowCount())

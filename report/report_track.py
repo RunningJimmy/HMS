@@ -299,7 +299,7 @@ class ReportTrack(ReportTrackUI):
                     if result.bgzt=='0':
                         try:
                             self.session.query(MT_TJ_BGGL).filter(MT_TJ_BGGL.tjbh == tjbh).delete()
-                            self.session.query(MT_TJ_CZJLB).filer(MT_TJ_CZJLB.tjbh == tjbh,MT_TJ_CZJLB.jllx=='0030').update({
+                            self.session.query(MT_TJ_CZJLB).filter(MT_TJ_CZJLB.tjbh == tjbh,MT_TJ_CZJLB.jllx=='0030').update({
                                 MT_TJ_CZJLB.jllx: '0000',
                                 MT_TJ_CZJLB.bz: '取消报告追踪'
                             })

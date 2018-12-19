@@ -39,8 +39,8 @@ class CollectHandover_UI(Widget):
         lt_where_search.addWidget(self.collect_user2, 1, 5, 1, 1)
         lt_where_search.addWidget(self.btn_query, 0, 6, 2, 2)
         lt_where_search.addWidget(self.btn_export, 0, 8, 2, 2)
-        lt_where_search.addWidget(self.btn_handover, 0,10, 2, 2)
-        lt_where_search.addWidget(self.btn_receive, 0, 12, 2, 2)
+        # lt_where_search.addWidget(self.btn_handover, 0,10, 2, 2)
+        # lt_where_search.addWidget(self.btn_receive, 0, 12, 2, 2)
         lt_where_search.setHorizontalSpacing(10)            #设置水平间距
         lt_where_search.setVerticalSpacing(10)              #设置垂直间距
         lt_where_search.setContentsMargins(10, 10, 10, 10)  #设置外间距

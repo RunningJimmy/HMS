@@ -748,7 +748,7 @@ def get_report_print2_sql():
         '''
 
 # 根据审阅日期检索
-def get_report_review_sql(t_start,t_end):
+def get_report_review_sql(where_str):
     return '''
             SELECT
                 (CASE C.BGZT
@@ -796,8 +796,8 @@ def get_report_review_sql(t_start,t_end):
                 AND a.QD='1' 
                 AND SUMOVER='1' 
                 AND c.BGZT <> '0'
-                AND (c.shrq>='%s' AND c.shrq<'%s')
-        '''%(t_start,t_end)
+                AND %s
+        '''%where_str
 
 def get_report_shth_sql():
     #     WITH
