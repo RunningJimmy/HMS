@@ -1,5 +1,5 @@
 from utils import gol
-from utils.base import EquipNo,EquipName
+
 
 class GolParasMixin(object):
 

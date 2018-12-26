@@ -66,9 +66,9 @@ class MV_TJJLMXB(BaseModel):
         if getattr(self, "xmbh", '')=='190016':
             jg = str2(getattr(self, "jg", '')).replace('\r\n','<br />')
             zd = str2(getattr(self, "zd", ''))
-        elif getattr(self, "xmbh", '')=='700036':
-            zd = str2(getattr(self, "jg", ''))
-            jg = '检查已做，详见心电图报告。'
+        # elif getattr(self, "xmbh", '')=='700036':
+        #     zd = str2(getattr(self, "jg", ''))
+        #     jg = '检查已做，详见心电图报告。'
         else:
             zd = str2(getattr(self, "zd", ''))
             jg = str2(getattr(self, "jg", ''))

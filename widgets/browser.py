@@ -2,7 +2,6 @@ from PyQt5.QtWebEngineWidgets import *
 from PyQt5.QtWidgets import *
 import datetime,os
 
-
 ###创建浏览器
 class WebEngineView(QWebEngineView):
 

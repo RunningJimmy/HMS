@@ -1736,24 +1736,13 @@ def get_equip_sql(tstart,tend):
                     WHEN '8' THEN '明州'
                     ELSE '' END
             ) AS TJQY,
-            substring(convert(char,JCRQ,120),1,10) AS BGRQ,
-            (SELECT YGXM FROM TJ_YGDM WHERE YGGH=TJ_TJJLMXB.JCYS) AS BGYS,
-            OPERATE_TIME AS JCRQ,
-            (CASE WHEN OPERATOR2 IS NULL THEN (SELECT YGXM FROM TJ_YGDM WHERE YGGH=TJ_TJJLMXB.JCYS) ELSE OPERATOR2 END) AS JCYS,
+            substring(convert(char,TJ_TJJLMXB.SHRQ,120),1,10) AS BGRQ,
+            (SELECT YGXM FROM TJ_YGDM WHERE YGGH=TJ_TJJLMXB.SHYS) AS BGYS,
+            substring(convert(char,JCRQ,120),1,19) AS JCRQ,
+            (SELECT YGXM FROM TJ_YGDM WHERE YGGH=TJ_TJJLMXB.JCYS) AS JCYS,
             operate_area AS JCQY,
-
             (select MC from TJ_DWDMB where DWBH=TJ_TJDJB.DWBH) as DWMC,
-            ( CASE
-                    WHEN TJ_TJJLMXB.zhbh IN ('501576','1000074') THEN TJ_TJJLMXB.JG
-                WHEN TJ_TJJLMXB.zhbh ='0310' THEN TJ_EQUIP.EQUIP_JG1
-                ELSE '' END
-            ) AS XMJG,
-            ( CASE
-                    WHEN TJ_TJJLMXB.zhbh IN ('501576','1000074') THEN TJ_TJJLMXB.ZD
-                WHEN TJ_TJJLMXB.zhbh ='0310' THEN TJ_EQUIP.EQUIP_JG2
-                    WHEN TJ_TJJLMXB.zhbh ='0806' THEN TJ_TJJLMXB.JG
-                ELSE '' END
-            ) AS XMZD,FILE_PATH AS FILENAME,TJ_TJDJB.DWBH
+            TJ_TJJLMXB.ZD AS XMZD,FILE_PATH AS FILENAME,TJ_TJDJB.DWBH
             FROM TJ_TJDJB 
             INNER JOIN TJ_TJDAB ON TJ_TJDAB.DABH=TJ_TJDJB.DABH AND (del <> '1' or del is null) AND QD='1' AND (QDRQ>='%s' and QDRQ<'%s')
     ''' %(tstart,tend)
@@ -1792,24 +1781,13 @@ def get_equip_quick_sql():
                     WHEN '8' THEN '明州'
                     ELSE '' END
             ) AS TJQY,
-            substring(convert(char,JCRQ,120),1,10) AS BGRQ,
-            (SELECT YGXM FROM TJ_YGDM WHERE YGGH=TJ_TJJLMXB.JCYS) AS BGYS,
-            OPERATE_TIME AS JCRQ,
-            (CASE WHEN OPERATOR2 IS NULL THEN (SELECT YGXM FROM TJ_YGDM WHERE YGGH=TJ_TJJLMXB.JCYS) ELSE OPERATOR2 END) AS JCYS,
+            substring(convert(char,TJ_TJJLMXB.SHRQ,120),1,10) AS BGRQ,
+            (SELECT YGXM FROM TJ_YGDM WHERE YGGH=TJ_TJJLMXB.SHYS) AS BGYS,
+            substring(convert(char,JCRQ,120),1,19) AS JCRQ,
+            (SELECT YGXM FROM TJ_YGDM WHERE YGGH=TJ_TJJLMXB.JCYS) AS JCYS,
             operate_area AS JCQY,
-
             (select MC from TJ_DWDMB where DWBH=TJ_TJDJB.DWBH) as DWMC,
-            ( CASE
-                    WHEN TJ_TJJLMXB.zhbh IN ('501576','1000074') THEN TJ_TJJLMXB.JG
-                WHEN TJ_TJJLMXB.zhbh ='0310' THEN TJ_EQUIP.EQUIP_JG1
-                ELSE '' END
-            ) AS XMJG,
-            ( CASE
-                    WHEN TJ_TJJLMXB.zhbh IN ('501576','1000074') THEN TJ_TJJLMXB.ZD
-                WHEN TJ_TJJLMXB.zhbh ='0310' THEN TJ_EQUIP.EQUIP_JG2
-                    WHEN TJ_TJJLMXB.zhbh ='0806' THEN TJ_TJJLMXB.JG
-                ELSE '' END
-            ) AS XMZD,FILE_PATH AS FILENAME,TJ_TJDJB.DWBH
+            TJ_TJJLMXB.ZD AS XMZD,FILE_PATH AS FILENAME,TJ_TJDJB.DWBH
             FROM TJ_TJDJB 
             INNER JOIN TJ_TJDAB ON TJ_TJDAB.DABH=TJ_TJDJB.DABH AND (del <> '1' or del is null) AND QD='1' 
     '''

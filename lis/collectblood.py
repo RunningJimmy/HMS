@@ -1,5 +1,3 @@
-from functools import partial
-from queue import Queue
 from lis.collectblood_ui import *
 from lis.model import *
 from utils.readparas import GolParasMixin
@@ -64,7 +62,7 @@ class CollectBlood(GolParasMixin,CollectBlood_UI):
     # 双击查看
     def on_blood_table_click(self,QModelIndex):
         tjbh = self.blood_table.getItemValueOfKey(QModelIndex.row(),'tjbh')
-        if self.user_id.text()==tjbh:
+        if self.lb_user_id.text()==tjbh:
             return
         self.le_serialno.setText(tjbh)
         self.cb_is_photo.setChecked(False)
@@ -137,16 +135,16 @@ class CollectBlood(GolParasMixin,CollectBlood_UI):
 
         if query_result:
             # 刷新人员信息
-            self.user_id.setText(query_result.tjbh)
-            self.user_name.setText(str2(query_result.xm))
-            self.user_sex.setText(str2(query_result.xb))
-            self.user_age.setText('%s 岁' %str(query_result.nl))
-            # self.depart.setText(str2(query_result.depart))
-            self.dwmc.setText(str2(query_result.dwmc))
-            # self.tj_qdrq.setText(query_result.qdrq)
-            self.sjhm.setText(query_result.sjhm)
-            self.sfzh.setText(query_result.sfzh)
-            # self.tj_djrq.setText(query_result.djrq)
+            self.lb_user_id.setText(query_result.tjbh)
+            self.lb_user_name.setText(str2(query_result.xm))
+            self.lb_user_sex.setText(str2(query_result.xb))
+            self.lb_user_age.setText('%s 岁' %str(query_result.nl))
+            # self.lb_depart.setText(str2(query_result.depart))
+            self.lb_dwmc.setText(str2(query_result.dwmc))
+            # self.lb_qdrq.setText(query_result.qdrq)
+            self.lb_sjhm.setText(query_result.sjhm)
+            self.lb_sfzh.setText(query_result.sfzh)
+            # self.lb_djrq.setText(query_result.djrq)
 
             # 特殊项目提醒
             results = dict(self.session.query(MT_TJ_TJJLMXB.xmbh,MT_TJ_TJJLMXB.xmmc).filter(MT_TJ_TJJLMXB.tjbh == tjbh).all())
@@ -274,12 +272,12 @@ class CollectBlood(GolParasMixin,CollectBlood_UI):
         self.layout5.setContentsMargins(10, 10, 10, 10)     # 设置外间距
         self.layout5.setColumnStretch(size, 1)              # 设置列宽，添加空白项的
 
-        self.ser_all.setText("%s" % str(tm_num))
-        self.ser_cx.setText("%s" % str(cx_num))
-        self.ser_ly.setText("%s" % str(ly_num))
-        self.ser_jj.setText("%s" % str(jj_num))
-        self.ser_done.setText("%s" % str(cx_done_num))
-        self.ser_undone.setText("%s" % str(tm_num-cx_done_num-jj_num))
+        self.lb_sno_all.setText("%s" % str(tm_num))
+        self.lb_sno_cx.setText("%s" % str(cx_num))
+        self.lb_sno_ly.setText("%s" % str(ly_num))
+        self.lb_sno_jj.setText("%s" % str(jj_num))
+        self.lb_sno_done.setText("%s" % str(cx_done_num))
+        self.lb_sno_undone.setText("%s" % str(tm_num-cx_done_num-jj_num))
 
     # 判断是否是第二次刷条码，对方法 refreshSerialNo 进行封装
     def refreshSerial(self,button):
@@ -340,10 +338,10 @@ class CollectBlood(GolParasMixin,CollectBlood_UI):
                 print(e)
             self.layout4.addWidget(button2, btn_pos_x, btn_pos_y, 1, 1)
         # 更新界面UI
-        self.ser_done.setText("%s" % str(int(self.ser_done.text())+1))
-        self.ser_undone.setText("%s" % str(int(self.ser_undone.text())-1))
+        self.lb_sno_done.setText("%s" % str(int(self.lb_sno_done.text())+1))
+        self.lb_sno_undone.setText("%s" % str(int(self.lb_sno_undone.text())-1))
         # 刷新 入库
-        self.data_obj['tjbh'] = self.user_id.text()
+        self.data_obj['tjbh'] = self.lb_user_id.text()
         self.data_obj['mxbh'] = btn_no
         self.data_obj['jlnr'] = btn_name
         self.data_obj['bz'] = btn_color
@@ -358,7 +356,7 @@ class CollectBlood(GolParasMixin,CollectBlood_UI):
             zxzt = '4'
         try:
             self.session.bulk_insert_mappings(MT_TJ_CZJLB, [self.data_obj])
-            self.session.query(MT_TJ_TJJLMXB).filter(MT_TJ_TJJLMXB.tjbh == self.user_id.text(),MT_TJ_TJJLMXB.tmbh1 == btn_no).update({MT_TJ_TJJLMXB.zxpb:zxzt})
+            self.session.query(MT_TJ_TJJLMXB).filter(MT_TJ_TJJLMXB.tjbh == self.lb_user_id.text(),MT_TJ_TJJLMXB.tmbh1 == btn_no).update({MT_TJ_TJJLMXB.zxpb:zxzt})
             self.session.commit()
         except Exception as e:
             self.session.rollback()
@@ -407,8 +405,8 @@ class CollectBlood(GolParasMixin,CollectBlood_UI):
     # 拍照
     def on_btn_photo_take(self):
         if self.camera:
-            if self.user_id.text():
-                file_photo = image_file(self.user_id.text())
+            if self.lb_user_id.text():
+                file_photo = image_file(self.lb_user_id.text())
                 img = self.camera.onTakeImage(file_photo)
                 self.photo_lable.setPixmap(QPixmap.fromImage(img, Qt.AutoColor))
                 #self.on_status_widget_show('拍照完成') 发射信号

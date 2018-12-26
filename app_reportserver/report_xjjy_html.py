@@ -80,6 +80,7 @@ pdf_html_cachet_page2 ='''
         </tr>
         <tr align="right">
             <td class="table_td_wxts">
+                
                 总检医生：<img src=${zjys} height="50" width="100" />&frasl;<img src=${shys} height="50" width="100" />&nbsp;&nbsp;
                 审核医生：<img src=${shys2} height="50" width="100" />&nbsp;&nbsp;
                 三审护士：<img src=${syys} height="50" width="100" />&nbsp;&nbsp;

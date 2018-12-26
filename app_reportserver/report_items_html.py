@@ -36,7 +36,7 @@ pdf_html_item_page = '''
                   <tbody>
                     % for mxxm in mxxms[zhxms[item]]:
                        % if mxxm['ycbz']=='1':
-                        %   if mxxm['ycts']:
+                        %  if mxxm['ycts']:
                                 <tr height=35px>
                                     <td>${mxxm['xmmc']}</td>
                                     <td class="table_td">${mxxm['jg']+'&nbsp;&nbsp;&nbsp;'+mxxm['ycts']}</td>
@@ -50,7 +50,7 @@ pdf_html_item_page = '''
                                     <td>${mxxm['xmdw']}</td>
                                     <td>${mxxm['ckfw']}</td>              
                                 </tr>
-                        %endif 
+                        % endif 
                       %  else:
                             <tr height=35px>
                                 <td>${mxxm['xmmc']}</td>
@@ -128,8 +128,8 @@ pdf_html_item_page = '''
                     <tr>
                         <td colspan="4">
                         <%
-                            if jcjl[zhxms[item]]['shrq']:
-                                jl = "检验：%s &nbsp;&nbsp;检验日期：%s &nbsp;&nbsp;&nbsp;&nbsp;审核：%s &nbsp;&nbsp;审核日期：%s" %(jcjl[zhxms[item]]['jcys'],jcjl[zhxms[item]]['jcrq'],jcjl[zhxms[item]]['shys'],jcjl[zhxms[item]]['shrq'])
+                            if jcjl[zhxms[item]]['shys']:
+                                jl = "检查：%s &nbsp;&nbsp;检查日期：%s &nbsp;&nbsp;&nbsp;&nbsp;审核：%s &nbsp;&nbsp" %(jcjl[zhxms[item]]['jcys'],jcjl[zhxms[item]]['jcrq'],jcjl[zhxms[item]]['shys'])
                             else:
                                 jl = "检查：%s &nbsp;&nbsp;检查日期：%s " %(jcjl[zhxms[item]]['jcys'],jcjl[zhxms[item]]['jcrq'])
                         %>
@@ -187,15 +187,15 @@ pdf_html_item_page = '''
                                 % if len(pic.get(zhbh,[])) % 2 ==0:
                                     % for i in range(len(pic.get(zhbh,[])) // 2):
                                         <tr>
-                                            <td colspan="2" align="center"><img src=${pic.get(zhbh,[])[i]} width="99%"></td>
-                                            <td colspan="2" align="center"><img src=${pic.get(zhbh,[])[i+1]} width="99%"></td>
+                                            <td colspan="2" align="center"><img src=${pic.get(zhbh,[])[2*i]} width="99%"></td>
+                                            <td colspan="2" align="center"><img src=${pic.get(zhbh,[])[2*i+1]} width="99%"></td>
                                         </tr>
                                     %endfor
                                 % else :
                                     % for i in range(len(pic.get(zhbh,[]))-1 // 2):
                                         <tr>
-                                            <td colspan="2" align="center"><img src=${pic.get(zhbh,[])[i]} width="99%"></td>
-                                            <td colspan="2" align="center"><img src=${pic.get(zhbh,[])[i+1]} width="99%"></td>
+                                            <td colspan="2" align="center"><img src=${pic.get(zhbh,[])[2*i]} width="99%"></td>
+                                            <td colspan="2" align="center"><img src=${pic.get(zhbh,[])[2*i+1]} width="99%"></td>
                                         </tr>
                                     %endfor
                                 % endif
@@ -206,9 +206,14 @@ pdf_html_item_page = '''
                       <tfoot>
                         <tr>
                             <td colspan="4">
-                            <%
-                                if jcjl[zhxms[item]]['shrq']:
-                                    jl = "检验：%s &nbsp;&nbsp;检验日期：%s &nbsp;&nbsp;&nbsp;&nbsp;审核：%s &nbsp;&nbsp;审核日期：%s" %(jcjl[zhxms[item]]['jcys'],jcjl[zhxms[item]]['jcrq'],jcjl[zhxms[item]]['shys'],jcjl[zhxms[item]]['shrq'])
+                            <%  
+                                if jcjl[zhxms[item]]['shys']:
+                                    if ksbm == '0020':
+                                        jl = "记录：%s &nbsp;&nbsp;记录日期：%s &nbsp;&nbsp;&nbsp;&nbsp;报告：%s &nbsp;&nbsp;&nbsp;&nbsp;审核：%s &nbsp;&nbsp;审核日期：%s" %(jcjl[zhxms[item]]['jcys'],jcjl[zhxms[item]]['jcrq'],jcjl[zhxms[item]]['shys'],jcjl[zhxms[item]]['shys'],jcjl[zhxms[item]]['shrq'])
+                                    elif ksbm == '0018':
+                                        jl = "检查：%s &nbsp;&nbsp;检查日期：%s &nbsp;&nbsp;&nbsp;&nbsp;报告：%s &nbsp;&nbsp;&nbsp;&nbsp;报告日期：%s" %(jcjl[zhxms[item]]['jcys'],jcjl[zhxms[item]]['jcrq'],jcjl[zhxms[item]]['shys'],jcjl[zhxms[item]]['shrq'])
+                                    else:
+                                        jl = "技师：%s &nbsp;&nbsp;检查日期：%s &nbsp;&nbsp;&nbsp;&nbsp;报告：%s &nbsp;&nbsp;&nbsp;&nbsp;审核：%s &nbsp;&nbsp;审核日期：%s" %(jcjl[zhxms[item]]['jcys'],jcjl[zhxms[item]]['jcrq'],jcjl[zhxms[item]]['shys'],jcjl[zhxms[item]]['shys'],jcjl[zhxms[item]]['shrq'])
                                 else:
                                     jl = "检查：%s &nbsp;&nbsp;检查日期：%s " %(jcjl[zhxms[item]]['jcys'],jcjl[zhxms[item]]['jcrq'])
                             %>

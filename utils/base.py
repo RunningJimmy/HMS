@@ -9,61 +9,7 @@ from collections import OrderedDict
 # lineNumber = sys._getframe().f_back.f_lineno      #获取行号
 # print(sys._getframe().f_code.co_name)             # 获取当前函数名
 
-# 设备信息
-EquipName={
-    '01':'电测听',
-    '02':'人体成分(投放)',
-    '03':'人体成分',
-    '04':'骨密度',
-    '05':'超声骨密度',
-    '06':'动脉硬化',
-    '07':'大便隐血',
-    '08':'心电图',
-    '11':'肺功能',
-    '12':'胸部正位'
-}
 
-# 设备信息
-EquipNo={
-    '01':'0310',
-    '02':'5402',
-    '03':'5402',
-    '04': '501576',
-    '05': '1000074',
-    '06': '5401',
-    '07': '2113',
-    '08':'0806',
-    '11':'0045',
-    '12':'501716'
-}
-
-# 设备动作点
-EquipAction={
-    '01':'0023',
-    '02':'0022',
-    '03':'0022',
-    '04': '0020',
-    '05': '1000074',
-    '06': '0024',
-    '07': '2113',
-    '08':'0021',
-    '11':'0045',
-    '12':'501716'
-}
-
-# 设备动作点
-EquipActionName={
-    '01':'电测听检查',
-    '02':'人体成分检查',
-    '03':'人体成分检查',
-    '04': '骨密度检查',
-    '05': '超声骨密度检查',
-    '06': '动脉硬化检查',
-    '07': '大肠癌检查',
-    '08':'心电图检查',
-    '11':'肺功能检查',
-    '12':'DR检查'
-}
 # 获取桌面地址
 def desktop():
     key = winreg.OpenKey(winreg.HKEY_CURRENT_USER,r'Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders',)
@@ -117,17 +63,6 @@ def cur_datetime():
 
 def cur_date():
     return time.strftime("%Y-%m-%d", time.localtime(int(time.time())))
-
-# 确认路径，不存在则创建
-def sure_path(file_path):
-    try:
-        if not os.path.isdir(file_path):
-            os.makedirs(file_path)
-        return True
-    except Exception as e:
-        log = gol.get_value("log")
-        log.info('路径：%s 不准确，请调整！错误信息：%s' %(file_path,e))
-        return False
 
 # 初始化-查找文件
 def fileiter(root_path):

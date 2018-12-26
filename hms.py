@@ -2,17 +2,16 @@
 from PyQt5.QtCore import PYQT_VERSION_STR,QCoreApplication,Qt,QProcess
 # 判断版本号
 if int(PYQT_VERSION_STR.replace('.',''))>=560:
-    from PyQt5.QtWebEngineWidgets import *
     # 处理闪屏、黑屏问题 必须放在 Application 实例化前
     QCoreApplication.setAttribute(Qt.AA_UseSoftwareOpenGL)
 else:
     from PyQt5.QtWebKit import *
     from PyQt5.QtWebKitWidgets import *
-
-import multiprocessing,requests,ctypes
 from multiprocessing import Process, Queue
+import multiprocessing,requests,ctypes
 from importlib import import_module
 from utils.envir import *
+from app_equip import equip_ui_run
 
 
 # 主界面
@@ -58,27 +57,9 @@ def start_run():
                 main_ui(TJ_Main_UI(), app)
             # 进入设备接口
             else:
-                if gol.get_value('equip_type', 0) == 12:
-                    pass
-                    #ui = Equip2()
-                else:
-                    from app_equip import EquipManager
-                    from pdfparse import run
-                    #################无论是否，均启动后台进程#################### 为临时解决子进程启动被UI化的问题
-                    # 全局进程队列
-                    gol_process_queue = Queue()
-                    multiprocessing.freeze_support()
-                    monitor_process = Process(target=run, args=(gol_process_queue,))
-                    monitor_process.start()
-                    ui = EquipManager(gol_process_queue)
-                    ui.show()
-                    app.exec_()
-                    # 退出后台子进程
-                    if monitor_process.is_alive:
-                        # 停止子进程
-                        monitor_process.terminate()
-                        # 随主进程退出
-                        monitor_process.join()
+                # 全局进程队列
+                gol_process_queue = Queue()
+                equip_ui_run(app,gol_process_queue,gol.get_value('equip_type', 0))
 
     # 不需要通过用户密码验证，直接进入主界面
     elif gol.get_value('system_is_login',1) == 0:
@@ -86,7 +67,7 @@ def start_run():
         main_ui(TJ_Main_UI(), app)
     # 进入自助机模式
     else:
-        from app_selfhelp import selfHelpManager,SelfHelpMachine
+        from app_selfhelp import SelfHelpMachine
         ui = SelfHelpMachine()
         main_ui(ui,app)
     if cef:
@@ -115,34 +96,6 @@ def is_update(url,log):
                 print("准备更新程序，启动更新进程失败，错误信息：%s" %e)
                 log.info("准备更新程序，启动更新进程失败，错误信息：%s" %e)
                 return
-            # try:
-            #     run_exe('update.update2', 'update_start')
-            #     print("更新完成，关闭更新进程！")
-            #     log.info("更新完成，关闭更新进程！")
-            # except Exception as e:
-            #     print("更新时，发生错误：%s" % e)
-            #     log.info("更新时，发生错误：%s" % e)
-            #     return
-            # 关闭自己，启动更新进程
-            # try:
-            #     # 采用动态模块为解决 打包后关闭和启动exe的问题
-            #     run_exe('update.update2','main_end')
-            #     print("准备更新程序，已关闭主进程！")
-            #     log.info("准备更新程序，已关闭主进程！")
-            # except Exception as e:
-            #     log.info("准备更新程序，关闭主进程时发生错误：%s" % e)
-            #     print("准备更新程序，关闭主进程时发生错误：%s" % e)
-            #     return
-            # 启动更新主进程
-            # try:
-            #     run_exe('update.update2', 'main_start')
-            #     print("更新完成，关闭更新进程！")
-            #     log.info("更新完成，关闭更新进程！")
-            # except Exception as e:
-            #     print("更新时，发生错误：%s" % e)
-            #     log.info("更新时，发生错误：%s" % e)
-            #     return
-
         else:
             return False
     except Exception as e:
@@ -169,10 +122,6 @@ if __name__=="__main__":
         is_update(url,log)
     # 增加全局异常处理
     start_run()
-    # try:
-    #     start_run()
-    # except Exception as e:
-    #     error = '%s' %e
-    #     ctypes.windll.user32.MessageBoxA(0,error.encode('gb2312'),'明州体检'.encode('gb2312'),0)
+
 
 

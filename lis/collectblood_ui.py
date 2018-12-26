@@ -11,9 +11,12 @@ def write_file(data, filename):
 
 class Lable(QLabel):
 
-    def __init__(self):
+    def __init__(self,width=None):
         super(Lable,self).__init__()
-        self.setMinimumWidth(75)
+        if not width:
+            self.setMinimumWidth(75)
+        else:
+            self.setMinimumWidth(width)
         self.setStyleSheet('''font: 75 11pt '黑体';color: rgb(0, 85, 255);''')
 
 class PicLable(QLabel):
@@ -63,8 +66,10 @@ class CollectBlood_UI(UI):
         self.left_middle_gp.setLayout(left_middle_lt)
         #
         left_down_lt = QHBoxLayout()
-        self.btn_handover = QPushButton(Icon('样本交接'), '采样明细')
+        self.btn_handover = QPushButton(Icon('样本交接'), '样本交接')
+        self.btn_diff = QPushButton(Icon('样本交接'), '采样遗漏')
         left_down_lt.addWidget(self.btn_handover)
+        left_down_lt.addWidget(self.btn_diff)
         left_down_lt.addStretch()
         self.left_layout.addWidget(left_up_gp)
         self.left_layout.addWidget(self.left_middle_gp)
@@ -84,71 +89,71 @@ class CollectBlood_UI(UI):
         self.layout5 = QGridLayout()
 
         ########################控件区#####################################
-        self.user_id   = Lable()          # 体检编号
-        self.user_name = Lable()          # 姓名
-        self.user_sex =  Lable()          # 性别
-        self.user_age =  Lable()          # 年龄->自动转换出生年月
-        # self.depart   =  Lable()          #班级
-        self.dwmc    =   Lable()          #单位名称
-        # self.tj_qdrq =   Lable()          # 签到日期，默认当天
-        self.sjhm   =    Lable()          #手机号码
-        self.sfzh    =   Lable()          #身份证号
-        # self.tj_djrq =   Lable()          # 登记日期
+        self.lb_user_id   = Lable()          # 体检编号
+        self.lb_user_name = Lable()          # 姓名
+        self.lb_user_sex =  Lable()          # 性别
+        self.lb_user_age =  Lable()          # 年龄->自动转换出生年月
+        # self.lb_depart   =  Lable()          #班级
+        self.lb_dwmc    =   Lable()          #单位名称
+        # self.lb_qdrq =   Lable()          # 签到日期，默认当天
+        self.lb_sjhm   =    Lable()          #手机号码
+        self.lb_sfzh    =   Lable()          #身份证号
+        # self.lb_djrq =   Lable()          # 登记日期
         self.lb_pic = PicLable()
 
-        self.ser_all = Lable()
-        self.ser_cx = Lable()
-        self.ser_ly = Lable()
-        self.ser_done = Lable()
-        self.ser_undone = Lable()
-        self.ser_jj = Lable()
+        self.lb_sno_all = Lable()
+        self.lb_sno_cx = Lable()
+        self.lb_sno_ly = Lable()
+        self.lb_sno_done = Lable()
+        self.lb_sno_undone = Lable()
+        self.lb_sno_jj = Lable()
 
         ###################基本信息  第一行##################################
         layout1.addWidget(QLabel('体检编号：'), 0, 0, 1, 1)
-        layout1.addWidget(self.user_id, 0, 1, 1, 1)
+        layout1.addWidget(self.lb_user_id, 0, 1, 1, 1)
         layout1.addWidget(QLabel('姓    名：'), 0, 2, 1, 1)
-        layout1.addWidget(self.user_name, 0, 3, 1, 1)
+        layout1.addWidget(self.lb_user_name, 0, 3, 1, 1)
         layout1.addWidget(QLabel('性    别：'), 0, 4, 1, 1)
-        layout1.addWidget(self.user_sex, 0, 5, 1, 1)
+        layout1.addWidget(self.lb_user_sex, 0, 5, 1, 1)
         layout1.addWidget(self.lb_pic, 0, 6, 3, 3)
 
         ###################基本信息  第二行##################################
         layout1.addWidget(QLabel('年    龄：'), 1, 0, 1, 1)
-        layout1.addWidget(self.user_age, 1, 1, 1, 1)
+        layout1.addWidget(self.lb_user_age, 1, 1, 1, 1)
         layout1.addWidget(QLabel('单位名称：'), 1, 2, 1, 1)
-        layout1.addWidget(self.dwmc, 1, 3, 1, 3)
+        layout1.addWidget(self.lb_dwmc, 1, 3, 1, 3)
 
         ###################基本信息  第三行##################################
         layout1.addWidget(QLabel('手机号码：'), 2, 0, 1, 1)
-        layout1.addWidget(self.sjhm, 2, 1, 1, 1)
+        layout1.addWidget(self.lb_sjhm, 2, 1, 1, 1)
         layout1.addWidget(QLabel('身份证号：'), 2, 2, 1, 1)
-        layout1.addWidget(self.sfzh, 2, 3, 1, 3)
+        layout1.addWidget(self.lb_sfzh, 2, 3, 1, 3)
 
-        layout1.setHorizontalSpacing(10)            #设置水平间距
-        layout1.setVerticalSpacing(10)              #设置垂直间距
-        layout1.setContentsMargins(10, 10, 10, 10)  #设置外间距
+        layout1.setHorizontalSpacing(5)            #设置水平间距
+        layout1.setVerticalSpacing(5)              #设置垂直间距
+        layout1.setContentsMargins(5, 5, 5, 5)  #设置外间距
         layout1.setColumnStretch(11, 1)             #设置列宽，添加空白项的
 
         group1.setLayout(layout1)
 
         layout2.addWidget(QLabel("总条码数："))
-        layout2.addWidget(self.ser_all)
-        layout2.addSpacing(10)
+        layout2.addWidget(self.lb_sno_all)
+        layout2.addSpacing(5)
         layout2.addWidget(QLabel("抽血条码："))
-        layout2.addWidget(self.ser_cx)
-        layout2.addSpacing(10)
+        layout2.addWidget(self.lb_sno_cx)
+        layout2.addSpacing(5)
         layout2.addWidget(QLabel("留样条码："))
-        layout2.addWidget(self.ser_ly)
-        layout2.addSpacing(10)
+        layout2.addWidget(self.lb_sno_ly)
+        layout2.addSpacing(5)
         layout2.addWidget(QLabel("已抽条码："))
-        layout2.addWidget(self.ser_done)
-        layout2.addSpacing(10)
+        layout2.addWidget(self.lb_sno_done)
+        layout2.addSpacing(5)
         layout2.addWidget(QLabel("拒检条码："))
-        layout2.addWidget(self.ser_jj)
-        layout2.addSpacing(10)
+        layout2.addWidget(self.lb_sno_jj)
+        layout2.addSpacing(5)
         layout2.addWidget(QLabel("剩余条码："))
-        layout2.addWidget(self.ser_undone)
-        layout2.addSpacing(10)
+        layout2.addWidget(self.lb_sno_undone)
+        layout2.addSpacing(5)
         layout2.addStretch()
         group2.setLayout(layout2)
 
@@ -507,7 +512,45 @@ class CollectHandleUI(Dialog):
                             ])
 
     def initUI(self):
-        lt_main = QHBoxLayout()
+        lt_main = QVBoxLayout()
+        # 上布局
+        lt_top = QHBoxLayout()
+        gp_top = QGroupBox('筛选条件')
+        # 上布局 控件
+        self.de_start = QDateEdit(QDate.currentDate())
+        self.de_end = QDateEdit(QDate.currentDate().addDays(1))
+        self.de_start.setCalendarPopup(True)
+        self.de_start.setDisplayFormat("yyyy-MM-dd")
+        self.de_end.setCalendarPopup(True)
+        self.de_end.setDisplayFormat("yyyy-MM-dd")
+        # 只有管理员选择其他日期
+        if self.login_id != 'BSSA':
+            self.de_start.setDisabled(True)
+            self.de_end.setDisabled(True)
+        self.collect_user = UserCombox()
+        self.collect_user.addItems(['%s'%self.login_name,'所有'])
+        areas = ['明州1楼','明州2楼','明州3楼','明州贵宾','江东']
+        self.collect_area = CollectAreaGroup(['明州1楼','明州2楼','明州3楼','明州贵宾','江东'])
+        for area in areas:
+            if area in self.login_area:
+                self.collect_area.set_area(area)
+        self.btn_query = QPushButton(Icon('query'),'查询')
+        lt_top.addWidget(QLabel("采集日期："))
+        lt_top.addWidget(self.de_start)
+        lt_top.addWidget(QLabel("-"))
+        lt_top.addWidget(self.de_end)
+        lt_top.addSpacing(6)
+        lt_top.addWidget(QLabel("采集人："))
+        lt_top.addWidget(self.collect_user)
+        lt_top.addSpacing(6)
+        lt_top.addLayout(self.collect_area)
+        lt_top.addSpacing(6)
+        lt_top.addWidget(self.btn_query)
+        lt_top.addStretch()
+        gp_top.setLayout(lt_top)
+
+        # 中布局
+        lt_middle = QHBoxLayout()
         ########### 汇总信息
         lt_left = QHBoxLayout()
         self.gp_left = QGroupBox('样本采集汇总(0)')
@@ -522,9 +565,11 @@ class CollectHandleUI(Dialog):
         self.table_handover_detail = CollectHandoverDTable(self.collect_detail_cols)
         lt_right.addWidget(self.table_handover_detail)
         self.gp_right.setLayout(lt_right)
-        lt_main.addWidget(self.gp_left)
-        lt_main.addWidget(self.gp_right)
-
+        lt_middle.addWidget(self.gp_left)
+        lt_middle.addWidget(self.gp_right)
+        # 添加主布局
+        lt_main.addWidget(gp_top)
+        lt_main.addLayout(lt_middle)
         self.setLayout(lt_main)
 
 

@@ -2731,10 +2731,10 @@ class EquipTypeLayout(QHBoxLayout):
     def __init__(self):
         super(EquipTypeLayout,self).__init__()
         self.is_check = QCheckBox('设备类型：')
+        self.is_check.setChecked(True)
         self.cb_equip_type = QComboBox()
         self.cb_equip_type.addItems(['所有','心电图','骨密度','电测听','人体成分','超声骨密度'])
         self.cb_equip_type.setCurrentText('所有')
-        self.cb_equip_type.setDisabled(True)
         # 添加布局
         self.addWidget(self.is_check)
         self.addWidget(self.cb_equip_type)
@@ -2757,6 +2757,9 @@ class EquipTypeLayout(QHBoxLayout):
                 return '05'
             else:
                 return '00'
+
+    def set_equip_type(self,p_str):
+        self.cb_equip_type.setCurrentText(p_str)
 
     def get_equip_type2(self):
         if self.cb_equip_type.currentText()=='所有':

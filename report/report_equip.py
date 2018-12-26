@@ -18,6 +18,7 @@ class ReportEquip(ReportEquipUI):
         # 按钮栏
         self.gp_quick_search.returnPressed.connect(self.on_quick_search)    # 快速检索
         self.gp_review_user.btnClick.connect(self.on_btn_audit_click)
+        self.gp_review_user.btnSet.connect(self.on_btn_describe_click)
         # 特殊变量，用于快速获取  含义：当前选择的体检编号、组合编号
         self.cur_tjbh = None
         self.cur_zhbh = None
@@ -105,6 +106,7 @@ class ReportEquip(ReportEquipUI):
             sql = sql + ''' WHERE T1.JCYS='%s' ''' %self.cb_user.where_user
 
         sql = sql + ''' ORDER BY xmzt,cname,jcys,TJQY,jcrq '''
+        # print(sql)
         results = self.session.execute(sql).fetchall()
 
         # 载入数据
@@ -182,33 +184,17 @@ class ReportEquip(ReportEquipUI):
         if shzt:
             # 更新TJ_TJJLMXB、TJ_EQUIP、TJ_CZJLB
             try:
-                if self.cur_zhbh=='0806':
-                    self.session.query(MT_TJ_TJJLMXB).filter(MT_TJ_TJJLMXB.tjbh == self.cur_tjbh,
-                                                             MT_TJ_TJJLMXB.zhbh==self.cur_zhbh
-                                                             ).update(
-                        {MT_TJ_TJJLMXB.jg: xmzd,
-                         MT_TJ_TJJLMXB.zxpb: '1',
-                         MT_TJ_TJJLMXB.jsbz: '1',
-                         MT_TJ_TJJLMXB.qzjs: None,
-                         MT_TJ_TJJLMXB.ycbz: '1',
-                         MT_TJ_TJJLMXB.jcrq: cur_datetime(),
-                         MT_TJ_TJJLMXB.jcys: self.login_id,
-                         }
-                    )
-                else:
-                    self.session.query(MT_TJ_TJJLMXB).filter(MT_TJ_TJJLMXB.tjbh == self.cur_tjbh,
-                                                             MT_TJ_TJJLMXB.zhbh==self.cur_zhbh
-                                                             ).update(
-                        {
-                             MT_TJ_TJJLMXB.zd: xmzd,
-                             MT_TJ_TJJLMXB.zxpb: '1',
-                             MT_TJ_TJJLMXB.jsbz: '1',
-                             MT_TJ_TJJLMXB.qzjs: None,
-                             MT_TJ_TJJLMXB.ycbz: '1',
-                             MT_TJ_TJJLMXB.jcrq: cur_datetime(),
-                             MT_TJ_TJJLMXB.jcys: self.login_id,
-                         }
-                    )
+                self.session.query(MT_TJ_TJJLMXB).filter(MT_TJ_TJJLMXB.tjbh == self.cur_tjbh,
+                                                         MT_TJ_TJJLMXB.zhbh==self.cur_zhbh
+                                                         ).update({
+                        MT_TJ_TJJLMXB.zxpb: '1',
+                        MT_TJ_TJJLMXB.jsbz: '1',
+                        MT_TJ_TJJLMXB.qzjs: None,
+                        MT_TJ_TJJLMXB.ycbz: '1',
+                        MT_TJ_TJJLMXB.shrq: cur_datetime(),
+                        MT_TJ_TJJLMXB.shys: self.login_id,
+                        MT_TJ_TJJLMXB.zd: xmzd
+                     })
                 data_obj = {
                     'jllx': '0124', 'jlmc': '%s结果录入' % get_key(self.equips, self.cur_zhbh), 'tjbh': self.cur_tjbh,
                     'mxbh': self.cur_zhbh,'czgh': self.login_id, 'czxm': self.login_name, 'czqy': self.login_area,
@@ -237,8 +223,9 @@ class ReportEquip(ReportEquipUI):
                          MT_TJ_TJJLMXB.jsbz: '0',
                          MT_TJ_TJJLMXB.qzjs: None,
                          MT_TJ_TJJLMXB.ycbz: '1',
-                         MT_TJ_TJJLMXB.jcrq: None,
-                         MT_TJ_TJJLMXB.jcys: None,
+                         MT_TJ_TJJLMXB.shrq: None,
+                         MT_TJ_TJJLMXB.shys: None,
+                         MT_TJ_TJJLMXB.zd: None
                      }
                 )
                 data_obj = {
@@ -254,7 +241,51 @@ class ReportEquip(ReportEquipUI):
                 mes_about(self,"取消审核失败，错误信息：%s" %e)
                 return
 
+    # 打开默认结论对话框
+    def on_btn_describe_click(self):
+        if not self.cur_tjbh:
+            mes_about(self,"请选择一个人！")
+            return
+        ui = ItemDefaultDescribeUI(self)
+        ui.initDatas.emit(self.cur_zhbh)
+        ui.doubleClick.connect(self.set_describe)
+        ui.exec_()
+
+    # 设置默认结论
+    def set_describe(self,describe):
+        self.gp_review_user.set_describe(describe)
 
 def get_key(d, value):
     return [k for k,v in d.items() if v == value][0]
+
+# 项目默认结果
+class ItemDefaultDescribeUI(Dialog):
+
+    initDatas = pyqtSignal(str)
+
+    doubleClick = pyqtSignal(str)
+
+    def __init__(self, parent=None):
+        super(ItemDefaultDescribeUI, self).__init__(parent)
+        self.setWindowTitle("常用结论")
+        self.initUI()
+        self.initDatas.connect(self.setDatas)
+        self.lw_describe.doubleClicked.connect(self.on_lw_describe_click)
+
+    def initUI(self):
+        self.lt_main = QHBoxLayout()
+        self.lw_describe = QListWidget()
+        self.lt_main.addWidget(self.lw_describe)
+        self.setLayout(self.lt_main)
+
+    def setDatas(self, item_no: str):
+        sql = "SELECT JG FROM TJ_XMJG WHERE XMBH IN (SELECT XMBH FROM TJ_ZHMX WHERE ZHBH='%s') AND JG IS NOT NULL ORDER BY XSSX " % item_no
+        results = self.session.execute(sql).fetchall()
+        self.lw_describe.addItems([str2(result[0]) for result in results])
+
+    # 双击事件
+    def on_lw_describe_click(self, QModelIndex):
+        self.doubleClick.emit(self.lw_describe.item(QModelIndex.row()).text())
+        self.close()
+
 

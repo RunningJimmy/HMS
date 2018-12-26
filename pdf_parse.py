@@ -1,19 +1,3 @@
-from watchdog.observers.read_directory_changes import WindowsApiObserver as Observer
-from watchdog.events import FileSystemEventHandler
-from utils.pdfmanager import *
-from utils.api import *
-from utils.base import *
-from utils.envir_equip import set_equip_env
-from utils.bmodel import *
-
-# 说明：
-# 2017-09-01 0.1  新增设备接口，增加设备：骨密度、心电图、电测听、大便仪、超声骨密度、C13/14
-# 2018-05-01 0.2  重构设备接口，增加外出联网，增加设备：DR放射、肺功能（COM）
-# 2018-07-26 0.3  重构设备接口
-# 1、增加 PDF转Pic功能；
-# 2、增加绩效、归档、日志补充 TJ_CZJLB,TJ_FILE_ACTIVE；
-# 3、HTTP上传取代SMB上传方式；
-# 2018-09-20 0.31  增加设备接口：人体成分（特殊版）图像识别功能，调用百度API进行识别解析体检编号，(Tesseract-OCR 识别率低，放弃本地识别模式)
 
 # 监听文件生成，解析，上传
 class MonitorHandler(FileSystemEventHandler):
@@ -280,7 +264,7 @@ class MonitorHandler(FileSystemEventHandler):
                     self.log.info("体检顾客：%s，更新表DCP_files失败！错误信息：%s" %(tjbh,e))
 
 # 运行监控服务
-def run(queue=None):
+def pdf_parse_run(queue=None):
     import cgitb
     cgitb.enable(logdir="./error/",format="text")
     set_equip_env(False)
@@ -307,4 +291,4 @@ def run(queue=None):
     observer.join()
 
 if __name__ == '__main__':
-    run()
+    pdf_parse_run()

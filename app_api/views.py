@@ -310,11 +310,14 @@ def init_views(app,db,print_queue=None,report_queue=None):
         if filetype=='html':
             # 审核取消
             try:
+                # 报告审核总检取消、报告生成取消
                 sql1 = " UPDATE TJ_TJDJB SET TJZT='%s' WHERE TJBH = '%s' ;" %(tjbh,czlx)
+                sql2 = " UPDATE TJ_BGGL SET BGZT='0',BGTH='0',SYRQ=NULL,SYXM=NULL,SYGH=NULL WHERE TJBH = '%s' ;" % tjbh
                 db.session.execute(sql1)
-                if czlx =='5':
-                    sql2 = " UPDATE TJ_BGGL SET BGZT='0',BGTH='0' WHERE TJBH = '%s' ;" % tjbh
-                    db.session.execute(sql2)
+                db.session.execute(sql2)
+                # if czlx =='5':
+                #     sql2 = " UPDATE TJ_BGGL SET BGZT='0',BGTH='0' WHERE TJBH = '%s' ;" % tjbh
+                #     db.session.execute(sql2)
             except Exception as e:
                 print(e)
             return ujson.dumps({'code': 1, 'mes': '取消审核，删除HTML报告成功', 'data': ''})

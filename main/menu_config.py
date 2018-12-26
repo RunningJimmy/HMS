@@ -170,6 +170,7 @@ SYS_MENU_TREE = {   # 系统
                  ('电话平台',{'pid': 900, 'sid': 9002, 'title': '电话平台', 'tip': None, 'state': True, 'icon': '电话', 'is_tool': False,'shortcut':None}),
                  ('检后健康',{'pid': 900, 'sid': 9003, 'title': '检后健康', 'tip': None, 'state': True, 'icon': '医生', 'is_tool': False,'shortcut':None}),
                  ('多媒体屏',{'pid': 900, 'sid': 9004, 'title': '多媒体屏', 'tip': None, 'state': True, 'icon': '多媒体', 'is_tool': False,'shortcut':None}),
+                 ('危急值',{'pid': 900, 'sid': 9005, 'title': '危急值', 'tip': None, 'state': True, 'icon': '电话', 'is_tool': True,'shortcut':None}),
             ])})
     ])
 }
@@ -244,5 +245,6 @@ SYS_MENU_MODULE_CLASS = {
     9001: {'module': 'app_interface', 'class': 'OaUI', 'enabled': True},
     9002: {'module': 'app_interface', 'class': 'PhonePlatUI', 'enabled': True},
     9003: {'module': 'app_interface', 'class': 'JHJKGLUI', 'enabled': True},
-    9004: {'module': 'app_interface', 'class': 'MediaUI', 'enabled': True}
+    9004: {'module': 'app_interface', 'class': 'MediaUI', 'enabled': True},
+    9005: {'module': 'app_interface', 'class': 'WJZUI', 'enabled': True},
 }

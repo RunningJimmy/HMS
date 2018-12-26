@@ -183,6 +183,7 @@ class TableWidget(QTableWidget):
         self.setSortingEnabled(True)            # 字符串排序功能
         self.setFrameShape(QFrame.NoFrame)      # 设置无边框
         self.verticalHeader().setVisible(False)  # 列表头
+        # self.setFocusPolicy(Qt.NoFocus) #取消选中单元格时的虚线框
         self.setEditTriggers(QAbstractItemView.NoEditTriggers)   # 表格内容不能编辑
         self.setSelectionBehavior(QAbstractItemView.SelectRows)  # 选中一行
         self.setAlternatingRowColors(True)                       # 使用行交替颜色
@@ -192,6 +193,13 @@ class TableWidget(QTableWidget):
         # self.horizontalHeader().setStyleSheet("QHeaderView::section{background:qlineargradient(spread:pad,x1:0,y1:0,x2:0,y2:1,stop:0.5 #054874 stop:1 #377277);}")  #设置表头背景色
         self.heads = heads
         self.setStyleSheet("QTableCornerButton::section{background-color:white;}")
+        # 鼠标跟踪功能
+        # self.setMouseTracking(True)
+        # self.cellEntered.connect(self.MouseTrackItem)
+
+    # def MouseTrackItem(self,row, col):
+    #     self.setStyleSheet("selection-background-color:lightblue;") #选中项的颜色
+    #     self.setCurrentCell(row, QItemSelectionModel.Select)  #设置该行为选中项
 
         # 公共实现，载入数据
     def load(self,datas:list,heads=None):
