@@ -81,7 +81,11 @@ class CollectUnireTable(TableWidget):
             # 插入一行
             self.insertRow(row_index)
             for col_index, col_value in enumerate(row_data):
-                item = QTableWidgetItem(str2(col_value))
+                value = str2(col_value)
+                if col_index==1:
+                    item = QTableWidgetItem(value[0:1]+ '*' + value[2:])
+                else:
+                    item = QTableWidgetItem(value)
                 item.setTextAlignment(Qt.AlignCenter)
                 item.setFont(unire_font())
                 self.setItem(row_index, col_index, item)

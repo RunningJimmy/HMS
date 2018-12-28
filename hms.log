@@ -1509,3 +1509,713 @@
 [2018-12-26 15:16:41] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
 [2018-12-26 15:16:46] INFO [utils.config_log:191] 写入配置(custom.ini)文件成功
 [2018-12-26 15:16:46] INFO [utils.config_log:192] 用户：管理员(BSSA) 登陆成功！
+[2018-12-26 20:49:45] INFO [utils.config_log:224] 用户：管理员(BSSA) 退出成功！
+[2018-12-26 20:49:47] INFO [utils.config_log:224] 用户：管理员(BSSA) 退出成功！
+[2018-12-26 20:49:58] INFO [utils.config_log:23] 程序启动......
+[2018-12-26 20:49:58] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-26 20:49:58] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-26 20:49:58] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-26 20:49:58] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-26 20:49:58] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-26 20:50:06] INFO [utils.config_log:191] 写入配置(custom.ini)文件成功
+[2018-12-26 20:50:06] INFO [utils.config_log:192] 用户：管理员(BSSA) 登陆成功！
+[2018-12-26 20:53:43] INFO [utils.config_log:224] 用户：管理员(BSSA) 退出成功！
+[2018-12-26 20:53:47] INFO [utils.config_log:23] 程序启动......
+[2018-12-26 20:53:47] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-26 20:53:47] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-26 20:53:47] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-26 20:53:47] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-26 20:53:47] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-26 20:53:54] INFO [utils.config_log:191] 写入配置(custom.ini)文件成功
+[2018-12-26 20:53:54] INFO [utils.config_log:192] 用户：管理员(BSSA) 登陆成功！
+[2018-12-26 21:03:12] INFO [utils.config_log:224] 用户：管理员(BSSA) 退出成功！
+[2018-12-26 21:03:19] INFO [utils.config_log:23] 程序启动......
+[2018-12-26 21:03:19] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-26 21:03:19] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-26 21:03:19] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-26 21:03:19] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-26 21:03:19] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-26 21:03:26] INFO [utils.config_log:191] 写入配置(custom.ini)文件成功
+[2018-12-26 21:03:26] INFO [utils.config_log:192] 用户：管理员(BSSA) 登陆成功！
+[2018-12-26 21:16:04] INFO [utils.config_log:224] 用户：管理员(BSSA) 退出成功！
+[2018-12-26 21:16:07] INFO [utils.config_log:224] 用户：管理员(BSSA) 退出成功！
+[2018-12-26 21:16:32] INFO [utils.config_log:23] 程序启动......
+[2018-12-26 21:16:32] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-26 21:16:32] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-26 21:16:32] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-26 21:16:32] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-26 21:16:32] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-26 21:16:37] INFO [utils.config_log:191] 写入配置(custom.ini)文件成功
+[2018-12-26 21:16:37] INFO [utils.config_log:192] 用户：管理员(BSSA) 登陆成功！
+[2018-12-27 08:01:06] INFO [utils.config_log:224] 用户：管理员(BSSA) 退出成功！
+[2018-12-27 08:01:08] INFO [utils.config_log:224] 用户：管理员(BSSA) 退出成功！
+[2018-12-27 08:20:48] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 08:20:48] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 08:20:48] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 08:20:48] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 08:20:48] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 08:20:48] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 08:20:53] INFO [utils.config_log:191] 写入配置(custom.ini)文件成功
+[2018-12-27 08:20:53] INFO [utils.config_log:192] 用户：管理员(BSSA) 登陆成功！
+[2018-12-27 08:24:50] INFO [utils.config_log:224] 用户：管理员(BSSA) 退出成功！
+[2018-12-27 08:24:54] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 08:24:54] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 08:24:54] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 08:24:54] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 08:24:54] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 08:24:54] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 08:25:52] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 08:25:52] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 08:25:52] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 08:25:52] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 08:25:52] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 08:25:52] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 08:33:40] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 08:35:04] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 08:35:04] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 08:35:04] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 08:35:04] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 08:35:04] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 08:35:04] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 08:35:28] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 08:35:28] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 08:35:28] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 08:35:28] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 08:35:28] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 08:35:28] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 08:37:33] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 08:37:33] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 08:37:33] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 08:37:33] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 08:37:33] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 08:37:33] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 08:37:37] INFO [utils.config_log:191] 写入配置(custom.ini)文件成功
+[2018-12-27 08:37:37] INFO [utils.config_log:192] 用户：管理员(BSSA) 登陆成功！
+[2018-12-27 08:37:52] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 08:37:52] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 08:37:52] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 08:37:52] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 08:37:52] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 08:37:52] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 08:38:07] INFO [utils.config_log:191] 写入配置(custom.ini)文件成功
+[2018-12-27 08:38:07] INFO [utils.config_log:192] 用户：谢小琴(070315078) 登陆成功！
+[2018-12-27 08:38:27] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 08:38:27] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 08:38:27] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 08:38:27] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 08:38:27] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 08:38:27] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 08:38:42] INFO [utils.config_log:191] 写入配置(custom.ini)文件成功
+[2018-12-27 08:38:42] INFO [utils.config_log:192] 用户：谢小琴(070315078) 登陆成功！
+[2018-12-27 08:39:18] INFO [utils.config_log:224] 用户：谢小琴(070315078) 退出成功！
+[2018-12-27 08:39:19] INFO [utils.config_log:224] 用户：谢小琴(070315078) 退出成功！
+[2018-12-27 08:39:44] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 08:39:44] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 08:39:44] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 08:39:44] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 08:39:44] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 08:39:44] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 08:39:49] INFO [utils.config_log:191] 写入配置(custom.ini)文件成功
+[2018-12-27 08:39:49] INFO [utils.config_log:192] 用户：谢小琴(070315078) 登陆成功！
+[2018-12-27 08:39:54] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 08:39:54] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 08:39:54] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 08:39:54] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 08:39:54] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 08:39:54] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 08:39:59] INFO [utils.config_log:191] 写入配置(custom.ini)文件成功
+[2018-12-27 08:39:59] INFO [utils.config_log:192] 用户：谢小琴(070315078) 登陆成功！
+[2018-12-27 08:40:15] INFO [utils.config_log:224] 用户：谢小琴(070315078) 退出成功！
+[2018-12-27 08:48:47] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 08:48:47] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 08:48:47] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 08:48:47] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 08:48:47] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 08:48:47] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 08:48:51] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-27 08:48:51] INFO [utils.config_log:195] 用户：谢小琴(070315078) 登陆成功！
+[2018-12-27 08:48:58] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 08:48:58] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 08:48:58] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 08:48:58] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 08:48:58] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 08:48:58] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 08:49:05] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-27 08:49:05] INFO [utils.config_log:195] 用户：谢小琴(070315078) 登陆成功！
+[2018-12-27 08:55:01] INFO [utils.config_log:224] 用户：谢小琴(070315078) 退出成功！
+[2018-12-27 08:55:31] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 08:55:31] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 08:55:31] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 08:55:31] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 08:55:31] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 08:55:31] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 08:55:44] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 08:55:44] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 08:55:44] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 08:55:44] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 08:55:44] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 08:55:44] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 09:06:19] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 09:06:19] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 09:06:19] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 09:06:19] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 09:06:19] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 09:06:19] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 09:06:42] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 09:06:42] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 09:06:42] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 09:06:42] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 09:06:42] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 09:06:42] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 09:07:07] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-27 09:07:07] INFO [utils.config_log:195] 用户：谢小琴(070315078) 登陆成功！
+[2018-12-27 09:12:02] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 09:12:02] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 09:12:02] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 09:12:02] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 09:12:02] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 09:12:02] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 09:12:10] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-27 09:12:10] INFO [utils.config_log:195] 用户：谢小琴(070315078) 登陆成功！
+[2018-12-27 09:12:16] INFO [utils.config_log:224] 用户：谢小琴(070315078) 退出成功！
+[2018-12-27 09:12:20] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 09:12:20] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 09:12:20] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 09:12:20] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 09:12:20] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 09:12:20] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 09:12:26] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-27 09:12:26] INFO [utils.config_log:195] 用户：谢小琴(070315078) 登陆成功！
+[2018-12-27 09:12:36] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 09:12:36] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 09:12:36] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 09:12:36] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 09:12:36] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 09:12:36] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 09:12:46] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-27 09:12:46] INFO [utils.config_log:195] 用户：谢小琴(070315078) 登陆成功！
+[2018-12-27 09:12:53] INFO [utils.config_log:224] 用户：谢小琴(070315078) 退出成功！
+[2018-12-27 14:37:56] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 14:37:56] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 14:37:56] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 14:37:56] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 14:37:56] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 14:37:56] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 14:38:06] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-27 14:38:06] INFO [utils.config_log:195] 用户：管理员(BSSA) 登陆成功！
+[2018-12-27 15:21:17] INFO [utils.config_log:224] 用户：管理员(BSSA) 退出成功！
+[2018-12-27 15:21:18] INFO [utils.config_log:224] 用户：管理员(BSSA) 退出成功！
+[2018-12-27 15:21:22] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 15:21:22] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 15:21:22] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 15:21:22] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 15:21:22] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 15:21:22] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 15:21:27] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-27 15:21:27] INFO [utils.config_log:195] 用户：管理员(BSSA) 登陆成功！
+[2018-12-27 15:24:03] INFO [utils.config_log:224] 用户：管理员(BSSA) 退出成功！
+[2018-12-27 15:24:07] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 15:24:07] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 15:24:07] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 15:24:07] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 15:24:07] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 15:24:07] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 15:24:12] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-27 15:24:12] INFO [utils.config_log:195] 用户：管理员(BSSA) 登陆成功！
+[2018-12-27 15:25:42] INFO [utils.config_log:224] 用户：管理员(BSSA) 退出成功！
+[2018-12-27 15:25:46] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 15:25:46] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 15:25:46] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 15:25:46] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 15:25:46] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 15:25:46] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 15:25:52] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-27 15:25:52] INFO [utils.config_log:195] 用户：管理员(BSSA) 登陆成功！
+[2018-12-27 15:26:24] INFO [utils.config_log:224] 用户：管理员(BSSA) 退出成功！
+[2018-12-27 15:27:31] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 15:27:31] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 15:27:31] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 15:27:31] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 15:27:31] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 15:27:31] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 15:27:35] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-27 15:27:35] INFO [utils.config_log:195] 用户：管理员(BSSA) 登陆成功！
+[2018-12-27 15:35:40] INFO [utils.config_log:224] 用户：管理员(BSSA) 退出成功！
+[2018-12-27 15:35:46] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 15:35:46] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 15:35:46] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 15:35:46] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 15:35:46] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 15:35:46] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 15:35:50] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-27 15:35:50] INFO [utils.config_log:195] 用户：管理员(BSSA) 登陆成功！
+[2018-12-27 15:35:55] INFO [utils.config_log:224] 用户：管理员(BSSA) 退出成功！
+[2018-12-27 15:35:58] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 15:35:58] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 15:35:58] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 15:35:58] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 15:35:58] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 15:35:58] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 15:36:07] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-27 15:36:07] INFO [utils.config_log:195] 用户：吕瑞兰(091102008) 登陆成功！
+[2018-12-27 15:57:14] INFO [utils.config_log:224] 用户：吕瑞兰(091102008) 退出成功！
+[2018-12-27 15:57:17] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 15:57:17] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 15:57:17] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 15:57:17] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 15:57:17] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 15:57:17] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 15:57:31] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-27 15:57:31] INFO [utils.config_log:195] 用户：吕瑞兰(091102008) 登陆成功！
+[2018-12-27 16:01:52] INFO [utils.config_log:224] 用户：吕瑞兰(091102008) 退出成功！
+[2018-12-27 16:01:56] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 16:01:56] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 16:01:56] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 16:01:56] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 16:01:56] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 16:01:56] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 16:02:03] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-27 16:02:03] INFO [utils.config_log:195] 用户：吕瑞兰(091102008) 登陆成功！
+[2018-12-27 16:03:31] INFO [utils.config_log:224] 用户：吕瑞兰(091102008) 退出成功！
+[2018-12-27 16:03:34] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 16:03:34] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 16:03:34] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 16:03:34] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 16:03:34] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 16:03:34] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 16:03:46] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-27 16:03:46] INFO [utils.config_log:195] 用户：吕瑞兰(091102008) 登陆成功！
+[2018-12-27 16:12:34] INFO [utils.config_log:224] 用户：吕瑞兰(091102008) 退出成功！
+[2018-12-27 16:12:38] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 16:12:38] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 16:12:38] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 16:12:38] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 16:12:38] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 16:12:38] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 16:12:48] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-27 16:12:48] INFO [utils.config_log:195] 用户：吕瑞兰(091102008) 登陆成功！
+[2018-12-27 16:24:30] INFO [utils.config_log:224] 用户：吕瑞兰(091102008) 退出成功！
+[2018-12-27 16:24:35] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 16:24:35] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 16:24:35] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 16:24:35] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 16:24:35] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 16:24:35] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 16:24:41] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-27 16:24:41] INFO [utils.config_log:195] 用户：吕瑞兰(091102008) 登陆成功！
+[2018-12-27 16:25:56] INFO [utils.config_log:224] 用户：吕瑞兰(091102008) 退出成功！
+[2018-12-27 16:26:00] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 16:26:00] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 16:26:00] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 16:26:00] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 16:26:00] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 16:26:00] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 16:26:04] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-27 16:26:04] INFO [utils.config_log:195] 用户：吕瑞兰(091102008) 登陆成功！
+[2018-12-27 16:26:42] INFO [utils.config_log:224] 用户：吕瑞兰(091102008) 退出成功！
+[2018-12-27 16:26:47] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 16:26:47] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 16:26:47] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 16:26:47] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 16:26:47] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 16:26:47] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 16:26:51] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-27 16:26:51] INFO [utils.config_log:195] 用户：吕瑞兰(091102008) 登陆成功！
+[2018-12-27 16:28:28] INFO [utils.config_log:224] 用户：吕瑞兰(091102008) 退出成功！
+[2018-12-27 16:28:32] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 16:28:32] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 16:28:32] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 16:28:32] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 16:28:32] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 16:28:32] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 16:28:36] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-27 16:28:36] INFO [utils.config_log:195] 用户：吕瑞兰(091102008) 登陆成功！
+[2018-12-27 16:40:33] INFO [utils.config_log:224] 用户：吕瑞兰(091102008) 退出成功！
+[2018-12-27 16:40:37] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 16:40:37] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 16:40:37] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 16:40:37] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 16:40:37] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 16:40:37] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 16:45:58] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-27 16:45:58] INFO [utils.config_log:195] 用户：吕瑞兰(091102008) 登陆成功！
+[2018-12-27 16:46:38] INFO [utils.config_log:224] 用户：吕瑞兰(091102008) 退出成功！
+[2018-12-27 16:46:42] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 16:46:42] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 16:46:42] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 16:46:42] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 16:46:42] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 16:46:42] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 16:46:49] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-27 16:46:49] INFO [utils.config_log:195] 用户：吕瑞兰(091102008) 登陆成功！
+[2018-12-27 16:48:21] INFO [utils.config_log:224] 用户：吕瑞兰(091102008) 退出成功！
+[2018-12-27 16:48:26] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 16:48:26] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 16:48:26] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 16:48:26] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 16:48:26] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 16:48:26] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 16:48:30] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-27 16:48:30] INFO [utils.config_log:195] 用户：吕瑞兰(091102008) 登陆成功！
+[2018-12-27 16:57:04] INFO [utils.config_log:224] 用户：吕瑞兰(091102008) 退出成功！
+[2018-12-27 16:57:09] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 16:57:09] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 16:57:09] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 16:57:09] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 16:57:09] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 16:57:09] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 16:57:40] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-27 16:57:40] INFO [utils.config_log:195] 用户：吕瑞兰(091102008) 登陆成功！
+[2018-12-27 17:03:01] INFO [utils.config_log:224] 用户：吕瑞兰(091102008) 退出成功！
+[2018-12-27 17:03:04] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 17:03:04] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 17:03:04] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 17:03:04] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 17:03:04] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 17:03:04] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 17:03:08] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-27 17:03:08] INFO [utils.config_log:195] 用户：吕瑞兰(091102008) 登陆成功！
+[2018-12-27 17:04:19] INFO [utils.config_log:224] 用户：吕瑞兰(091102008) 退出成功！
+[2018-12-27 17:04:22] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 17:04:22] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 17:04:22] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 17:04:22] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 17:04:22] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 17:04:22] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 17:04:26] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-27 17:04:26] INFO [utils.config_log:195] 用户：吕瑞兰(091102008) 登陆成功！
+[2018-12-27 17:05:34] INFO [utils.config_log:224] 用户：吕瑞兰(091102008) 退出成功！
+[2018-12-27 17:05:38] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 17:05:38] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 17:05:38] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 17:05:38] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 17:05:38] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 17:05:38] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 17:05:43] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-27 17:05:43] INFO [utils.config_log:195] 用户：吕瑞兰(091102008) 登陆成功！
+[2018-12-27 17:07:05] INFO [utils.config_log:224] 用户：吕瑞兰(091102008) 退出成功！
+[2018-12-27 17:07:08] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 17:07:08] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 17:07:08] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 17:07:08] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 17:07:08] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 17:07:08] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 17:07:12] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-27 17:07:12] INFO [utils.config_log:195] 用户：吕瑞兰(091102008) 登陆成功！
+[2018-12-27 20:40:35] INFO [utils.config_log:224] 用户：吕瑞兰(091102008) 退出成功！
+[2018-12-27 20:40:43] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 20:40:43] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 20:40:43] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 20:40:43] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 20:40:43] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 20:40:43] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 20:40:50] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-27 20:40:50] INFO [utils.config_log:195] 用户：吕瑞兰(091102008) 登陆成功！
+[2018-12-27 20:51:16] INFO [utils.config_log:224] 用户：吕瑞兰(091102008) 退出成功！
+[2018-12-27 20:51:17] INFO [utils.config_log:224] 用户：吕瑞兰(091102008) 退出成功！
+[2018-12-27 20:51:22] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 20:51:22] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 20:51:22] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 20:51:22] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 20:51:22] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 20:51:22] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 20:51:32] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-27 20:51:32] INFO [utils.config_log:195] 用户：吕瑞兰(091102008) 登陆成功！
+[2018-12-27 20:53:17] INFO [utils.config_log:224] 用户：吕瑞兰(091102008) 退出成功！
+[2018-12-27 20:55:19] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 20:55:19] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 20:55:19] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 20:55:19] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 20:55:19] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 20:55:19] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 20:55:24] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-27 20:55:24] INFO [utils.config_log:195] 用户：吕瑞兰(091102008) 登陆成功！
+[2018-12-27 21:04:56] INFO [utils.config_log:224] 用户：吕瑞兰(091102008) 退出成功！
+[2018-12-27 21:05:38] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 21:05:38] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 21:05:38] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 21:05:38] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 21:05:38] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 21:05:38] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 21:05:47] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-27 21:05:47] INFO [utils.config_log:195] 用户：管理员(BSSA) 登陆成功！
+[2018-12-27 21:16:08] INFO [utils.config_log:224] 用户：管理员(BSSA) 退出成功！
+[2018-12-27 21:16:12] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 21:16:12] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 21:16:12] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 21:16:12] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 21:16:12] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 21:16:12] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 21:16:18] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-27 21:16:18] INFO [utils.config_log:195] 用户：管理员(BSSA) 登陆成功！
+[2018-12-27 21:21:00] INFO [utils.config_log:224] 用户：管理员(BSSA) 退出成功！
+[2018-12-27 21:21:04] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 21:21:04] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 21:21:04] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 21:21:04] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 21:21:04] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 21:21:04] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 21:21:10] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-27 21:21:10] INFO [utils.config_log:195] 用户：管理员(BSSA) 登陆成功！
+[2018-12-27 21:25:49] INFO [utils.config_log:224] 用户：管理员(BSSA) 退出成功！
+[2018-12-27 21:25:53] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 21:25:53] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 21:25:53] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 21:25:53] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 21:25:53] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 21:25:53] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 21:25:58] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-27 21:25:58] INFO [utils.config_log:195] 用户：管理员(BSSA) 登陆成功！
+[2018-12-27 21:33:45] INFO [utils.config_log:224] 用户：管理员(BSSA) 退出成功！
+[2018-12-27 21:33:49] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 21:33:49] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 21:33:49] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 21:33:49] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 21:33:49] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 21:33:49] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 21:33:55] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-27 21:33:55] INFO [utils.config_log:195] 用户：管理员(BSSA) 登陆成功！
+[2018-12-27 21:57:35] INFO [utils.config_log:224] 用户：管理员(BSSA) 退出成功！
+[2018-12-27 21:57:40] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 21:57:40] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 21:57:40] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 21:57:40] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 21:57:40] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 21:57:40] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 21:57:45] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-27 21:57:45] INFO [utils.config_log:195] 用户：管理员(BSSA) 登陆成功！
+[2018-12-27 21:59:36] INFO [utils.config_log:224] 用户：管理员(BSSA) 退出成功！
+[2018-12-27 21:59:41] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 21:59:41] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 21:59:41] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 21:59:41] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 21:59:41] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 21:59:41] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 21:59:47] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-27 21:59:47] INFO [utils.config_log:195] 用户：管理员(BSSA) 登陆成功！
+[2018-12-27 22:06:40] INFO [utils.config_log:224] 用户：管理员(BSSA) 退出成功！
+[2018-12-27 22:06:44] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 22:06:44] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 22:06:44] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 22:06:44] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 22:06:44] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 22:06:44] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 22:06:49] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-27 22:06:49] INFO [utils.config_log:195] 用户：管理员(BSSA) 登陆成功！
+[2018-12-27 22:08:16] INFO [utils.config_log:224] 用户：管理员(BSSA) 退出成功！
+[2018-12-27 22:08:20] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 22:08:20] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 22:08:20] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 22:08:20] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 22:08:20] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 22:08:20] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 22:08:26] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-27 22:08:26] INFO [utils.config_log:195] 用户：管理员(BSSA) 登陆成功！
+[2018-12-27 22:15:31] INFO [utils.config_log:224] 用户：管理员(BSSA) 退出成功！
+[2018-12-27 22:15:36] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 22:15:36] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 22:15:36] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 22:15:36] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 22:15:36] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 22:15:36] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 22:15:43] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-27 22:15:43] INFO [utils.config_log:195] 用户：管理员(BSSA) 登陆成功！
+[2018-12-27 22:17:56] INFO [utils.config_log:224] 用户：管理员(BSSA) 退出成功！
+[2018-12-27 22:17:59] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 22:17:59] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 22:17:59] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 22:17:59] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 22:17:59] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 22:17:59] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 22:18:05] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-27 22:18:05] INFO [utils.config_log:195] 用户：管理员(BSSA) 登陆成功！
+[2018-12-27 22:33:01] INFO [utils.config_log:224] 用户：管理员(BSSA) 退出成功！
+[2018-12-27 22:33:05] INFO [utils.config_log:23] 程序启动......
+[2018-12-27 22:33:05] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-27 22:33:05] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-27 22:33:05] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-27 22:33:05] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-27 22:33:05] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-27 22:33:09] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-27 22:33:09] INFO [utils.config_log:195] 用户：管理员(BSSA) 登陆成功！
+[2018-12-28 08:13:52] INFO [utils.config_log:224] 用户：管理员(BSSA) 退出成功！
+[2018-12-28 08:13:56] INFO [utils.config_log:23] 程序启动......
+[2018-12-28 08:13:56] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-28 08:13:56] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-28 08:13:56] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-28 08:13:56] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-28 08:13:56] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-28 08:14:00] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-28 08:14:00] INFO [utils.config_log:195] 用户：管理员(BSSA) 登陆成功！
+[2018-12-28 08:21:22] INFO [utils.config_log:224] 用户：管理员(BSSA) 退出成功！
+[2018-12-28 08:21:26] INFO [utils.config_log:23] 程序启动......
+[2018-12-28 08:21:26] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-28 08:21:26] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-28 08:21:26] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-28 08:21:26] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-28 08:21:26] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-28 08:21:30] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-28 08:21:30] INFO [utils.config_log:195] 用户：管理员(BSSA) 登陆成功！
+[2018-12-28 08:24:14] INFO [utils.config_log:224] 用户：管理员(BSSA) 退出成功！
+[2018-12-28 08:24:18] INFO [utils.config_log:23] 程序启动......
+[2018-12-28 08:24:18] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-28 08:24:18] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-28 08:24:18] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-28 08:24:18] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-28 08:24:18] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-28 08:24:23] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-28 08:24:23] INFO [utils.config_log:195] 用户：管理员(BSSA) 登陆成功！
+[2018-12-28 08:34:15] INFO [utils.config_log:224] 用户：管理员(BSSA) 退出成功！
+[2018-12-28 08:34:17] INFO [utils.config_log:224] 用户：管理员(BSSA) 退出成功！
+[2018-12-28 08:34:21] INFO [utils.config_log:23] 程序启动......
+[2018-12-28 08:34:21] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-28 08:34:21] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-28 08:34:21] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-28 08:34:21] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-28 08:34:21] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-28 08:34:25] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-28 08:34:25] INFO [utils.config_log:195] 用户：管理员(BSSA) 登陆成功！
+[2018-12-28 09:37:27] INFO [utils.config_log:224] 用户：管理员(BSSA) 退出成功！
+[2018-12-28 09:37:29] INFO [utils.config_log:224] 用户：管理员(BSSA) 退出成功！
+[2018-12-28 09:37:33] INFO [utils.config_log:23] 程序启动......
+[2018-12-28 09:37:33] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-28 09:37:33] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-28 09:37:33] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-28 09:37:33] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-28 09:37:33] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-28 09:37:39] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-28 09:37:39] INFO [utils.config_log:195] 用户：管理员(BSSA) 登陆成功！
+[2018-12-28 09:42:21] INFO [utils.config_log:224] 用户：管理员(BSSA) 退出成功！
+[2018-12-28 09:42:25] INFO [utils.config_log:23] 程序启动......
+[2018-12-28 09:42:25] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-28 09:42:25] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-28 09:42:25] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-28 09:42:25] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-28 09:42:25] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-28 09:42:28] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-28 09:42:28] INFO [utils.config_log:195] 用户：管理员(BSSA) 登陆成功！
+[2018-12-28 09:44:04] INFO [utils.config_log:23] 程序启动......
+[2018-12-28 09:44:04] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-28 09:44:04] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-28 09:44:04] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-28 09:44:04] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-28 09:44:04] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-28 09:44:08] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-28 09:44:08] INFO [utils.config_log:195] 用户：管理员(BSSA) 登陆成功！
+[2018-12-28 09:46:28] INFO [utils.config_log:23] 程序启动......
+[2018-12-28 09:46:28] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-28 09:46:28] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-28 09:46:28] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-28 09:46:28] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-28 09:46:28] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-28 09:46:33] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-28 09:46:33] INFO [utils.config_log:195] 用户：管理员(BSSA) 登陆成功！
+[2018-12-28 10:04:48] INFO [utils.config_log:224] 用户：管理员(BSSA) 退出成功！
+[2018-12-28 10:04:52] INFO [utils.config_log:23] 程序启动......
+[2018-12-28 10:04:52] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-28 10:04:52] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-28 10:04:52] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-28 10:04:52] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-28 10:04:52] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-28 10:04:58] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-28 10:04:58] INFO [utils.config_log:195] 用户：管理员(BSSA) 登陆成功！
+[2018-12-28 10:06:05] INFO [utils.config_log:224] 用户：管理员(BSSA) 退出成功！
+[2018-12-28 10:06:09] INFO [utils.config_log:23] 程序启动......
+[2018-12-28 10:06:09] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-28 10:06:09] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-28 10:06:09] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-28 10:06:09] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-28 10:06:09] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-28 10:06:14] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-28 10:06:14] INFO [utils.config_log:195] 用户：管理员(BSSA) 登陆成功！
+[2018-12-28 10:19:30] INFO [utils.config_log:224] 用户：管理员(BSSA) 退出成功！
+[2018-12-28 10:19:34] INFO [utils.config_log:23] 程序启动......
+[2018-12-28 10:19:34] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-28 10:19:34] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-28 10:19:34] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-28 10:19:34] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-28 10:19:34] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-28 10:19:38] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-28 10:19:38] INFO [utils.config_log:195] 用户：管理员(BSSA) 登陆成功！
+[2018-12-28 10:19:52] INFO [utils.config_log:224] 用户：管理员(BSSA) 退出成功！
+[2018-12-28 10:30:30] INFO [utils.config_log:23] 程序启动......
+[2018-12-28 10:30:30] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-28 10:30:30] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-28 10:30:30] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-28 10:30:30] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-28 10:30:30] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-28 10:30:33] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-28 10:30:33] INFO [utils.config_log:195] 用户：管理员(BSSA) 登陆成功！
+[2018-12-28 10:34:07] INFO [utils.config_log:224] 用户：管理员(BSSA) 退出成功！
+[2018-12-28 10:34:11] INFO [utils.config_log:23] 程序启动......
+[2018-12-28 10:34:11] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-28 10:34:11] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-28 10:34:11] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-28 10:34:11] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-28 10:34:11] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-28 10:34:15] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-28 10:34:15] INFO [utils.config_log:195] 用户：管理员(BSSA) 登陆成功！
+[2018-12-28 10:34:52] INFO [utils.config_log:224] 用户：管理员(BSSA) 退出成功！
+[2018-12-28 10:34:56] INFO [utils.config_log:23] 程序启动......
+[2018-12-28 10:34:56] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-28 10:34:56] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-28 10:34:56] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-28 10:34:56] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-28 10:34:56] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-28 10:34:59] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-28 10:34:59] INFO [utils.config_log:195] 用户：管理员(BSSA) 登陆成功！
+[2018-12-28 10:37:59] INFO [utils.config_log:224] 用户：管理员(BSSA) 退出成功！
+[2018-12-28 10:38:03] INFO [utils.config_log:23] 程序启动......
+[2018-12-28 10:38:03] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-28 10:38:03] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-28 10:38:03] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-28 10:38:03] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-28 10:38:03] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-28 10:38:08] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-28 10:38:08] INFO [utils.config_log:195] 用户：管理员(BSSA) 登陆成功！
+[2018-12-28 10:39:20] INFO [utils.config_log:224] 用户：管理员(BSSA) 退出成功！
+[2018-12-28 10:39:24] INFO [utils.config_log:23] 程序启动......
+[2018-12-28 10:39:24] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-28 10:39:24] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-28 10:39:24] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-28 10:39:24] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-28 10:39:24] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-28 10:39:28] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-28 10:39:28] INFO [utils.config_log:195] 用户：管理员(BSSA) 登陆成功！
+[2018-12-28 10:40:29] INFO [utils.config_log:224] 用户：管理员(BSSA) 退出成功！
+[2018-12-28 10:40:33] INFO [utils.config_log:23] 程序启动......
+[2018-12-28 10:40:33] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-28 10:40:33] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-28 10:40:33] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-28 10:40:33] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-28 10:40:33] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-28 10:40:37] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-28 10:40:37] INFO [utils.config_log:195] 用户：管理员(BSSA) 登陆成功！
+[2018-12-28 11:04:08] INFO [utils.config_log:224] 用户：管理员(BSSA) 退出成功！
+[2018-12-28 11:04:41] INFO [utils.config_log:23] 程序启动......
+[2018-12-28 11:04:41] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-28 11:04:41] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-28 11:04:41] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-28 11:04:41] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-28 11:04:41] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-28 11:04:50] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-28 11:04:50] INFO [utils.config_log:195] 用户：管理员(BSSA) 登陆成功！
+[2018-12-28 11:05:36] INFO [utils.config_log:224] 用户：管理员(BSSA) 退出成功！
+[2018-12-28 11:05:40] INFO [utils.config_log:23] 程序启动......
+[2018-12-28 11:05:40] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-28 11:05:40] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-28 11:05:40] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-28 11:05:40] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-28 11:05:40] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-28 11:05:46] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-28 11:05:46] INFO [utils.config_log:195] 用户：管理员(BSSA) 登陆成功！
+[2018-12-28 11:08:40] INFO [utils.config_log:224] 用户：管理员(BSSA) 退出成功！
+[2018-12-28 14:21:21] INFO [utils.config_log:23] 程序启动......
+[2018-12-28 14:21:21] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2018-12-28 14:21:21] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2018-12-28 14:21:21] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2018-12-28 14:21:21] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2018-12-28 14:21:21] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2018-12-28 14:21:25] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2018-12-28 14:21:25] INFO [utils.config_log:195] 用户：管理员(BSSA) 登陆成功！
+[2018-12-28 15:26:46] INFO [utils.config_log:224] 用户：管理员(BSSA) 退出成功！

@@ -32,7 +32,10 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.viewfinder)
 
         # Set the default camera.
-        self.select_camera(0)
+        try:
+            self.select_camera(0)
+        except Exception as e:
+            print(e)
 
         # Setup tools
         camera_toolbar = QToolBar("Camera")
@@ -52,7 +55,7 @@ class MainWindow(QMainWindow):
 
         camera_selector = QComboBox()
         camera_selector.addItems([c.description() for c in self.available_cameras])
-        camera_selector.currentIndexChanged.connect( self.select_camera )
+        camera_selector.currentIndexChanged.connect(self.select_camera )
 
         camera_toolbar.addWidget(camera_selector)
 

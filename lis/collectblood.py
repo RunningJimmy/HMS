@@ -72,7 +72,7 @@ class CollectBlood(GolParasMixin,CollectBlood_UI):
     # 打开样本交接
     def on_btn_handover_click(self):
         collect_handle_ui = CollectHandleUI(self)
-        collect_handle_ui.query.emit(self.login_id)
+        collect_handle_ui.initQuery.emit(True)
         collect_handle_ui.exec_()
 
     def serialno_validate(self):

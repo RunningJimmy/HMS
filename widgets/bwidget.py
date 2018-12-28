@@ -241,6 +241,15 @@ class TableWidget(QTableWidget):
             tmp.append(self.getItemValueOfKey(row,key))
         return tmp
 
+    # 获取已选择行的关键字的值
+    def isSelectRowsValueOfInt(self,key):
+        tmp = []
+        for row in self.isSelectRows():
+            value = self.getItemValueOfKey(row,key)
+            if value.isdigit():
+                tmp.append(int(value))
+        return tmp
+
     # 插入一行 实现
     def insert(self,data):
         self.insertRow(self.rowCount())  # 特别含义

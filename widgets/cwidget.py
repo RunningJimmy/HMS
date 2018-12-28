@@ -1628,10 +1628,11 @@ class ReportStateGroup(QHBoxLayout):
 
     @property
     def xmzt(self):
-        if self.cb_report_state.currentText()=='已审核':
-            return True
-        else:
-            return False
+        return self.cb_report_state.currentText()
+        # if self.cb_report_state.currentText()=='已审核':
+        #     return True
+        # else:
+        #     return False
 
     @property
     def text(self):
@@ -1842,6 +1843,9 @@ class CollectAreaGroup(QHBoxLayout):
 
     def set_area(self,area):
         self.cb_area.setCurrentText(area)
+
+    def setDisabled(self,state:bool):
+        self.cb_area.setDisabled(state)
 
 
 # 楼层区域组件

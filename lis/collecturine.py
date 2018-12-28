@@ -211,7 +211,8 @@ class CollectUrine(CollectUrine_UI):
     # 刷新采样列表
     def on_table_urine_insert(self,button:SerialNoButton):
         if self.user_obj:
-            data=['已留样',str2(self.user_obj.xm),str2(self.user_obj.xb),str2(self.user_obj.nl),button.collectNo,button.collectTJBH,button.collectTxt]
+            xm = str2(self.user_obj.xm)
+            data=['已留样',xm[0:1]+'*'+xm[2:],str2(self.user_obj.xb),str2(self.user_obj.nl),button.collectNo,button.collectTJBH,button.collectTxt]
             self.table_urine.insert(data)
             self.gp_right.setTitle('留样列表（%s）' % str(self.table_urine.rowCount()))
         else:

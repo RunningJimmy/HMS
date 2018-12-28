@@ -265,7 +265,7 @@ class CollectBloodTable(TableWidget):
 
 class CollectHandleUI(Dialog):
 
-    query = pyqtSignal(str)
+    initQuery = pyqtSignal(bool)    # 是否初始化查询
 
     def __init__(self,parent=None):
         super(CollectHandleUI,self).__init__(parent)
@@ -273,7 +273,8 @@ class CollectHandleUI(Dialog):
         self.setMinimumHeight(500)
         self.initParas()
         self.initUI()
-        self.query.connect(self.on_btn_query_click)
+        self.initQuery.connect(self.on_btn_query_click)                         #初始化查询，默认
+        self.btn_query.clicked.connect(partial(self.on_btn_query_click,False))  #手工查询，用于复杂场景，多人合并操作的
         self.table_handover_master.itemClicked.connect(self.on_table_detail_click)
         self.table_handover_master.setContextMenuPolicy(Qt.CustomContextMenu)  ######允许右键产生子菜单
         self.table_handover_master.customContextMenuRequested.connect(self.onTableMenu)   ####右键菜单
@@ -288,19 +289,22 @@ class CollectHandleUI(Dialog):
             item1 = menu.addAction(Icon("打印"), "条码补打")
             item2 = menu.addAction(Icon("打印"), "重新生成")
             item3 = menu.addAction(Icon("打印"), "条码预览")
+            item4 = menu.addAction(Icon("打印"), "条码取消")
+            item5 = menu.addAction(Icon("条码"), "合并封盘")
             action = menu.exec_(self.table_handover_master.mapToGlobal(pos))
 
             serialno_text = self.table_handover_master.getCurItemValueOfKey('HZTM')
             serialno_sgys = self.table_handover_master.getCurItemValueOfKey('SGYS')
             serialno_sgsl = self.table_handover_master.getCurItemValueOfKey('SGSL')
-            # 条码标签
+            jjxm = self.table_handover_master.getCurItemValueOfKey('jjxm')
+            qsxm = self.table_handover_master.getCurItemValueOfKey('qsxm')
             serialno_lable = "%s %s %s %s" % (serialno_sgys, str(serialno_sgsl), self.login_name, cur_time())
-            # 按钮功能
+            # 条码补打
             if action == item1:
                 if not serialno_text:
                     return
                 self.on_serialno_handle(serialno_text,serialno_lable, True)
-            # 按钮功能
+            # 重新生成
             elif action == item2:
                 # 模拟点击
                 self.on_table_detail_click(self.table_handover_master.currentItem())
@@ -311,20 +315,134 @@ class CollectHandleUI(Dialog):
                 self.table_handover_master.setCurItemValueOfKey('jjsj', operate_time)
                 # 更新数据库
                 self.on_table_handover_detail_update(serialno_text,operate_time)
-            # 按钮功能
+            # 条码预览
             elif action == item3:
                 if not serialno_text:
                     return
                 self.on_serialno_handle(serialno_text,serialno_lable, False)
+            # 取消条码
+            elif action == item4:
+                # 是否已生成封盘条码
+                if not serialno_text.isdigit():
+                    return
+                # 是否已完成签收
+                if qsxm:
+                    mes_about(self, "样本已签收，不允许取消！")
+                    return
+                if jjxm!=self.login_name:
+                    mes_about(self,"只有交接的本人才能进行取消操作！")
+                    return
+                tstart, tend = self.de_start.text(), self.de_end.text()
+                czxm = self.table_handover_master.getCurItemValueOfKey('CZXM')
+                # 执行取消
+                try:
+                    self.session.query(MT_TJ_CZJLB).filter(MT_TJ_CZJLB.czxm==czxm,
+                                                           MT_TJ_CZJLB.czsj>=tstart,
+                                                           MT_TJ_CZJLB.czsj < tend,
+                                                           MT_TJ_CZJLB.sjfs == serialno_text,
+                                                           ).update({
+                        MT_TJ_CZJLB.sjfs: None,
+                        MT_TJ_CZJLB.jjxm: None,
+                        MT_TJ_CZJLB.jjsj: None,
+                    })
+                    self.session.commit()
+                    # 更新UI
+                    self.table_handover_master.setCurItemValueOfKey('HZTM', '打印')
+                    self.table_handover_master.setCurItemValueOfKey('jjsj', '')
+                    self.table_handover_master.setCurItemValueOfKey('jjxm', '')
+                    mes_about(self, "取消成功！" )
+                except Exception as e:
+                    self.session.rollback()
+                    mes_about(self,"取消封盘失败，错误信息：%s" %e)
+            # 合并封盘
+            elif action == item5:
+                # 必须是多行，才能处理
+                rows = self.table_handover_master.isSelectRows()
+                if len(rows)<=1:
+                    mes_about(self, "必须选择多行，才能进行此操作 ")
+                    return
+                # 合并试管总数是否大于100
+                sgzs = sum(self.table_handover_master.isSelectRowsValueOfInt('SGSL'))
+                if sgzs>100:
+                    mes_about(self,"不允许合并的封盘条码数量>100 ")
+                    return
+                # 合并的试管颜色是否统一
+                tmp = set(self.table_handover_master.isSelectRowsValue('SGYS'))
+                if len(tmp)>1:
+                    mes_about(self, "合并封盘的试管颜色必须一致 ")
+                    return
+                sgys = list(tmp)[0]
+                # 合并的试管是否均是待交接的情况
+                for row in rows:
+                    hztm = self.table_handover_master.getItemValueOfKey(row,'HZTM')
+                    if hztm.isdigit():
+                        mes_about(self, "合并封盘必须都是未交接的条码 ")
+                        return
+                # 多个采集人
+                czxms = ",".join(self.table_handover_master.isSelectRowsValue('CZXM'))
+                # 获取条码标签
+                serialno_lable = "%s %s %s %s" % (sgys, str(sgzs), czxms, cur_time())
+                serialno_text = self.on_serialno_handle('', serialno_lable, True)
+                operate_time = cur_datetime()
+                tstart, tend = self.de_start.text(), self.de_end.text()
+                # 更新UI/数据库
+                for row in rows:
+                    self.table_handover_master.setItemValueOfKey(row, 'HZTM', serialno_text)
+                    self.table_handover_master.setItemValueOfKey(row, 'jjxm', self.login_name)
+                    self.table_handover_master.setItemValueOfKey(row, 'jjsj', operate_time)
+                    czqy = self.table_handover_master.getItemValueOfKey(row,'CZQY')
+                    czxm = self.table_handover_master.getItemValueOfKey(row, 'CZXM')
+                    try:
+                        sql_dict ={
+                            'tstart': tstart,
+                            'tend': tend,
+                            'czqy': czqy,
+                            'czxm': czxm,
+                            'sgys':sgys,
+                            'sjfs_new':serialno_text,
+                            'jjxm':self.login_name,
+                            'jjsj':operate_time
+                        }
+                        sql_str = "UPDATE TJ_CZJLB SET sjfs='{sjfs_new}',jjxm='{jjxm}',jjsj='{jjsj}' " \
+                              "WHERE czsj>='{tstart}' AND czsj<'{tend}' " \
+                              "AND czqy='{czqy}' AND czxm='{czxm}' AND cast(bz as VARCHAR)='{sgys}' AND sjfs is NULL ;"
+                        # print(sql_str.format(**sql_dict))
+                        self.session.execute(sql_str.format(**sql_dict))
+                        # 更新限制，sqlalchemy 恶心
+                        # self.session.query(MT_TJ_CZJLB).filter(MT_TJ_CZJLB.czqy==czqy,
+                        #                                        MT_TJ_CZJLB.czxm == czxm,
+                        #                                        MT_TJ_CZJLB.czsj >= tstart,
+                        #                                        MT_TJ_CZJLB.czsj < tend,
+                        #                                        cast(MT_TJ_CZJLB.bz, VARCHAR) == sgys,
+                        #                                        MT_TJ_CZJLB.sjfs == None,
+                        #                                        ).update({
+                        #     MT_TJ_CZJLB.sjfs: serialno_text,
+                        #     MT_TJ_CZJLB.jjxm: self.login_name,
+                        #     MT_TJ_CZJLB.jjsj: operate_time,
+                        # })
+                        self.session.commit()
+                    except Exception as e:
+                        self.session.rollback()
+                        mes_about(self,"更新数据库出错，信息：%s" %e)
+                        return
+
 
     # 查询
-    def on_btn_query_click(self,login_id:str):
-        sql = get_collect_handle_sql(cur_date(),cur_date(1),login_id)
+    def on_btn_query_click(self,init:bool):
+        if init:
+            where_other = ''' AND CZGH ='%s' ''' %self.login_id
+            sql = get_collect_handle_sql(cur_date(),cur_date(1),where_other)
+        else:
+            where_other = ''' AND CZQY like '{0}%' '''.format(self.collect_area.get_area)
+            if not self.collect_user.currentText()=='所有':
+                where_other = where_other + " AND CZGH ='%s' " % self.login_id
+            tstart,tend = self.de_start.text(),self.de_end.text()
+            sql = get_collect_handle_sql(tstart,tend, where_other)
         # print(sql)
         try:
             results = self.session.execute(sql)
         except Exception as e:
-            mes_about(self,"执行数据库查询出错，错误信息：%s" %e)
+            mes_about(self, "执行数据库查询出错，错误信息：%s" % e)
             return
         self.table_handover_master.load(results)
         self.gp_left.setTitle('样本采集汇总(%s)' % self.table_handover_master.all_count)
@@ -419,6 +537,15 @@ class CollectHandleUI(Dialog):
                 return '',bytes()
             fpid = result.value
             serialno_text = "%s%s" % (cur_date2(), str(fpid).zfill(4))
+            # ID 自增
+            try:
+                self.session.query(MT_GY_IDENTITY).filter(MT_GY_IDENTITY.tname == 'TJ_CZJLB').update({
+                    MT_GY_IDENTITY.value: MT_GY_IDENTITY.value + 1
+                })
+                self.session.commit()
+            except Exception as e:
+                self.session.rollback()
+                mes_about(self,"更新表 GY_IDENTITY 出错，信息：%s" %e)
         # 生成条码图片
         BarCodeBuild(path=self.tmp_file).create(serialno_text)
         try:
@@ -433,9 +560,6 @@ class CollectHandleUI(Dialog):
     def on_table_handover_detail_update(self,serialno_text:str,operate_time:str):
         # 更新数据库，自增ID
         try:
-            self.session.query(MT_GY_IDENTITY).filter(MT_GY_IDENTITY.tname == 'TJ_CZJLB').update({
-                MT_GY_IDENTITY.value: MT_GY_IDENTITY.value + 1
-            })
             count=0
             for row in range(self.table_handover_detail.rowCount()):
                 count = count + 1
@@ -456,11 +580,16 @@ class CollectHandleUI(Dialog):
 
     # 单击主表获得副表详情
     def on_table_detail_click(self,QTableWidgetItem):
+        # 获取参数
+        tstart, tend = self.de_start.text(), self.de_end.text()
         row = QTableWidgetItem.row()
         sgys = self.table_handover_master.getItemValueOfKey(row, 'SGYS')
         jjxm = self.table_handover_master.getItemValueOfKey(row, 'jjxm')
         jjsj = self.table_handover_master.getItemValueOfKey(row, 'jjsj')
         sgsl = self.table_handover_master.getItemValueOfKey(row, 'SGSL')
+        hztm = self.table_handover_master.getItemValueOfKey(row, 'HZTM')
+        czxm = self.table_handover_master.getItemValueOfKey(row, 'CZXM')
+        czqy = self.table_handover_master.getItemValueOfKey(row, 'CZQY')
         # 最多100管
         if int(sgsl)>100:
             sgsl=100
@@ -468,13 +597,19 @@ class CollectHandleUI(Dialog):
             jjxm = None
         if not jjsj:
             jjsj = None
-        results = self.session.query(MT_TJ_CZJLB).filter(MT_TJ_CZJLB.czsj.between(cur_date(), cur_date(1)),
+        if not hztm.isdigit():
+            hztm = None
+        results = self.session.query(MT_TJ_CZJLB).filter(MT_TJ_CZJLB.czsj.between(tstart, tend),
                                                          MT_TJ_CZJLB.jllx.in_(('0010', '0011')),
                                                          cast(MT_TJ_CZJLB.bz, VARCHAR) == sgys,
-                                                         MT_TJ_CZJLB.czgh == self.login_id,
+                                                         MT_TJ_CZJLB.sjfs == hztm,
+                                                         MT_TJ_CZJLB.czxm == czxm,
                                                          MT_TJ_CZJLB.jjxm == jjxm,
-                                                         MT_TJ_CZJLB.jjsj == jjsj
+                                                         MT_TJ_CZJLB.jjsj == jjsj,
+                                                         MT_TJ_CZJLB.czqy == czqy
+                                                         # MT_TJ_CZJLB.czqy.like("%{0}".format(self.collect_area.get_area)),
                                                          ).all()
+        # print(str(results))
         self.table_handover_detail.load([result.detail for result in results])
         self.gp_right.setTitle('样本采集明细(%s)' %self.table_handover_detail.rowCount())
         # 是否需要打印
@@ -495,6 +630,7 @@ class CollectHandleUI(Dialog):
                                 ("CZQY", "区域"),
                                 ("SGYS", "试管"),
                                 ("SGSL", "数量"),
+                                ("CZXM", "采集护士"),
                                 ("HZTM", "封盘条码"),
                                 ("jjxm", "交接护士"),
                                 ("jjsj", "交接时间"),
@@ -523,17 +659,19 @@ class CollectHandleUI(Dialog):
         self.de_start.setDisplayFormat("yyyy-MM-dd")
         self.de_end.setCalendarPopup(True)
         self.de_end.setDisplayFormat("yyyy-MM-dd")
+
+        self.collect_user = UserCombox()
+        self.collect_user.addItems(['%s'%self.login_name,'所有'])
+        areas = ['明州1楼','明州2楼','明州3楼','明州贵宾','江东']
+        self.collect_area = CollectAreaGroup(areas)
+        for area in areas:
+            if area in self.login_area:
+                self.collect_area.set_area(area)
         # 只有管理员选择其他日期
         if self.login_id != 'BSSA':
             self.de_start.setDisabled(True)
             self.de_end.setDisabled(True)
-        self.collect_user = UserCombox()
-        self.collect_user.addItems(['%s'%self.login_name,'所有'])
-        areas = ['明州1楼','明州2楼','明州3楼','明州贵宾','江东']
-        self.collect_area = CollectAreaGroup(['明州1楼','明州2楼','明州3楼','明州贵宾','江东'])
-        for area in areas:
-            if area in self.login_area:
-                self.collect_area.set_area(area)
+            self.collect_area.setDisabled(True)
         self.btn_query = QPushButton(Icon('query'),'查询')
         lt_top.addWidget(QLabel("采集日期："))
         lt_top.addWidget(self.de_start)
@@ -574,11 +712,11 @@ class CollectHandleUI(Dialog):
 
 
 # 样本交接 条码数量汇总  明州的时候 汇总
-def get_collect_handle_sql(t_start, t_end, login_id):
+def get_collect_handle_sql(t_start, t_end, where_other):
     return '''
-        SELECT LEFT(CZQY,2) as CZQY,CAST(BZ AS VARCHAR) AS SGYS,count(*) as SGSL,SJFS,
+        SELECT CZQY,CAST(BZ AS VARCHAR) AS SGYS,count(*) as SGSL,
 
-        JJXM,JJSJ,JSXM,JSSJ
+        CZXM,SJFS,JJXM,JJSJ,JSXM,JSSJ
 
         FROM TJ_CZJLB 
 
@@ -586,13 +724,13 @@ def get_collect_handle_sql(t_start, t_end, login_id):
 
         AND JLLX IN ('0010','0011')  
 
-        AND CZGH = '%s'
+        %s
 
-        GROUP BY LEFT(CZQY,2),CAST(BZ AS VARCHAR),JJXM,JJSJ,JSXM,JSSJ,SJFS
+        GROUP BY CZQY,CAST(BZ AS VARCHAR),CZXM,JJXM,JJSJ,JSXM,JSSJ,SJFS
 
         ORDER BY count(*) DESC ;
 
-    ''' % (t_start, t_end, login_id)
+    ''' % (t_start, t_end, where_other)
 
 # 抽血交接签收
 class CollectHandleSumTable(TableWidget):
@@ -604,6 +742,7 @@ class CollectHandleSumTable(TableWidget):
 
     # 具体载入逻辑实现
     def load_set(self, datas, heads=None):
+        self.all_count = 0
         # 载入数据到表格
         for row_index, row_data in enumerate(datas):
             self.insertRow(row_index)  # 插入一行
@@ -612,7 +751,7 @@ class CollectHandleSumTable(TableWidget):
                 # 特殊处理 计算试管总数量
                 if col_index==2:
                     self.all_count = self.all_count + col_value
-                if col_index==3:
+                if col_index==4:
                     if not col_value:
                         item = QTableWidgetItem('打印')
                         item.setFont(get_font())
@@ -621,14 +760,16 @@ class CollectHandleSumTable(TableWidget):
                 item.setTextAlignment(Qt.AlignCenter)
                 self.setItem(row_index, col_index, item)
 
-        self.setColumnWidth(0, 40)
+        self.setColumnWidth(0, 100)
         self.setColumnWidth(1, 50)
         self.setColumnWidth(2, 40)
         self.setColumnWidth(3, 70)
         self.setColumnWidth(4, 70)
-        self.setColumnWidth(5, 80)
-        self.setColumnWidth(6, 70)
-        self.setColumnWidth(7, 80)
+        self.setColumnWidth(5, 70)
+        self.setColumnWidth(6, 80)
+        self.setColumnWidth(7, 70)
+        self.setColumnWidth(8, 80)
+        self.setColumnWidth(9, 80)
 
 class SerialNoLable(QDialog):
 

@@ -105,7 +105,7 @@ class ReportEquipUser(QGroupBox):
         lt_main.addWidget(self.lb_jcys, 0, 1, 1, 1)
         lt_main.addWidget(QLabel('时间：'), 1, 0, 1, 1)
         lt_main.addWidget(self.lb_jcrq, 1, 1, 1, 1)
-        lt_main.addWidget(QLabel('医生：'), 0, 2, 1, 1)
+        lt_main.addWidget(QLabel('报告：'), 0, 2, 1, 1)
         lt_main.addWidget(self.lb_bgys, 0, 3, 1, 1)
         lt_main.addWidget(QLabel('时间：'), 1, 2, 1, 1)
         lt_main.addWidget(self.lb_bgrq, 1, 3, 1, 1)

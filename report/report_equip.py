@@ -87,6 +87,10 @@ class ReportEquip(ReportEquipUI):
         dwbh = self.gp_where_search.where_dwbh
         if dwbh:
             sql = sql + " AND TJ_TJDJB.DWBH = '%s' " %dwbh
+        # 区域
+        tjqy_where = self.cb_area.where_tjqy2
+        if tjqy_where:
+            sql = sql + tjqy_where
         # 关联项目表
         sql = sql + ''' INNER JOIN TJ_TJJLMXB ON TJ_TJDJB.TJBH=TJ_TJJLMXB.TJBH AND TJ_TJJLMXB.SFZH='0' '''
         # 3、设备编号
@@ -97,8 +101,11 @@ class ReportEquip(ReportEquipUI):
             sql = sql + ''' AND ZHBH IN ('0806','5402','501576','1000074','0310') '''
         # 4、报告状态
         xmzt = self.cb_report_state.xmzt
-        if xmzt:
+        if xmzt=='已审核':
             sql = sql + ''' AND TJ_TJJLMXB.jsbz='1' '''
+        elif xmzt=='未审核':
+            sql = sql + ''' AND TJ_TJJLMXB.jsbz='0' '''
+        # 关联设备表
         sql = sql + ''' LEFT JOIN TJ_EQUIP ON TJ_TJJLMXB.TJBH = TJ_EQUIP.TJBH AND TJ_TJJLMXB.ZHBH=TJ_EQUIP.XMBH ) '''
         sql = sql + ''' SELECT * FROM T1  '''
         # 5、检查医生
@@ -287,5 +294,4 @@ class ItemDefaultDescribeUI(Dialog):
     def on_lw_describe_click(self, QModelIndex):
         self.doubleClick.emit(self.lw_describe.item(QModelIndex.row()).text())
         self.close()
-
 

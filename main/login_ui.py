@@ -74,7 +74,7 @@ class Login_UI(QDialog):
         self.lb_version.setStyleSheet(self.login_font)
         self.lb_version.setGeometry(QRect(400, 360, 100, 30))
 
-        if gol.get_value('login_auto_record',0)==0:
+        if not gol.get_value('login_auto_record',0):
             self.is_rem.setChecked(False)
         else:
             self.is_rem.setChecked(True)
@@ -82,7 +82,7 @@ class Login_UI(QDialog):
             self.lb_user_id.setText(str(gol.get_value('login_user_id', 'BSSA')))
             self.lb_user_name.setText(gol.get_value('login_user_name', '管理员'))
 
-        if gol.get_value('system_is_equip',0)==0:
+        if not gol.get_value('system_is_equip',0):
             self.is_equip.setChecked(False)
         else:
             self.is_equip.setChecked(True)
@@ -154,71 +154,69 @@ class Login_UI(QDialog):
         _user_id=self.lb_user_id.text()
         _user_name = self.lb_user_name.text()
         _user_pwd=self.lb_user_pd.text()
-        if _user_id:
-            try:
-                result = self.session.query(MT_TJ_USER).filter(MT_TJ_USER.xtsb == '101', MT_TJ_USER.yhdm == _user_id).filter(or_(MT_TJ_USER.yhkl==_user_pwd,MT_TJ_USER.yhkl==None)).scalar()
-            except Exception as e:
-                result = []
-                mes_about(self,"验证密码失败！请检查网络，错误信息：%s" %e)
-                return
-            if result:
-                results = self.session.query(MT_TJ_YGQSKS).filter(MT_TJ_YGQSKS.yggh == _user_id).all()
-                ksbms = [result.ksbm.rstrip() for result in results]
-                gol.set_value('login_user_ksbms', ksbms)
-                gol.set_value('login_user_id',_user_id)
-                gol.set_value('login_user_name', _user_name)
-                gol.set_value('login_user_pwd', _user_pwd)
-                gol.set_value('login_time', cur_datetime())
-                ############### 写入配置 #########################
-                if self.is_rem.isChecked():
-                    auto_record = 1
-                else:
-                    auto_record = 0
-                if self.is_equip.isChecked():
-                    is_equip = 1
-                else:
-                    is_equip = 0
-                login={
-                    "auto_record":auto_record,
-                    "user_id":_user_id,
-                    "user_name":_user_name
-                }
-                system={
-                    "is_equip":is_equip
-                }
-                config_write("custom.ini", "login", login)
-                config_write("custom.ini", "system", system)
-                self.log.info('写入配置(custom.ini)文件成功')
-                self.log.info("用户：%s(%s) 登陆成功！" %(_user_name,_user_id))
-                # 写入登录记录，获取主键ID
-                login_obj = MT_TJ_LOGIN(
-                    login_id = _user_id,
-                    login_name =_user_name,
-                    login_area = gol.get_value('login_area', ''),
-                    login_ip = gol.get_value('host_ip', ''),
-                    login_host = gol.get_value('host_name', ''),
-                    login_in = gol.get_value('login_time', '')
-                )
-                try:
-                    self.session.add(login_obj)
-                    # 先写入数据库，但是不提交 ,此时可获取自增ID
-                    self.session.flush()
-                    gol.set_value('login_lid', login_obj.lid)
-                    self.session.commit()
-                except Exception as e:
-                    self.session.rollback()
-                    mes_about(self, '执行发生错误：%s' % e)
-                # 跳转
-                self.accept()
-            else:
-                if _user_name:
-                    mes_about(self,"您输入的密码：%s 有误，请重新输入！" %_user_pwd)
-                    return
-
-                else:
-                    mes_warn(self,"您输入的账户:%s,密码:%s，有误！\n请确认后重新登陆！" %(_user_id,_user_pwd))
-        else:
+        if not _user_id:
             mes_about("请输入账户！！")
+            return
+        try:
+            result = self.session.query(MT_TJ_USER).filter(MT_TJ_USER.xtsb == '101', MT_TJ_USER.yhdm == _user_id).filter(or_(MT_TJ_USER.yhkl==_user_pwd,MT_TJ_USER.yhkl==None)).scalar()
+        except Exception as e:
+            mes_about(self,"从数据库中验收密码失败！错误信息：%s" %e)
+            return
+        if not result:
+            mes_warn(self, "您输入的账户:%s,密码:%s，有误！\n请确认后重新登陆！" % (_user_id, _user_pwd))
+            return
+        results = self.session.query(MT_TJ_YGQSKS).filter(MT_TJ_YGQSKS.yggh == _user_id).all()
+        ksbms = [result.ksbm.rstrip() for result in results]
+        gol.set_value('login_user_ksbms', ksbms)
+        gol.set_value('login_user_id',_user_id)
+        gol.set_value('login_user_name', _user_name)
+        gol.set_value('login_user_pwd', _user_pwd)
+        gol.set_value('login_time', cur_datetime())
+        ############### 写入配置 #########################
+        if self.is_rem.isChecked():
+            auto_record = 1
+        else:
+            auto_record = 0
+        if self.is_equip.isChecked():
+            is_equip = 1
+        else:
+            is_equip = 0
+        login={
+            "auto_record":auto_record,
+            "user_id":_user_id,
+            "user_name":_user_name
+        }
+        system={
+            "is_equip":is_equip
+        }
+        config_write("custom.ini", "login", login)
+        config_write("custom.ini", "system", system)
+        self.log.info('写入配置(custom.ini)文件成功')
+        self.log.info("用户：%s(%s) 登陆成功！" %(_user_name,_user_id))
+        # 写入登录记录，获取主键ID
+        login_obj = MT_TJ_LOGIN(
+            login_id = _user_id,
+            login_name =_user_name,
+            login_area = gol.get_value('login_area', ''),
+            login_ip = gol.get_value('host_ip', ''),
+            login_host = gol.get_value('host_name', ''),
+            login_in = gol.get_value('login_time', '')
+        )
+        try:
+            self.session.add(login_obj)
+            # 先写入数据库，但是不提交 ,此时可获取自增ID
+            self.session.flush()
+            gol.set_value('login_lid', login_obj.lid)
+            self.session.commit()
+        except Exception as e:
+            self.session.rollback()
+            mes_about(self, '执行发生错误：%s' % e)
+            return
+        # 跳转
+        self.accept()
+
+
+
 
 
 if __name__=="__main__":

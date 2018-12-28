@@ -48,17 +48,29 @@ def config_parse(file_ini,crypt=False,code='UTF-8'):
         for key_p in config.keys():
             for key_c in config[key_p].keys():
                 new_key=key_p+"_"+key_c
-                try:
-                    if config[key_p][key_c] in ['False','false']:
-                        value = False
-                    elif config[key_p][key_c] in ['True','true']:
-                        value = True
+                value = config[key_p][key_c]
+                # 对值判断处理
+                if value in ['False','false']:
+                    new_value = False
+                elif value in ['True','true']:
+                    new_value = True
+                # 处理数字字符串
+                elif isinstance(value,str):
+                    if value.isdigit():
+                        if value.startswith('0'):
+                            if len(value)==1:
+                                new_value = int(value)
+                            else:
+                                new_value = value
+                        else:
+                            new_value = int(value)
                     else:
-                        value = int(config[key_p][key_c])
-                except Exception as e:
-                    value = config[key_p][key_c]
-                tmp[new_key]=value
+                        new_value = value
+                else:
+                    new_value = value
 
+                tmp[new_key]=new_value
+    # pprint(tmp)
     return tmp
 
 #报告服务配置，由于PDF生成参数多且可随意组合，特殊处理分下面三点：

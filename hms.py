@@ -52,6 +52,7 @@ def start_run():
         login_ui = Login_UI()
         if login_ui.exec_():
             # 是否进入设备接口
+            print(gol.get_value('system_is_equip', 0))
             if gol.get_value('system_is_equip', 0) == 0:
                 from main import TJ_Main_UI
                 main_ui(TJ_Main_UI(), app)

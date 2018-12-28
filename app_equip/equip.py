@@ -100,8 +100,8 @@ class EquipInspect(EquipInspectUI):
         else:
             mes_about(self, "请输入正确的体检编号！")
 
-        self.tjbh.setText('')
-        self.tjbh.setFocus(Qt.OtherFocusReason)
+        self.le_tjbh.setText('')
+        self.le_tjbh.setFocus(Qt.OtherFocusReason)
 
     # 刷新列表
     def on_table_insert(self,result):
