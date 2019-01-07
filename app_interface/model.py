@@ -1,5 +1,25 @@
 from utils.bmodel import *
 
+# 固定资产
+class MT_TJ_ASSET(BaseModel):
+
+    __tablename__ = 'TJ_ASSET'
+
+    aid = Column(Integer, primary_key=True, autoincrement=True)
+    ename = Column(VARCHAR(30), nullable=True)
+    etype = Column(VARCHAR(20), nullable=True)
+    earea= Column(VARCHAR(20), nullable=True)
+    use_date = Column(Date, nullable=False)
+    use_id = Column(VARCHAR(30), nullable=False)
+    use_place = Column(VARCHAR(30), nullable=False)
+    eip = Column(VARCHAR(15), nullable=False)
+    ehost = Column(VARCHAR(30), nullable=False)
+    eport = Column(VARCHAR(10), nullable=False)
+    bz = Column(VARCHAR(200), nullable=False)
+    sfbf = Column(CHAR(1), nullable=True)
+
+
+# 需求管理
 class MT_TJ_XQGL(BaseModel):
 
     __tablename__ = 'TJ_XQGL'

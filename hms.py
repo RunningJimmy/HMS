@@ -56,6 +56,9 @@ def start_run():
             if gol.get_value('system_is_equip', 0) == 0:
                 from main import TJ_Main_UI
                 main_ui(TJ_Main_UI(), app)
+                # from app_setup.enterprise_head_ui import EnterpriseHeadUI
+                # main_ui(EnterpriseHeadUI(), app)
+
             # 进入设备接口
             else:
                 # 全局进程队列
@@ -123,6 +126,3 @@ if __name__=="__main__":
         is_update(url,log)
     # 增加全局异常处理
     start_run()
-
-
-

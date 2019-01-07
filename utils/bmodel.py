@@ -4,14 +4,99 @@ from sqlalchemy.orm import sessionmaker
 from utils.base import str2
 from datetime import datetime
 import os
-BaseModel = declarative_base()
 
+# 1、sqlalchemy  支持的字段类型
+# 类型名       python中类型           说明
+# Integer       int            普通整数，一般是32位
+# Float         float          浮点数
+# String        str            变长字符串
+# Text          str            变长字符串，对较长字符串做了优化
+# Boolean       bool            布尔值
+# PickleType    任何Python对象   自动使用Pickle序列化
+
+# 2、sqlalchemy  支持的字段限制
+# primary_key       表示主键
+# unique            表示此列不重复
+# index             创建索引，提升查询效率
+# nullable          如果为True，允许空值
+# default           定义默认值
+
+# 增删改查
+# 4 查
+# query(*entities, **kwargs)
+# query(classname) or query(classname.column1,classname.column2) or query(func.max())
+
+# 4.1 查->过滤器函数
+# filter(*criterion)    示例：filter(classname.column=='xxxxxx')   描述：过滤器，使用关键字变量过滤查询结果
+# filter_by(**kwargs)   示例：filter_by(column==’xxxxxx’)          描述：过滤器，使用关键字变量过滤查询结果
+#
+# filter与filter_by都是帮助过滤查询结果的函数，区别：
+# 1、filter用classname.column，支持运算符、and、or等作为参数。
+# 2、filter_by不必加上classname，不支持运算符、and、or等做参数，因为参数为**kwargs支持组合查询。
+
+# 其他查询操作条件
+# or 操作： filter(or_(TJ_TJDJB.somover=='1',TJ_TJDABH.sfzh==xxxxx))
+# and 操作：filter(and_(TJ_TJDJB.somover=='1',TJ_TJDABH.sfzh==xxxxx))
+# in 操作： filter(TJ_TJDJB.somover.in_(('0','9')))
+# not in 操作： filter(~TJ_TJDJB.somover.in_(('0','9')))
+# between 操作：filter(TJ_TJDJB.qdrq.between(('2019-01-01','2019-01-02')))
+# like 操作：filter(TJ_TJDJB.area.like('明州%'))
+# 空值 操作：filter(TJ_TJDJB.del.is_(None))
+
+# 4.2 查->返回结果
+# all()                                 描述：返回keyedTuple元组的列表
+# first()                               描述：返回查询结果的第一个，如果没有，返回None
+# first_or_404()                        描述：返回查询结果的第一个，如果没有，抛出404异常
+# one()                                 描述：获取所有行，若查询不到or查询到多个对象or查询到一个对象但重复记录，抛出异常
+# scalar()                              描述：在one()的基础上获得该行的第一列
+# order_by(classname.column)	        描述：依据某列或某几列对查询结果按字典序排序
+# label()                               描述：为某一列起别名
+# get()                                 描述：返回主键对应记录，如果没有，返回None
+# get_or_404()                          描述：返回主键对应记录，如果没有，抛出404异常
+# count()                               描述：返回查询结果数量
+
+# 5、连表查询
+# 连表查询有两种方式，一种是通过filter，一种是通过join。
+
+# 5.1 通过 query 与 filter 进行连表查询
+# session.query(User, Address).filter(User.id==Address.user_id).filter(Address.city=='Peking')
+#
+# 5.2 通过join达到同样效果, 只有一个外键
+# session.query(User).join(Address).filter(Address.city=='Peking')
+#
+# # 多个外键或者没有外键时，要给出明确条件
+# session.query(User).join(Address，User.id==Address.user_id).filter(Address.city=='Peking')
+# session.query(User).join(Address,User.addresses). filter(Address.city=='Peking')
+
+# 6、特殊 用于封装功能
+# 获取字段长度 User.name.property.columns[0].type.length
+
+BaseModel = declarative_base()
 
 '''
 模型类名：
 1）MT_ 表示表     其中 M表示model  T表示table
 2）MV_ 表示视图   其中 M表示model  V表示view
 '''
+
+#
+class MT_TJDJB(BaseModel):
+
+    __tablename__ = 'TJ_TJDJB'
+
+    tjbh= Column(VARCHAR(16), primary_key=True)
+    dabh = Column(VARCHAR(30),nullable=False)
+    djr = Column(VARCHAR(20),nullable=False)
+    djrq = Column(DateTime,nullable=False)
+    nl = Column(Integer,nullable=False)
+    tjlb = Column(CHAR(1),nullable=False)
+    dwbh = Column(VARCHAR(30), nullable=False)
+    fzbh = Column(CHAR(6), nullable=False)
+    fkfs = Column(Numeric(8),nullable=False)
+    fksj = Column(DateTime, nullable=False)
+    djr = Column(VARCHAR(20), nullable=False)
+
+
 
 #用户登录信息表
 class MT_TJ_LOGIN(BaseModel):

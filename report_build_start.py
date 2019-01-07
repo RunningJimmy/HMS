@@ -241,10 +241,11 @@ class buildBodyHtml(object):
 
     # 写入体检注意事项及公章
     def write_cachet(self,cachet):
-        if cachet['syys']:
-            self.html_obj.write(Template2(pdf_html_cachet_page2).render(cachet=cachet))
-        else:
-            self.html_obj.write(Template2(pdf_html_cachet_page).render(cachet=cachet))
+        self.html_obj.write(Template2(pdf_html_cachet_page).render(cachet=cachet))
+        # if cachet['syys']:
+        #     self.html_obj.write(Template2(pdf_html_cachet_page2).render(cachet=cachet))
+        # else:
+        #     self.html_obj.write(Template2(pdf_html_cachet_page).render(cachet=cachet))
 
     # 写入体检结果项目
     def write_items(self,items):

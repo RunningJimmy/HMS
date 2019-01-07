@@ -250,6 +250,14 @@ class TableWidget(QTableWidget):
                 tmp.append(int(value))
         return tmp
 
+    # 获取单行的字典 {col:value,......,colx:valuex,.....}
+    def selectRow2Dict(self):
+        tmp = {}
+        for index,key in enumerate(self.heads.keys()):
+            tmp[key] = self.getCurItemValueOfKey(key)
+
+        return tmp
+
     # 插入一行 实现
     def insert(self,data):
         self.insertRow(self.rowCount())  # 特别含义
@@ -363,17 +371,6 @@ class ArrowButton2(QPushButton):
         self.setFocusPolicy(Qt.NoFocus)
         self.setStyleSheet("background: #E8E8E8; border: none; padding: 0px;")
         self.setObjectName(name)
-
-class BrowserWidget(QWidget):
-
-    status = False  # 是否被打开
-
-    def __init__(self,parent=None):
-        super(BrowserWidget,self).__init__(parent)
-
-    def closeEvent(self, *args, **kwargs):
-        self.status = True
-        super(BrowserWidget, self).closeEvent(*args, **kwargs)
 
 class UI(QSplitter):
 
@@ -1202,6 +1199,43 @@ class ComboCheckBox(QComboBox):
         for i in range(self.row_num):
             self.cb_boxs[i].setChecked(False)
 
+
+# 获取控件的值
+def widget_get_value(widget):
+    '''
+    :param widget: Qt控件
+    :return:
+    '''
+    if isinstance(widget,(QLineEdit,QLabel,QDateEdit,QTimeEdit,QDateTimeEdit)):
+        return widget.text()
+    elif isinstance(widget,(QTextEdit,QPlainTextEdit)):
+        return widget.toPlainText()
+    elif isinstance(widget,(QSpinBox,QDoubleSpinBox)):
+        return widget.value()
+    elif isinstance(widget,QCheckBox):
+        return {False:'0',True:'1'}.get(widget.isChecked(),'0')
+    elif isinstance(widget,QComboBox):
+        return widget.currentText()
+    else:
+        return None
+
+# 设置控件的值
+def widget_set_value(widget,value):
+    '''
+    :param widget: Qt控件
+    :param value: Qt控件的值
+    :return:
+    '''
+    if isinstance(widget,(QLineEdit,QLabel,QDateEdit,QTimeEdit,QDateTimeEdit)):
+        widget.setText(value)
+    elif isinstance(widget,(QTextEdit,QPlainTextEdit)):
+        widget.setPlainText(value)
+    elif isinstance(widget,(QSpinBox,QDoubleSpinBox)):
+        widget.setValue(value)
+    elif isinstance(widget,QCheckBox):
+        widget.setChecked(bool(value))
+    elif isinstance(widget,QComboBox):
+        widget.setCurrentText(value)
 
 if __name__ == "__main__":
     import sys

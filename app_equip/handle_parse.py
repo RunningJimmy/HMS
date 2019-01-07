@@ -43,11 +43,12 @@ def equip_file_parse(filename,session,log,process_queue,
         return
     # 解析 电测听 数值
     if file_suffix == '.gnd':
-        result = get_cyct_result(filename)
-        if not result:
-            log.info("文件：%s 解析电测听结果失败！" % filename)
+        tjbh,jcrq,result,error = get_so_ac_result(filename)
+        if error:
+            log.info("文件：%s 解析电测听结果失败：%s" %(filename,error))
             return
-        insert_cyct(session, login_id, login_name,login_area, result, host_name, host_ip)
+        # 校正听力值并更新数据库
+        insert_cyct(session, login_id, login_name,login_area,tjbh,jcrq,result, host_name, host_ip)
     elif file_suffix == '.pdf':
         # PDF 文件解析
         values = pdfhandle(filename, equip_type, path_parse, path_error, url,
@@ -266,129 +267,133 @@ def api_equip_upload(url, filename):
         print('URL：%s 请求失败！错误信息：%s' % (url, e))
 
 #### 电测听取值
-def minus_list(l1,l2):
-    return list(map(lambda x,y:x - y,l1,l2))
+def minus_list(list1:list,list2:list):
+    return list(map(lambda x,y:x - y,list1,list2))
 
-def merge_list(l1):
-    return  '|'.join([str(i) for i in l1])
+def merge_list(list1:list):
+    return  '|'.join([str(i) for i in list1])
 
 #单耳听阈加权值（dB）
-def f_avg(val_dict):
-    return int(((val_dict[0]+val_dict[1]+val_dict[2])/3)*0.9+val_dict[4]*0.1)
+def f_avg(result:list):
+    return int(((result[0]+result[1]+result[2])/3)*0.9+result[4]*0.1)
 
 #双耳高频平均听阈（dB）
-def f_avg2(val1_d,val2_d):
-    if len(val1_d)<6:
-        print("结果值不足6个:%s" %str(val1_d))
-    if len(val2_d)<6:
-        print("结果值不足6个:%s" %str(val2_d))
-
-    return int((val1_d[3]+val1_d[4]+val1_d[5]+val2_d[3]+val2_d[4]+val2_d[5])/6)
+def f_avg2(result1:list,result2:list):
+    return int((result1[3]+result1[4]+result1[5]+result2[3]+result2[4]+result2[5])/6)
 
 #单耳平均听阈（dB）
-def f_avg3(val_dict):
-    return int((val_dict[3] + val_dict[4] + val_dict[5]) / 3)
+def f_avg3(result:list):
+    return int((result[3] + result[4] + result[5]) / 3)
 
 #结果是否合格判断
-def is_hg(val1_d,val2_d):
-    if all([f_avg(val1_d)<25,f_avg(val2_d)<25,f_avg2(val1_d,val2_d)<40]):
+def is_hg(result1:list,result2:list):
+    if all([f_avg(result1)<25,f_avg(result2)<25,f_avg2(result1,result2)<40]):
         return '合格'
     else:
         return '不合格'
 
-def get_cyct_result(file_name):
-    f=open(file_name,encoding="utf-8")
-    context2 = xmltodict.parse(f.read())
-    f.close()
-    result = {
-        "tjbh": None,
-        "left": None,
-        "right": None,
-        "left_new": None,
-        "right_new": None,
-        "left_xz": None,
-        "right_xz": None,
-        "jcrq": None
-    }
-    result["tjbh"] = context2["Session"]["Actors"]["Client"]["@Id"]
-    result["jcrq"] = context2["Session"]["@Date"][0:19].replace('T', ' ')
-    if isinstance(context2["Session"]["Action"],list):
-        # print('xxxxxxx')
-        #2次以上结果，取最新一次
-        try:
-            real_result=context2["Session"]["Action"][0]["Public"]["TAudioSession"]["ToneTHRAudiogram"]["TToneTHRAudiogram"]
-        except Exception as e:
-            #单次结果
-            real_result = context2["Session"]["Action"][1]["Public"]["TAudioSession"]["ToneTHRAudiogram"]["TToneTHRAudiogram"]
+# 获取气导的数值，骨导不参与计算
+def get_so_ac_result(file_name):
+    with open(file_name,encoding="utf-8") as f:
+        content = xmltodict.parse(f.read())
+    # 获取本次检查记录
+    session = content.get('Session',None)
+    if not session:
+        return None,None,None,"检查记录为空"
+    # 获取体检编号
+    tjbh = parse_nestdict(session,'Actors.Client.@Id')
+    if not tjbh:
+        return None,None,None,"体检编号获取失败"
+    # 获取检查日期
+    jcrq_tmp = session.get('@Date',None)
+    if not jcrq_tmp:
+        jcrq = cur_datetime()
     else:
-        real_result =context2["Session"]["Action"]["Public"]["TAudioSession"]["ToneTHRAudiogram"]["TToneTHRAudiogram"]
-    for i in real_result:
-        #pprint(i)
-        if i["MeasCond"]["@SignalOutput1"]=="so_ACL":
-            #左耳气导
-            tmp1=[]
-            for j in i["Curve"]["TTonePoint"]:
-                #tmp1[j["@Freq1"]] = int(j["@Intensity1"])/10
-                tmp1.append(int(int(j["@Intensity1"]) / 10))
-            result["left"]=tmp1
+        jcrq = jcrq_tmp[0:19].replace('T', ' ')
+    # 获取结果信息
+    results_tmp = session.get('Action',None)
+    if not results_tmp:
+        return tjbh,jcrq,results_tmp,"结果信息获取失败"
+    tmp = {}
+    result_key = 'Public.TAudioSession.ToneTHRAudiogram.TToneTHRAudiogram'      # 结果信息 路径
+    so_key_key = 'MeasCond.@SignalOutput1'                                      # 气导、骨导 标记路径 以SignalOutput1 输出为主
+    so_result_key = 'Curve.TTonePoint'                                          # 气导、骨导 结果路径，左、右耳
+    so_value_key = '@Intensity1'                                                # 结果值 路径
 
-        elif i["MeasCond"]["@SignalOutput1"]=="so_ACR":
-            #右耳气导
-            tmp2=[]
-            for j in i["Curve"]["TTonePoint"]:
-                #tmp2[j["@Freq1"]] = int(j["@Intensity1"])/10
-                tmp2.append(int(int(j["@Intensity1"]) / 10 ))
-            result["right"] = tmp2
+    if isinstance(results_tmp,list):
+        # 多组结果：可能是骨导+气导，也可能是多组气导
+        for result_tmp in results_tmp:
+            results = parse_nestdict(result_tmp,result_key)
+            for result in results:
+                so_key = parse_nestdict(result, so_key_key)
+                # 获取列表
+                so_value = [int(int(i.get(so_value_key, 0)) / 10) for i in parse_nestdict(result, so_result_key)]
+                # 获取字典
+                # so_value = dict((int(i.get('@Freq1', 0)),int(int(i.get('@Intensity1', 0)) / 10)) for i in parse_nestdict(result, so_result_key))
+                if len(so_value) == 6:
+                    tmp[so_key] = so_value
+                else:
+                    return tjbh,jcrq,None,"%s的数值不足6组:%s" %(so_key,str(so_value))
 
-        elif i["MeasCond"]["@SignalOutput1"] == "so_BCL":
-            #左耳骨导
-            return
-        elif i["MeasCond"]["@SignalOutput1"] == "so_BCR":
-            #右耳骨导
-            return
-        else:
-            return
+    else:
+        # 单组结果，则为气导
+        ac_results = parse_nestdict(results_tmp,result_key)
+        for ac_result in ac_results:
+            so_key = parse_nestdict(ac_result, so_key_key)
+            # 获取列表
+            so_value = [int(int(i.get(so_value_key, 0)) / 10) for i in parse_nestdict(ac_result, so_result_key)]
+            # 获取字典
+            # so_value = dict((int(i.get('@Freq1', 0)), int(int(i.get('@Intensity1', 0)) / 10)) for i in parse_nestdict(ac_result, so_result_key))
+            if len(so_value) == 6:
+                tmp[so_key] = so_value
+            else:
+                return tjbh, jcrq, None, "%s的数值不足6组:%s" % (so_key, str(so_value))
 
-    return result
+
+    return tjbh,jcrq,tmp,''
 
 #获取纯音听力原始记录，校正后插入到TJ_EQUIP
-def insert_cyct(session,login_id,login_name,login_area,val_dict,host_name,host_ip,xmbh='0310'):
-    tjbh = val_dict['tjbh']  # 体检编号
-    jcrq = val_dict["jcrq"]  # 检查日期
+def insert_cyct(session,login_id,login_name,login_area,tjbh,jcrq,result,host_name,host_ip,xmbh='0310'):
     # 从数据库中校对人员信息
-    result = session.execute(get_tjxx_sql(tjbh)).fetchone()
-    if not result:
+    result_user = session.execute(get_tjxx_sql(tjbh)).fetchone()
+    if not result_user:
+        print("未找到体检编号为：%s的人员信息" %tjbh)
         return
-    user_name = str2(result[1])     # 用户姓名
-    user_sex = str2(result[2])      # 用户性别
-    user_age = result[-1]           # 用户年龄
+    user_name = str2(result_user[1])     # 用户姓名
+    user_sex = str2(result_user[2])      # 用户性别
+    user_age = result_user[-1]           # 用户年龄
 
     if user_age>=22:
+        #result = session.execute(standard_audition_sql(user_age, user_sex)).fetchone()
+        # if result:
+        #     standard_result = dict(zip([500,1000,2000,3000,4000,6000],[int(i[1]) for i in result]))
         results = session.execute(standard_audition_sql(user_age,user_sex)).fetchall()
         if results:
-            result = sorted(results[0].items(), key=lambda item: item[0])
-            standard_result = [int(i[1]) for i in result]
+            result_tmp = sorted(results[0].items(), key=lambda item: item[0])
+            standard_result = [int(i[1]) for i in result_tmp]
         else:
             standard_result = [0, 0, 0, 0, 0, 0]
+            # standard_result = {500: 0, 1000: 0, 2000: 0, 3000: 0, 4000: 0, 6000: 0}
     else:
         standard_result = [0, 0, 0, 0, 0, 0]
+        # standard_result = {500: 0, 1000: 0, 2000: 0, 3000: 0, 4000: 0, 6000: 0}
     #
-    val_dict["left_new"] = minus_list(val_dict["left"], standard_result)
-    val_dict["right_new"] = minus_list(val_dict["right"], standard_result)
-    val_dict["left_xz"] = standard_result
-    val_dict["right_xz"] = standard_result
-    xmzd = is_hg(val_dict["left_new"], val_dict["right_new"])
+    result["so_ACR_new"] = minus_list(result["so_ACR"], standard_result)
+    result["so_ACL_new"] = minus_list(result["so_ACL"], standard_result)
+    result["so_ACR_init"] = standard_result
+    result["so_ACL_init"] = standard_result
+    xmzd = is_hg(result["so_ACL_new"], result["so_ACR_new"])
     # 计算校正结果
-    ms1 = merge_list(val_dict["right"]) + '|' + merge_list(val_dict["left"])
-    ms2 = merge_list(val_dict["right_xz"]) + '|' + merge_list(val_dict["left_xz"])
-    ms3 = merge_list(val_dict["right_new"]) + '|' + merge_list(val_dict["left_new"])
+    ms1 = merge_list(result["so_ACR"]) + '|' + merge_list(result["so_ACL"])
+    ms2 = merge_list(result["so_ACR_new"]) + '|' + merge_list(result["so_ACL_new"])
+    ms3 = merge_list(result["so_ACR_init"]) + '|' + merge_list(result["so_ACL_init"])
     ms4 = "右耳平均语频=%s\n" \
           "右耳平均高频=%s\n" \
           "左耳平均语频=%s\n" \
           "左耳平均高频=%s\n" \
-          "双耳高频平均听阈=%s" % (f_avg(val_dict["right_new"]), f_avg3(val_dict["right_new"]),
-                           f_avg(val_dict["left_new"]), f_avg3(val_dict["left_new"]),
-                           f_avg2(val_dict["right_new"], val_dict["left_new"]))
+          "双耳高频平均听阈=%s" % (f_avg(result["so_ACR_new"]), f_avg3(result["so_ACR_new"]),
+                           f_avg(result["so_ACL_new"]), f_avg3(result["so_ACL_new"]),
+                           f_avg2(result["so_ACR_new"], result["so_ACL_new"]))
 
     xmjg = '||||' + ms1 + '|||||' + ms2 + '|||||' + ms3 + '|$' + ms4
     try:
@@ -492,3 +497,31 @@ EquipActionName={
     '11':'肺功能检查',
     '12':'DR检查'
 }
+
+# 嵌套字典解析
+def parse_nestdict(nestdict:dict,keys:str,default=None):
+    keys_list = keys.split('.')
+    tmp = nestdict
+    for key in keys_list:
+        if isinstance(tmp,dict):
+            val = tmp.get(key, None)
+        else:
+            val = None
+        if val!= None:
+            tmp = val
+        else:
+            return default
+
+    return tmp
+
+if __name__=="__main__":
+    from pprint import pprint
+    pprint(get_so_ac_result(r"E:\DR\create\01\My Suite\178240009 龙元明, (男) 2019-01-02T14.58.02.1866546+08.00.gnd"))
+
+    # for root, dirs, files in os.walk(r"E:\DR\create\01\My Suite"):
+    #     if files and not dirs:  # 必须是指定目录的下级目录
+    #         for file in files:
+    #             try:
+    #                 print(get_so_ac_result(os.path.join(root, file)))
+    #             except Exception as e:
+    #                 print(os.path.join(root, file))

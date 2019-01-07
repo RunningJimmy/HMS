@@ -553,3 +553,41 @@ QTabBar::tab:selected {
         color: rgb(255,255,255);
         background:qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #9fc6df, stop:0.5 #256894 stop:1 #77c5cb);
 }
+
+QListWidget
+{
+    border:1px solid gray;   /*边界线:宽度、颜色*/
+    /*background:gray;*/    /*表格背景色*/
+    color:black;        /*前景色：文字颜色*/
+    /*margin:5px,5px,0px,50px;*/   /*上、下、左、右，间距*/
+}
+
+/*
+QListWidget::item
+{
+    padding-top:24px;
+    padding-bottom:4px;
+}
+*/
+
+QListWidget::item:hover
+{
+    show-decoration-selected:5;
+    background:skyblue;
+}
+
+QListWidget::item:selected
+{
+    /*border:0px;*/
+    background:lightgray;
+    padding:0px;
+    margin:0px;
+    color:red;
+}
+
+/*上次选择后保留的状态，鼠标离开后显示*/
+QListWidget::item:selected:!active
+{
+    border-width:0px;
+    background:lightgreen;
+}

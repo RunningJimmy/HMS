@@ -31,7 +31,7 @@ SYS_MENU_TREE = {   # 系统
             ])
          }),
         # 基础资料维护
-        ('基础资料',
+        ('基础维护',
          {
              'pid': 1,
              'sid': 200,
@@ -47,7 +47,7 @@ SYS_MENU_TREE = {   # 系统
                   # ('员工信息',{'pid': 200, 'id': 2006, 'title': '员工信息', 'tip': None, 'state': True,'icon':'','is_tool':False,'class':None, 'childs': None}),
                   # ('体检科室',{'pid': 200, 'id': 2007, 'title': '体检科室', 'tip': None, 'state': True,'icon':'','is_tool':False,'class':None, 'childs': None}),
                   # ('发票号码',{'pid': 200, 'id': 2008, 'title': '发票号码', 'tip': None, 'state': True,'icon':'','is_tool':False,'class':None, 'childs': None})
-
+                  ('招工电子报告权限',{'pid': 200, 'sid': 2009, 'title': '招工电子报告权限', 'tip': None, 'state': True, 'icon':'报告中心','is_tool':False,'shortcut':None}),
             ])
          }),
         # 外围系统 WEB、app、微信、电话、短信、HIS、LIS、PACS
@@ -110,6 +110,8 @@ SYS_MENU_TREE = {   # 系统
              'childs': OrderedDict([
                 ('报告中心',{'pid': 500, 'sid': 5001, 'title': '报告中心', 'tip': None, 'state': True, 'icon':'报告中心','is_tool':True,'shortcut':None}),
                 ('慢病管理',{'pid': 500, 'sid': 5002, 'title': '慢病管理', 'tip': None, 'state': True, 'icon':'慢病管理','is_tool':True,'shortcut':None}),
+                ('希和检后',{'pid': 500, 'sid': 5003, 'title': '希和检后', 'tip': None, 'state': True, 'icon': '医生', 'is_tool': False,'shortcut':None}),
+                ('台湾检后',{'pid': 500, 'sid': 5004, 'title': '台湾检后', 'tip': None, 'state': True, 'icon': '医生', 'is_tool': False,'shortcut':None}),
             ])}),
         # 管理人员 用到的
         ('主任平台',
@@ -126,6 +128,8 @@ SYS_MENU_TREE = {   # 系统
              # ('工作效率统计',{'pid': 500, 'id': 5003, 'title': '工作效率统计', 'tip': None, 'state': True,'icon':'','is_tool':False,'shortcut':None}),
              # ('日签到统计',{'pid': 500, 'id': 5004, 'title': '日签到统计', 'tip': None, 'state': True,'icon':'','is_tool':False,'shortcut':None}),
              # ('预约明细',{'pid': 500, 'id': 5005, 'title': '预约明细', 'tip': None, 'state': True,'icon':'','is_tool':False,'shortcut':None})
+                 ('危急值上报',{'pid': 600, 'sid': 6008, 'title': '危急值上报', 'tip': None, 'state': True, 'icon': '', 'is_tool': False,'shortcut': None}),
+                 ('不良事件上报',{'pid': 600, 'sid': 6009, 'title': '不良事件上报', 'tip': None, 'state': True, 'icon': '', 'is_tool': False,'shortcut': None}),
             ])}),
         # 自带财务模块
         # ('财务管理',
@@ -166,11 +170,14 @@ SYS_MENU_TREE = {   # 系统
              'state': True,
              'childs': OrderedDict([
                  ('业务需求',{'pid': 900, 'sid': 9000, 'title': '业务需求', 'tip': None, 'state': True, 'icon': '填写率', 'is_tool': True,'shortcut':None}),
-                 ('OA办公',{'pid': 900, 'sid': 9001, 'title': 'OA办公', 'tip': None, 'state': True, 'icon': 'oa办公', 'is_tool': False,'shortcut':None}),
+                 ('科室档案',{'pid': 900, 'sid': 9001, 'title': '科室档案', 'tip': None, 'state': True, 'icon': '所有科室', 'is_tool': False,'shortcut':None}),
                  ('电话平台',{'pid': 900, 'sid': 9002, 'title': '电话平台', 'tip': None, 'state': True, 'icon': '电话', 'is_tool': False,'shortcut':None}),
-                 ('检后健康',{'pid': 900, 'sid': 9003, 'title': '检后健康', 'tip': None, 'state': True, 'icon': '医生', 'is_tool': False,'shortcut':None}),
-                 ('多媒体屏',{'pid': 900, 'sid': 9004, 'title': '多媒体屏', 'tip': None, 'state': True, 'icon': '多媒体', 'is_tool': False,'shortcut':None}),
-                 ('危急值',{'pid': 900, 'sid': 9005, 'title': '危急值', 'tip': None, 'state': True, 'icon': '电话', 'is_tool': True,'shortcut':None}),
+                 ('多媒体屏',{'pid': 900, 'sid': 9003, 'title': '多媒体屏', 'tip': None, 'state': True, 'icon': '多媒体', 'is_tool': False,'shortcut':None}),
+                 ('微信后台',{'pid': 900, 'sid': 9004, 'title': '微信后台', 'tip': None, 'state': True, 'icon': 'website', 'is_tool': False,'shortcut':None}),
+                 ('官网后台',{'pid': 900, 'sid': 9005, 'title': '官网后台', 'tip': None, 'state': True, 'icon': 'website', 'is_tool': False,'shortcut':None}),
+                 ('官网主页',{'pid': 900, 'sid': 9006, 'title': '官网主页', 'tip': None, 'state': True, 'icon': 'website', 'is_tool': False,'shortcut':None}),
+                 ('好评率',{'pid': 900, 'sid': 9008, 'title': '好评率', 'tip': None, 'state': True, 'icon': 'oa办公', 'is_tool': False,'shortcut':None}),
+                 ('OA办公',{'pid': 900, 'sid': 9009, 'title': 'OA办公', 'tip': None, 'state': True, 'icon': 'oa办公', 'is_tool': False,'shortcut':None}),
             ])})
     ])
 }
@@ -192,6 +199,7 @@ SYS_MENU_MODULE_CLASS = {
     2006: {'module': None, 'class': None, 'enabled': False},
     2007: {'module': None, 'class': None, 'enabled': False},
     2008: {'module': None, 'class': None, 'enabled': False},
+    2009: {'module': 'app_setup', 'class': 'EnterpriseHeadUI', 'enabled': True},
     3001: {'module': None, 'class': None, 'enabled': False},
     3002: {'module': None, 'class': None, 'enabled': False},
     3003: {'module': None, 'class': None, 'enabled': False},
@@ -211,8 +219,8 @@ SYS_MENU_MODULE_CLASS = {
     4009: {'module': 'C13', 'class': 'BreathManager', 'enabled': True},       # 呼气室
     5001: {'module': 'report', 'class': 'ReportManager', 'enabled': True},    # 报告中心
     5002: {'module': 'mbgl', 'class': 'NCDManager', 'enabled': True},         # 慢病管理
-    5003: {'module': None, 'class': None, 'enabled': False},
-    5004: {'module': None, 'class': None, 'enabled': False},
+    5003: {'module': 'app_interface', 'class': 'XiHe_HealthUI', 'enabled': True},  # 希和检后
+    5004: {'module': 'app_interface', 'class': 'TaiWan_HealthUI', 'enabled': True},  # 台湾检后
     5005: {'module': None, 'class': None, 'enabled': False},
     5006: {'module': None, 'class': None, 'enabled': False},
     5007: {'module': None, 'class': None, 'enabled': False},
@@ -224,7 +232,8 @@ SYS_MENU_MODULE_CLASS = {
     6005: {'module': None, 'class': None, 'enabled': False},
     6006: {'module': None, 'class': None, 'enabled': False},
     6007: {'module': None, 'class': None, 'enabled': False},
-    6008: {'module': None, 'class': None, 'enabled': False},
+    6008: {'module': 'app_interface', 'class': 'CriticalValueUI', 'enabled': True},
+    6009: {'module': 'app_interface', 'class': 'AdverseEventUI', 'enabled': True},
     7001: {'module': None, 'class': None, 'enabled': False},
     7002: {'module': None, 'class': None, 'enabled': False},
     7003: {'module': None, 'class': None, 'enabled': False},
@@ -242,9 +251,12 @@ SYS_MENU_MODULE_CLASS = {
     8007: {'module': None, 'class': None, 'enabled': False},
     8008: {'module': None, 'class': None, 'enabled': False},
     9000: {'module': 'app_interface', 'class': 'DemandManger', 'enabled': True},
-    9001: {'module': 'app_interface', 'class': 'OaUI', 'enabled': True},
+    9001: {'module': 'app_interface', 'class': 'InfoManager', 'enabled': True},
     9002: {'module': 'app_interface', 'class': 'PhonePlatUI', 'enabled': True},
-    9003: {'module': 'app_interface', 'class': 'JHJKGLUI', 'enabled': True},
-    9004: {'module': 'app_interface', 'class': 'MediaUI', 'enabled': True},
-    9005: {'module': 'app_interface', 'class': 'WJZUI', 'enabled': True},
+    9003: {'module': 'app_interface', 'class': 'MediaUI', 'enabled': True},
+    9004: {'module': 'app_interface', 'class': 'WeiXinUI', 'enabled': True},
+    9005: {'module': 'app_interface', 'class': 'WebsiteBackUI', 'enabled': True},
+    9006: {'module': 'app_interface', 'class': 'WebsiteFrontUI', 'enabled': True},
+    9008: {'module': 'app_interface', 'class': 'GoodEvaluateUI', 'enabled': True},
+    9009: {'module': 'app_interface', 'class': 'OaUI', 'enabled': True},
 }

@@ -15,3 +15,4 @@ from .i_phone_ui import PhoneUI
 from .i_sms_ui import SmsUI
 from .i_web import *
 from .i_demand import DemandManger
+from .info_manger import InfoManager

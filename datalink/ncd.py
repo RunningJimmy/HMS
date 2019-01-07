@@ -1,4 +1,4 @@
-from datalink.model import *
+﻿from datalink.model import *
 from sqlfiles.sql_ncd import *
 import re
 
@@ -202,7 +202,10 @@ if __name__ =="__main__":
     engine = create_engine('mssql+pymssql://bsuser:admin2389@10.8.200.201:1433/tjxt', encoding='utf8', echo=False)
     session = sessionmaker(bind=engine)()
     #  '2018-01-10','2018-01-21'
-    results = session.execute(SQL_NCD %('2018-12-27','2018-12-28')).fetchall()
+    # results = session.execute("SELECT XZ1,XZ2,XZ3,XZ4,XZ5,XZ6 FROM NBMZYY35.dbo.JC_DCTXZB WHERE NL='41' AND XB='男'").fetchone()
+    # print(results)
+    #
+    results = session.execute(SQL_NCD %('2019-01-04','2019-01-03')).fetchall()
     count = 0
     #ryxx = {'tjbh':'','xm':'','xb':'','nl':0,'sjhm':'','sfzh':'','dwbh':'','dwmc':'','addr':'','ysje':0.00,
     #       'djrq':'','tjrq':'','qdrq':'','zjrq':'','shrq':'','zjys':'','shys':''}

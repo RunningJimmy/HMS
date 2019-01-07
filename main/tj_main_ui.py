@@ -21,7 +21,10 @@ from statistics import DN_MeritPay,LoginUserUI,LoginInUI
 # 体检登记
 from register import RegisterManager
 # OA
-from app_interface import OaUI,PhoneUI,JHJKGLUI,MediaUI,WJZUI
+from app_interface import *
+# 基础设置
+from app_setup import EnterpriseHeadUI
+
 
 WindowsTitle="明州体检"
 WindowsIcon="mztj"
@@ -130,15 +133,11 @@ class TJ_Main_UI(QMainWindow):
                 setattr(self, class_name, module_class())
                 self.mdiArea.addSubWindow(getattr(self, class_name))
                 getattr(self, class_name).showMaximized()
-                if class_name in ['OaUI','PhonePlatUI','JHJKGLUI','MediaUI','WJZUI']:
-                    getattr(self, class_name).load()
             elif getattr(getattr(self, class_name), 'status'): # 窗口被关闭了
                 module_class = getattr(module, class_name)
                 setattr(self, class_name, module_class())
                 self.mdiArea.addSubWindow(getattr(self, class_name))
                 getattr(self, class_name).showMaximized()
-                if class_name in ['OaUI','PhonePlatUI','JHJKGLUI','MediaUI','WJZUI']:
-                    getattr(self, class_name).load()
             # # 未关闭
             getattr(self, class_name).setFocus()
         else:

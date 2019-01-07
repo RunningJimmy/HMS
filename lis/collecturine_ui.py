@@ -104,3 +104,5 @@ class CollectUnireTable(TableWidget):
             item.setFont(unire_font())
             item.setTextAlignment(Qt.AlignCenter)
             self.setItem(0, col_index, item)
+
+        self.horizontalHeader().setStretchLastSection(True)

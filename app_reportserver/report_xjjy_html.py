@@ -50,10 +50,33 @@ pdf_html_cachet_page ='''
             <td></td>
         </tr>
         <tr align="right">
-            <td class="table_td_wxts">
-                总检医生：<img src=${zjys} height="50" width="100" />&frasl;<img src=${shys} height="50" width="100" />&nbsp;&nbsp;
-                审核医生：<img src=${shys2} height="50" width="100" />&nbsp;&nbsp;
-            </td>
+            % if syys:
+                % if shys==zjys:
+                    <td class="table_td_wxts">
+                        总检医生：<img src=${zjys} height="50" width="100" />&nbsp;&nbsp;
+                        审核医生：<img src=${shys2} height="50" width="100" />&nbsp;&nbsp;
+                        三审护士：<img src=${syys} height="50" width="100" />&nbsp;&nbsp;
+                    </td>
+                % else:
+                     <td class="table_td_wxts">
+                        总检医生：<img src=${shys} height="50" width="100" />&frasl;<img src=${zjys} height="50" width="100" />&nbsp;&nbsp;
+                        审核医生：<img src=${shys2} height="50" width="100" />&nbsp;&nbsp;
+                        三审护士：<img src=${syys} height="50" width="100" />&nbsp;&nbsp;
+                    </td>   
+                %endif
+            % else:
+                % if shys==zjys:
+                    <td class="table_td_wxts">
+                        总检医生：<img src=${zjys} height="50" width="100" />&nbsp;&nbsp;
+                        审核医生：<img src=${shys2} height="50" width="100" />&nbsp;&nbsp;
+                    </td>
+                % else:
+                     <td class="table_td_wxts">
+                        总检医生：<img src=${shys} height="50" width="100" />&frasl;<img src=${zjys} height="50" width="100" />&nbsp;&nbsp;
+                        审核医生：<img src=${shys2} height="50" width="100" />&nbsp;&nbsp;
+                    </td>   
+                %endif                                
+            %endif 
         </tr>
         <tr align="left">
             <td class="table_td_wxts">${warn}</td>
@@ -80,7 +103,6 @@ pdf_html_cachet_page2 ='''
         </tr>
         <tr align="right">
             <td class="table_td_wxts">
-                
                 总检医生：<img src=${zjys} height="50" width="100" />&frasl;<img src=${shys} height="50" width="100" />&nbsp;&nbsp;
                 审核医生：<img src=${shys2} height="50" width="100" />&nbsp;&nbsp;
                 三审护士：<img src=${syys} height="50" width="100" />&nbsp;&nbsp;

@@ -76,7 +76,7 @@ class CollectUrine(CollectUrine_UI):
                 else:
                     # 显示 选中
                     self.table_urine.selectRow(self.seri_objs.index(self.tmbh.text()))
-            mes_about(self,'条码有误或顾客未签到！')
+            # mes_about(self,'条码有误或顾客未签到！')
 
         self.tmbh.setText('')
 
