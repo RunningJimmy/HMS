@@ -13,8 +13,8 @@ class CollectSignFor_UI(Widget):
     def initUI(self):
         lt_main = QVBoxLayout()                    # 主布局
         lt_top = QHBoxLayout()                     # 上布局
-        lt_bottom = QHBoxLayout()                  # 下布局
-        self.gp_bottom = QGroupBox('签收数量(0)')
+        lt_bottom = HBoxLayout()                  # 下布局
+        self.gp_bottom = GroupBox('签收数量(0)')
         ############ 上布局 ########################
         self.lb_serialno = QSerialNo()
         lt_top.addWidget(self.lb_serialno)

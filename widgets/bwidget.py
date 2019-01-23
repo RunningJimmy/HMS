@@ -95,9 +95,18 @@ class Line(QFrame):
         self.setFrameShape(QFrame.VLine)
         self.setFrameShadow(QFrame.Sunken)
 
-# def mes_about(parent,message):
-#     MessageBox(self, text=mes).exec_()
-#     QMessageBox.about(parent, '明州体检', message)
+class GroupBox(QGroupBox):
+
+    def __init__(self,*__args):
+        super(GroupBox,self).__init__(*__args)
+        self.setFlat(True)
+        self.setFont(QFont("宋体",10))
+
+class HBoxLayout(QHBoxLayout):
+
+    def __init__(self,parent=None):
+        super(HBoxLayout,self).__init__(parent)
+        self.setContentsMargins(0,10,0,0)
 
 # 自带检索按钮、清除按钮
 class SearchLineEdit(QLineEdit):
@@ -156,21 +165,11 @@ class ToolButton(QToolButton):
 
     def __init__(self,icon,name):
         super(ToolButton,self).__init__()
-        # self.setObjectName('toolB')
         self.setIcon(icon)
         self.setText(name)
         self.setIconSize(QSize(32,32))
         self.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
         self.setAutoRaise(True)
-
-# 第一列加选择框
-    # for(int i = 0; i < 10; ++i)
-    # {
-    #     QStandardItem *item = new QStandardItem();
-    #     item->setCheckable(true);
-    #     item->setCheckState(Qt::Unchecked);
-    #     m_pModel->setItem(i, 0, item);
-    # }
 
 # 基础方法：
 # self.horizontalHeader().setSectionResizeMode(2, QHeaderView.Stretch) #第二列扩展
@@ -193,6 +192,7 @@ class TableWidget(QTableWidget):
         # self.horizontalHeader().setStyleSheet("QHeaderView::section{background:qlineargradient(spread:pad,x1:0,y1:0,x2:0,y2:1,stop:0.5 #054874 stop:1 #377277);}")  #设置表头背景色
         self.heads = heads
         self.setStyleSheet("QTableCornerButton::section{background-color:white;}")
+        self.keys = None
         # 鼠标跟踪功能
         # self.setMouseTracking(True)
         # self.cellEntered.connect(self.MouseTrackItem)
@@ -251,12 +251,22 @@ class TableWidget(QTableWidget):
         return tmp
 
     # 获取单行的字典 {col:value,......,colx:valuex,.....}
-    def selectRow2Dict(self):
+    def selectRow2Dict(self,*args):
         tmp = {}
-        for index,key in enumerate(self.heads.keys()):
-            tmp[key] = self.getCurItemValueOfKey(key)
+        if self.keys:
+            for key in self.keys:
+                tmp[key] = self.getCurItemValueOfKey(key)
+        elif args:
+            for key in args:
+                tmp[key] = self.getCurItemValueOfKey(key)
+        else:
+            for index,key in enumerate(self.heads.keys()):
+                tmp[key] = self.getCurItemValueOfKey(key)
 
         return tmp
+
+    def setKeys(self,keys):
+        self.keys = keys
 
     # 插入一行 实现
     def insert(self,data):
@@ -932,7 +942,8 @@ class Window(QWidget):
 
 # 流水布局，自动换行
 class FlowLayout(QLayout):
-    def __init__(self, parent=None, margin=0, spacing=-1):
+
+    def __init__(self, parent=None, margin=5, spacing=10):
         super(FlowLayout, self).__init__(parent)
 
         if parent is not None:
@@ -1216,6 +1227,10 @@ def widget_get_value(widget):
         return {False:'0',True:'1'}.get(widget.isChecked(),'0')
     elif isinstance(widget,QComboBox):
         return widget.currentText()
+    # 文件控件
+    elif isinstance(widget,FileWidget):
+        return widget.get_bytes()
+
     else:
         return None
 
@@ -1226,16 +1241,106 @@ def widget_set_value(widget,value):
     :param value: Qt控件的值
     :return:
     '''
-    if isinstance(widget,(QLineEdit,QLabel,QDateEdit,QTimeEdit,QDateTimeEdit)):
+    if isinstance(widget,(QLineEdit,QLabel)):
         widget.setText(value)
+    elif isinstance(widget,QDateEdit):
+        widget.setDate(QDate().fromString(value, 'yyyy-MM-dd'))
+    elif isinstance(widget,QTimeEdit):
+        widget.setTime(QTime().fromString(value),'HH:mm:ss')
+    elif isinstance(widget,QDateTimeEdit):
+        widget.setDateTime(QDateTime().fromString(value,'yyyy-MM-dd HH:mm:ss'))
     elif isinstance(widget,(QTextEdit,QPlainTextEdit)):
         widget.setPlainText(value)
-    elif isinstance(widget,(QSpinBox,QDoubleSpinBox)):
-        widget.setValue(value)
+    elif isinstance(widget,QSpinBox):
+        widget.setValue(int(value))
+    elif isinstance(widget,QDoubleSpinBox):
+        widget.setValue(float(value))
     elif isinstance(widget,QCheckBox):
-        widget.setChecked(bool(value))
+        widget.setChecked(bool(int(value)))
     elif isinstance(widget,QComboBox):
         widget.setCurrentText(value)
+
+# 根据数据库模型生成控件模型
+def create_widget(pytype,pylength,isnull=False,iskey=False,isauto=False,default=0):
+    '''
+    :param pytype: 列类型
+    :param pylength: 列长度
+    :param isnull: 是否可以为空,True 表示不允许为空
+    :return: widget
+    '''
+    from decimal import Decimal
+    from datetime import datetime,date,time
+    if pytype == str:
+        if pylength==None:
+            widget = QPlainTextEdit()
+        elif pylength==1:
+            widget = QCheckBox()
+            widget.setChecked(bool(int(default)))
+        else:
+            widget = QLineEdit()
+            widget.setMaxLength(pylength)
+            widget.setReadOnly(iskey)
+            if isnull:
+                widget.setPlaceholderText("允许空")
+            else:
+                widget.setPlaceholderText("不允许空")
+    elif pytype == int:
+        widget = QSpinBox()
+        widget.setDisabled(iskey)
+    elif pytype == Decimal:
+        widget = QDoubleSpinBox()
+    elif pytype == float:
+        widget = QDoubleSpinBox()
+    elif pytype == datetime:
+        widget = QDateTimeEdit()
+    elif pytype == date:
+        widget = QDateEdit(QDate.currentDate())
+        widget.setCalendarPopup(True)
+        widget.setDisplayFormat("yyyy-MM-dd")
+    elif pytype == time:
+        widget = QDateEdit()
+        widget.setDisplayFormat("HH:mm:ss")
+    elif pytype == bytes:
+        # 二进制
+        widget = FileWidget()
+    else:
+        return
+
+    return widget
+
+# 文件读取控件
+class FileWidget(QWidget):
+
+    def __init__(self,parent=None):
+        super(FileWidget,self).__init__(parent)
+        self.initUI()
+        self.btn_open_file.clicked.connect(self.setOpenFileName)
+
+    def initUI(self):
+        lt_main = QHBoxLayout()
+        self.le_file = QLineEdit()
+        self.le_file.setReadOnly(True)
+        self.btn_open_file = QPushButton('选择文件')
+        lt_main.addWidget(self.le_file)
+        lt_main.addWidget(self.btn_open_file)
+        self.setLayout(lt_main)
+
+    def setOpenFileName(self):
+        fileName, _ = QFileDialog.getOpenFileName(self,
+                "QFileDialog.getOpenFileName()", self.le_file.text(),
+                "All Files (*);;Word 2003 Files (*.doc);;Word 2007/2010 Files (*.docx);;Text Files (*.txt)")
+        if fileName:
+            self.le_file.setText(fileName)
+
+    def get_bytes(self):
+        if not self.le_file.text():
+            return
+        import zipfile
+        f = zipfile.ZipFile('archive.zip', 'w', zipfile.ZIP_DEFLATED)
+        f.write(self.le_file.text())
+        f.close()
+        with open('archive.zip',"rb") as f:
+            return f.read()
 
 if __name__ == "__main__":
     import sys

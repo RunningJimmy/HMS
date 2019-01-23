@@ -50,8 +50,8 @@ class ReportEquipUI(Widget):
         ])
         # 待审阅列表
         self.table_report_equip = ReportEquipTable(self.table_report_equip_cols)
-        self.gp_table = QGroupBox('检查列表（0）')
-        lt_table = QHBoxLayout()
+        self.gp_table = GroupBox('检查列表（0）')
+        lt_table = HBoxLayout()
         lt_table.addWidget(self.table_report_equip)
         self.gp_table.setLayout(lt_table)
         # 审阅信息

@@ -1,6 +1,16 @@
 from flask_sqlalchemy import SQLAlchemy
-
+from datetime import datetime
 db = SQLAlchemy()
+
+class MT_TJ_ShortUrl(db.Model):
+
+    __tablename__ = 'TJ_Short_Url'
+
+    SUID = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    tjbh = db.Column(db.String(16, 'Chinese_PRC_CI_AS'), nullable=False)
+    url_long = db.Column(db.String(200, 'Chinese_PRC_CI_AS'), nullable=False)
+    url_short = db.Column(db.String(200, 'Chinese_PRC_CI_AS'), nullable=False)
+    create_time = db.Column(db.DateTime, default=datetime.utcnow)
 
 # MT 表示 表 MV 表示视图
 class MT_TJ_FILE_ACTIVE(db.Model):

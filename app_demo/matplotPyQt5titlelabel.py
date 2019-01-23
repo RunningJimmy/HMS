@@ -14,6 +14,7 @@ from matplotlib import pyplot as plt
 # 每个Axes(ax)对象都是一个拥有自己坐标系统的绘图区域。
 
 class MyMplCanvas(FigureCanvas):
+
     """Ultimately, this is a QWidget (as well as a FigureCanvasAgg, etc.)."""
     def __init__(self, parent=None, width=5, height=4, dpi=100, title='title'):
         self.title = title
@@ -30,9 +31,7 @@ class MyMplCanvas(FigureCanvas):
         FigureCanvas.__init__(self, fig)
         self.setParent(parent)
 
-        FigureCanvas.setSizePolicy(self,
-                QSizePolicy.Expanding,
-                QSizePolicy.Expanding)
+        FigureCanvas.setSizePolicy(self,QSizePolicy.Expanding,QSizePolicy.Expanding)
         FigureCanvas.updateGeometry(self)
 
     def compute_initial_figure(self):
@@ -124,7 +123,6 @@ class ApplicationWindow(QMainWindow):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-
     aw = ApplicationWindow()
     aw.setWindowTitle("PyQt5 Matplot Example")
     aw.show()

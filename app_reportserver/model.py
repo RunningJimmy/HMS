@@ -86,8 +86,6 @@ class MV_TJJLMXB(BaseModel):
                 "zd": zd
                 }
 
-
-
 # 保健处方标题
 class MT_TJ_BJCF_TITLE(BaseModel):
 

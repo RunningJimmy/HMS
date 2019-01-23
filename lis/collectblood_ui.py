@@ -43,14 +43,14 @@ class CollectBlood_UI(UI):
         super(CollectBlood_UI,self).__init__(title)
 
         ####################左边布局#####################################
-        left_up_gp = QGroupBox('筛选条件')
-        left_up_lt = QVBoxLayout()
+        left_up_gp = GroupBox('筛选条件')
+        left_up_lt = HBoxLayout()
         self.le_serialno= QSerialNo()
         left_up_lt.addWidget(self.le_serialno)
         left_up_gp.setLayout(left_up_lt)
 
-        self.left_middle_gp = QGroupBox('采血列表')
-        left_middle_lt = QVBoxLayout()
+        self.left_middle_gp = GroupBox('采血列表')
+        left_middle_lt = HBoxLayout()
         self.blood_cols = OrderedDict([
             # ("tmzt", "状态"),
             ("sgys", "试管"),
@@ -690,15 +690,15 @@ class CollectHandleUI(Dialog):
         # 中布局
         lt_middle = QHBoxLayout()
         ########### 汇总信息
-        lt_left = QHBoxLayout()
-        self.gp_left = QGroupBox('样本采集汇总(0)')
+        lt_left = HBoxLayout()
+        self.gp_left = GroupBox('样本采集汇总(0)')
         self.gp_left.setMinimumWidth(530)
         self.table_handover_master = CollectHandleSumTable(self.collect_cols)
         lt_left.addWidget(self.table_handover_master)
         self.gp_left.setLayout(lt_left)
         ########### 详细信息
-        lt_right = QHBoxLayout()
-        self.gp_right = QGroupBox('样本采集明细(0)')
+        lt_right = HBoxLayout()
+        self.gp_right = GroupBox('样本采集明细(0)')
         self.gp_right.setMinimumWidth(500)
         self.table_handover_detail = CollectHandoverDTable(self.collect_detail_cols)
         lt_right.addWidget(self.table_handover_detail)

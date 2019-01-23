@@ -26,8 +26,8 @@ class PacsResultUI(PacsDialog):
         lt_top.addWidget(self.btn_receive)
         gp_top.setLayout(lt_top)
         # 中间布局
-        lt_middle = QHBoxLayout()
-        gp_middle = QGroupBox('检查列表')
+        lt_middle = HBoxLayout()
+        gp_middle = GroupBox('检查列表')
         self.inspect_cols = OrderedDict([
             ('CBGZT', '报告状态'),
             ('CJCZT', '检查状态'),
@@ -82,11 +82,11 @@ class PacsResultUI(PacsDialog):
         self.shys = Lable()
         self.shgh = Lable()         #隐藏
         self.shsj = Lable()
-        lt_bottom_3.addWidget(QLabel('报告医生：'))
+        lt_bottom_3.addWidget(QLabel('报告：'))
         lt_bottom_3.addWidget(self.bgys)
         lt_bottom_3.addWidget(QLabel('报告时间：'))
         lt_bottom_3.addWidget(self.bgsj)
-        lt_bottom_3.addWidget(QLabel('审核医生：'))
+        lt_bottom_3.addWidget(QLabel('审核：'))
         lt_bottom_3.addWidget(self.shys)
         lt_bottom_3.addWidget(QLabel('审核时间：'))
         lt_bottom_3.addWidget(self.shsj)

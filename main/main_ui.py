@@ -1,4 +1,6 @@
 from widgets.bwidget import *
+from widgets import HeadPortraitLabel
+from .toolkit import ToolkitUI
 from importlib import import_module
 from .about import about_msessage
 from .menu_config import *
@@ -126,10 +128,12 @@ class MenuBar(QMenuBar):
                 if self.tree.menu_is_tool(menubar_name, action_name):
                     toolbar.addAction(action)
                 #
-                self.parentWidget().addToolBar(toolbar)
+
 
         ######################所有用户均有权限##########################################
+
         menu_help = self.addMenu(Icon('帮助'), '帮助')
+        menu_help.addAction(Icon('toolkit'), '工具',self.open_toolkit)
         # menu_help.addAction(Icon('操作手册'), '操作手册')
         # menu_help.addAction(Icon('注册'), '注册')
         self.menu_help_skin = menu_help.addMenu(Icon('皮肤'), '更换皮肤')
@@ -139,12 +143,28 @@ class MenuBar(QMenuBar):
         menu_help.addAction(Icon('意见'), '意见')
         menu_help.addAction(Icon('关于'), '关于',self.about)
 
+        # 增加头像
+        lb_head = HeadPortraitLabel()
+        widget = QWidget()
+        widget.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        toolbar.addWidget(widget)
+        toolbar.addWidget(lb_head)
+        toolbar.setMovable(True)
+
+        #
+        self.parentWidget().addToolBar(toolbar)
+
     # 获取用户默认的菜单栏，便于程序自动打开
     def default_action(self,sid):
         return self.sys_action_obj.get(sid,None)
 
     def about(self):
         QMessageBox.about(self, "明州体检",about_msessage)
+
+    def open_toolkit(self):
+        widget = ToolkitUI(self.parent())
+        widget.exec_()
+
 
 # 菜单 按钮
 class Action(QAction):

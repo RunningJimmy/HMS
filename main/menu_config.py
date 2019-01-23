@@ -39,7 +39,7 @@ SYS_MENU_TREE = {   # 系统
              'tip': None,
              'state': True,
              'childs': OrderedDict([
-                  # ('体检项目',{'pid': 200, 'id': 2001, 'title': '体检项目', 'tip': None, 'state': True,'icon':'','is_tool':False,'class':None, 'childs': None}),
+                  ('项目设置',{'pid': 200, 'sid': 2001, 'title': '项目设置', 'tip': None, 'state': True,'icon':'','is_tool':False,'shortcut': None}),
                   # ('体检套餐',{'pid': 200, 'id': 2002, 'title': '体检套餐', 'tip': None, 'state': True,'icon':'','is_tool':False,'class':None, 'childs': None}),
                   # ('体检项目类别',{'pid': 200, 'id': 2003, 'title': '体检项目类别', 'tip': None, 'state': True, 'icon':'','is_tool':False,'class':None,'childs': None}),
                   # ('导检单项目',{'pid': 200, 'id': 2004, 'title': '导检单项目', 'tip': None, 'state': True,'icon':'','is_tool':False,'class':None, 'childs': None}),
@@ -47,38 +47,40 @@ SYS_MENU_TREE = {   # 系统
                   # ('员工信息',{'pid': 200, 'id': 2006, 'title': '员工信息', 'tip': None, 'state': True,'icon':'','is_tool':False,'class':None, 'childs': None}),
                   # ('体检科室',{'pid': 200, 'id': 2007, 'title': '体检科室', 'tip': None, 'state': True,'icon':'','is_tool':False,'class':None, 'childs': None}),
                   # ('发票号码',{'pid': 200, 'id': 2008, 'title': '发票号码', 'tip': None, 'state': True,'icon':'','is_tool':False,'class':None, 'childs': None})
-                  ('招工电子报告权限',{'pid': 200, 'sid': 2009, 'title': '招工电子报告权限', 'tip': None, 'state': True, 'icon':'报告中心','is_tool':False,'shortcut':None}),
+                  ('报告设置',{'pid': 200, 'sid': 2005, 'title': '报告设置', 'tip': None, 'state': True, 'icon':'报告中心','is_tool':False,'shortcut':None}),
+                  ('接口配置', {'pid': 200, 'sid': 2008, 'title': '接口配置', 'tip': None, 'state': True, 'icon': '切换接口','is_tool': False, 'shortcut': None}),
+                  ('其他配置', {'pid': 200, 'sid': 2009, 'title': '其他配置', 'tip': None, 'state': True, 'icon': '切换接口','is_tool': False, 'shortcut': None}),
             ])
          }),
         # 外围系统 WEB、app、微信、电话、短信、HIS、LIS、PACS
-        ('接口管理',
-         {
-             'pid': 1,
-             'sid': 300,
-             'title': '接口管理',
-             'tip': None,
-             'state': True,
-             'childs': OrderedDict([
-                  #     ('HIS收费项目对照',
-                  #      {'pid': 400, 'id': 4001, 'title': 'HIS收费项目对照', 'tip': None, 'state': True, 'icon': '',
-                  #       'is_tool': False, 'class': None, 'childs': None}),
-                  #     ('LIS检验项目对照',
-                  #      {'pid': 400, 'id': 4002, 'title': 'LIS检验项目对照', 'tip': None, 'state': True, 'icon': '',
-                  #       'is_tool': False, 'class': None, 'childs': None}),
-                  #     ('PACS项目对照', {'pid': 400, 'id': 4003, 'title': 'PACS项目对照', 'tip': None, 'state': True, 'icon': '',
-                  #                   'is_tool': False, 'class': None, 'childs': None}),
-                  #     ('HIS接口',
-                  #      {'pid': 400, 'id': 4004, 'title': 'HIS接口', 'tip': None, 'state': True, 'icon': '', 'is_tool': False,
-                  #       'class': None, 'childs': None}),
-                  #     ('LIS接口',
-                  #      {'pid': 400, 'id': 4005, 'title': 'LIS接口', 'tip': None, 'state': True, 'icon': '', 'is_tool': False,
-                  #       'class': None, 'childs': None}),
-                  #     ('PACS接口', {'pid': 400, 'id': 4006, 'title': 'PACS接口', 'tip': None, 'state': True, 'icon': '',
-                  #                 'is_tool': False, 'class': None, 'childs': None}),
-                  #     ('设备接口',
-                  #      {'pid': 400, 'id': 4007, 'title': '设备接口', 'tip': None, 'state': True, 'icon': '', 'is_tool': False,
-                  #       'class': None, 'childs': None})
-                  ])}),
+        # ('接口管理',
+        #  {
+        #      'pid': 1,
+        #      'sid': 300,
+        #      'title': '接口管理',
+        #      'tip': None,
+        #      'state': True,
+        #      'childs': OrderedDict([
+        #           #     ('HIS收费项目对照',
+        #           #      {'pid': 400, 'id': 4001, 'title': 'HIS收费项目对照', 'tip': None, 'state': True, 'icon': '',
+        #           #       'is_tool': False, 'class': None, 'childs': None}),
+        #           #     ('LIS检验项目对照',
+        #           #      {'pid': 400, 'id': 4002, 'title': 'LIS检验项目对照', 'tip': None, 'state': True, 'icon': '',
+        #           #       'is_tool': False, 'class': None, 'childs': None}),
+        #           #     ('PACS项目对照', {'pid': 400, 'id': 4003, 'title': 'PACS项目对照', 'tip': None, 'state': True, 'icon': '',
+        #           #                   'is_tool': False, 'class': None, 'childs': None}),
+        #           #     ('HIS接口',
+        #           #      {'pid': 400, 'id': 4004, 'title': 'HIS接口', 'tip': None, 'state': True, 'icon': '', 'is_tool': False,
+        #           #       'class': None, 'childs': None}),
+        #           #     ('LIS接口',
+        #           #      {'pid': 400, 'id': 4005, 'title': 'LIS接口', 'tip': None, 'state': True, 'icon': '', 'is_tool': False,
+        #           #       'class': None, 'childs': None}),
+        #           #     ('PACS接口', {'pid': 400, 'id': 4006, 'title': 'PACS接口', 'tip': None, 'state': True, 'icon': '',
+        #           #                 'is_tool': False, 'class': None, 'childs': None}),
+        #           #     ('设备接口',
+        #           #      {'pid': 400, 'id': 4007, 'title': '设备接口', 'tip': None, 'state': True, 'icon': '', 'is_tool': False,
+        #           #       'class': None, 'childs': None})
+        #           ])}),
         # 体检检中管理
         ('检中管理',
          {
@@ -170,12 +172,13 @@ SYS_MENU_TREE = {   # 系统
              'state': True,
              'childs': OrderedDict([
                  ('业务需求',{'pid': 900, 'sid': 9000, 'title': '业务需求', 'tip': None, 'state': True, 'icon': '填写率', 'is_tool': True,'shortcut':None}),
-                 ('科室档案',{'pid': 900, 'sid': 9001, 'title': '科室档案', 'tip': None, 'state': True, 'icon': '所有科室', 'is_tool': False,'shortcut':None}),
+                 ('科室管理',{'pid': 900, 'sid': 9001, 'title': '科室管理', 'tip': None, 'state': True, 'icon': '所有科室', 'is_tool': False,'shortcut':None}),
                  ('电话平台',{'pid': 900, 'sid': 9002, 'title': '电话平台', 'tip': None, 'state': True, 'icon': '电话', 'is_tool': False,'shortcut':None}),
                  ('多媒体屏',{'pid': 900, 'sid': 9003, 'title': '多媒体屏', 'tip': None, 'state': True, 'icon': '多媒体', 'is_tool': False,'shortcut':None}),
                  ('微信后台',{'pid': 900, 'sid': 9004, 'title': '微信后台', 'tip': None, 'state': True, 'icon': 'website', 'is_tool': False,'shortcut':None}),
                  ('官网后台',{'pid': 900, 'sid': 9005, 'title': '官网后台', 'tip': None, 'state': True, 'icon': 'website', 'is_tool': False,'shortcut':None}),
                  ('官网主页',{'pid': 900, 'sid': 9006, 'title': '官网主页', 'tip': None, 'state': True, 'icon': 'website', 'is_tool': False,'shortcut':None}),
+                 ('图特资产',{'pid': 900, 'sid': 9007, 'title': '图特资产', 'tip': None, 'state': True, 'icon': 'website','is_tool': False, 'shortcut': None}),
                  ('好评率',{'pid': 900, 'sid': 9008, 'title': '好评率', 'tip': None, 'state': True, 'icon': 'oa办公', 'is_tool': False,'shortcut':None}),
                  ('OA办公',{'pid': 900, 'sid': 9009, 'title': 'OA办公', 'tip': None, 'state': True, 'icon': 'oa办公', 'is_tool': False,'shortcut':None}),
             ])})
@@ -191,15 +194,15 @@ SYS_MENU_MODULE_CLASS = {
     1006: {'module': None, 'class': None, 'enabled': False},
     1007: {'module': None, 'class': None, 'enabled': False},
     1008: {'module': None, 'class': None, 'enabled': False},
-    2001: {'module': None, 'class': None, 'enabled': False},
+    2001: {'module': 'app_setup', 'class': 'SetupManagerItem', 'enabled': True},
     2002: {'module': None, 'class': None, 'enabled': False},
     2003: {'module': None, 'class': None, 'enabled': False},
     2004: {'module': None, 'class': None, 'enabled': False},
-    2005: {'module': None, 'class': None, 'enabled': False},
+    2005: {'module': 'app_setup', 'class': 'SetupManagerReport', 'enabled': True},
     2006: {'module': None, 'class': None, 'enabled': False},
     2007: {'module': None, 'class': None, 'enabled': False},
-    2008: {'module': None, 'class': None, 'enabled': False},
-    2009: {'module': 'app_setup', 'class': 'EnterpriseHeadUI', 'enabled': True},
+    2008: {'module': 'app_setup', 'class': 'SetupManagerInterface', 'enabled': True},
+    2009: {'module': 'app_setup', 'class': 'SetupManagerOther', 'enabled': True},
     3001: {'module': None, 'class': None, 'enabled': False},
     3002: {'module': None, 'class': None, 'enabled': False},
     3003: {'module': None, 'class': None, 'enabled': False},
@@ -215,18 +218,18 @@ SYS_MENU_MODULE_CLASS = {
     4005: {'module': None, 'class': None, 'enabled': False},
     4006: {'module': None, 'class': None, 'enabled': False},
     4007: {'module': 'vip', 'class': 'VipManager', 'enabled': True},
-    4008: {'module': 'lis', 'class': 'SampleManager', 'enabled': True},       # 采血台
-    4009: {'module': 'C13', 'class': 'BreathManager', 'enabled': True},       # 呼气室
-    5001: {'module': 'report', 'class': 'ReportManager', 'enabled': True},    # 报告中心
-    5002: {'module': 'mbgl', 'class': 'NCDManager', 'enabled': True},         # 慢病管理
-    5003: {'module': 'app_interface', 'class': 'XiHe_HealthUI', 'enabled': True},  # 希和检后
-    5004: {'module': 'app_interface', 'class': 'TaiWan_HealthUI', 'enabled': True},  # 台湾检后
+    4008: {'module': 'lis', 'class': 'SampleManager', 'enabled': True},                 # 采血台
+    4009: {'module': 'C13', 'class': 'BreathManager', 'enabled': True},                 # 呼气室
+    5001: {'module': 'report', 'class': 'ReportManager', 'enabled': True},              # 报告中心
+    5002: {'module': 'mbgl', 'class': 'NCDManager', 'enabled': True},                   # 慢病管理
+    5003: {'module': 'app_interface', 'class': 'XiHe_HealthUI', 'enabled': True},       # 希和检后
+    5004: {'module': 'app_interface', 'class': 'TaiWan_HealthUI', 'enabled': True},     # 台湾检后
     5005: {'module': None, 'class': None, 'enabled': False},
     5006: {'module': None, 'class': None, 'enabled': False},
     5007: {'module': None, 'class': None, 'enabled': False},
     5008: {'module': None, 'class': None, 'enabled': False},
-    6001: {'module': 'statistics', 'class': 'DN_MeritPay', 'enabled': True},    #医护绩效
-    6002: {'module': 'statistics', 'class': 'TimeEfficency', 'enabled': True},  # 医护绩效
+    6001: {'module': 'statistics', 'class': 'DN_MeritPay', 'enabled': True},            # 医护绩效
+    6002: {'module': 'statistics', 'class': 'TimeEfficency', 'enabled': True},          # 医护绩效
     6003: {'module': None, 'class': None, 'enabled': False},
     6004: {'module': None, 'class': None, 'enabled': False},
     6005: {'module': None, 'class': None, 'enabled': False},
@@ -257,6 +260,7 @@ SYS_MENU_MODULE_CLASS = {
     9004: {'module': 'app_interface', 'class': 'WeiXinUI', 'enabled': True},
     9005: {'module': 'app_interface', 'class': 'WebsiteBackUI', 'enabled': True},
     9006: {'module': 'app_interface', 'class': 'WebsiteFrontUI', 'enabled': True},
+    9007: {'module': 'app_interface', 'class': 'AssetUI', 'enabled': True},
     9008: {'module': 'app_interface', 'class': 'GoodEvaluateUI', 'enabled': True},
     9009: {'module': 'app_interface', 'class': 'OaUI', 'enabled': True},
 }

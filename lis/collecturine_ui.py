@@ -60,8 +60,8 @@ class CollectUrine_UI(Widget):
 
         gp_left.setLayout(lt_left)
         ############################ 布局右边 ############################
-        self.gp_right = QGroupBox('留样扫码')
-        lt_right = QVBoxLayout()
+        self.gp_right = GroupBox('留样扫码')
+        lt_right = HBoxLayout()
         lt_right.addWidget(self.table_urine)
         self.gp_right.setLayout(lt_right)
         main_layout.addWidget(gp_left,1)

@@ -103,11 +103,10 @@ class CefWidget(QWidget):
                 cef.WindowUtils().OnSize(self.getHandle(), 0, 0, 0)
             self.browser.NotifyMoveOrResizeStarted()
 
-
     def closeEvent(self, event):
         if self.browser:
-            self.browser.CloseBrowser(True)
-            # self.clear_browser_references()
+            # Browser对象的正确结束
+            self.browser.ParentWindowWillClose()
             self.browser = None
 
 class LoadHandler(object):

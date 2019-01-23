@@ -20,12 +20,13 @@
 # 反向步骤：
 # 一、取消审阅
 # 1、客户端取消审阅调用 API服务：传递参数：tjbh 默认参数pdf
-import time,os,ujson
+import time as timer,os,ujson
 import shutil
 from collections import OrderedDict
 import pdfkit
-from utils import set_report_env,BarCodeBuild,cur_datetime,RemoteFileHandler,fileRename
+from utils import set_report_env,BarCodeBuild,RemoteFileHandler,fileRename
 from utils import gol
+from app_api.tools import cur_datetime
 from app_reportserver import *
 from jinja2 import Template
 from mako.template import Template as Template2
@@ -96,7 +97,7 @@ def report_run(queue):
                 else:
                     # 报告生成服务
                     tjbh = mes_obj['tjbh']                                                      # 获取体检编号
-                    time_start = time.time()
+                    time_start = timer.time()
                     # pdf 数据对象
                     pdf_data_obj = PdfData(session_tjxt,session_cxk,gol.get_value('report_path'),tjbh,action)
                     # 设置报告生成状态
@@ -163,9 +164,9 @@ def report_run(queue):
                         pdf_build_obj.write_health_care(health)
                     # 关闭文件
                     pdf_build_obj.close()
-                    time_end = time.time()
-                    print("%s: %s HTML报告生成成功！耗时：%s " % (cur_datetime(),tjbh,time_end - time_start))
-                    log.info("%s: %s HTML报告生成成功！耗时：%s " % (cur_datetime(),tjbh,time_end - time_start))
+                    time_end = timer.time()
+                    print("%s: %s HTML报告生成成功！耗时：%s " % (cur_datetime(),tjbh,str(round(time_end - time_start,2))))
+                    log.info("%s: %s HTML报告生成成功！耗时：%s " % (cur_datetime(),tjbh,str(round(time_end - time_start,2))))
                     # print('HTML头文件：%s' % pdf_data_obj.get_head_html)
                     # print('HTML主文件：%s' % pdf_data_obj.get_body_html)
                     if action == 'pdf':
@@ -182,9 +183,9 @@ def report_run(queue):
                             css=pdf_css                        # (optional) string with path to css file which will be added to a single input file
 
                         )
-                        time_end2 = time.time()
-                        print("%s: %s PDF报告生成成功！耗时：%s " %(cur_datetime(),tjbh,time_end2 - time_start))
-                        log.info("%s: %s PDF报告生成成功！耗时：%s " % (cur_datetime(),tjbh,time_end2 - time_start))
+                        time_end2 = timer.time()
+                        print("%s: %s PDF报告生成成功！耗时：%s " %(cur_datetime(),tjbh,str(round(time_end2 - time_start,2))))
+                        log.info("%s: %s PDF报告生成成功！耗时：%s " % (cur_datetime(),tjbh,str(round(time_end2 - time_start,2))))
                         pdf_data_obj.set_bglj(pdf_data_obj.get_pdf)
                     ############################## 更新数据库 ########################################
                     pdf_data_obj.update_user_report()
@@ -192,7 +193,7 @@ def report_run(queue):
                     del pdf_data_obj
                     del pdf_build_obj
         else:
-            time.sleep(1)
+            timer.sleep(1)
 
 
 def write_home_html(filename,user:dict):
@@ -402,7 +403,7 @@ class PdfData(object):
     # 获得该人保存的图片目录
     @property
     def get_img_dir(self):
-        dday = time.strftime("%Y-%m-%d", time.localtime(int(time.time())))
+        dday = timer.strftime("%Y-%m-%d", timer.localtime(int(timer.time())))
         dyear = dday[0:4]
         dmonth = dday[0:7]
         cur_path = '%s/%s/%s/%s/%s/img/' % (self.path, dyear, dmonth, dday, self.tjbh)
@@ -413,7 +414,7 @@ class PdfData(object):
     # 获得该人保存的图片目录（HTML 用）
     @property
     def get_html_img_dir(self):
-        dday = time.strftime("%Y-%m-%d", time.localtime(int(time.time())))
+        dday = timer.strftime("%Y-%m-%d", timer.localtime(int(timer.time())))
         dyear = dday[0:4]
         dmonth = dday[0:7]
         cur_path = '%s/%s/%s/%s/%s/img/' % (self.html_path, dyear, dmonth, dday, self.tjbh)
@@ -437,7 +438,7 @@ class PdfData(object):
                 return
 
         # 如果不存在，则生成当日路径
-        dday = time.strftime("%Y-%m-%d", time.localtime(int(time.time())))
+        dday = timer.strftime("%Y-%m-%d", timer.localtime(int(timer.time())))
         dyear = dday[0:4]
         dmonth = dday[0:7]
         cur_path = '%s/%s/%s/%s/%s/' % (self.path, dyear, dmonth, dday, self.tjbh)
@@ -470,7 +471,7 @@ class PdfData(object):
     @property
     def get_user_xjjy(self):
         # 小结、建议
-        results = self.session_tjk.query(MT_TJ_JBQK).filter(MT_TJ_JBQK.tjbh == self.tjbh).order_by(MT_TJ_JBQK.jbpx).all()
+        results = self.session_tjk.query(MT_TJ_JBQK).filter(MT_TJ_JBQK.tjbh == self.tjbh).order_by(MT_TJ_JBQK.jblx,MT_TJ_JBQK.jbpx).all()
         summarys = []
         suggestions = []
         for result in results:
@@ -959,21 +960,23 @@ def get_film_num(tjbh):
         INNER JOIN (SELECT XMBH,JPSL,LBBM FROM TJ_XMDM WHERE jpsl is NOT NULL) AS B ON A.XMBH=B.XMBH
     ''' % tjbh
 
+
 if __name__ =='__main__':
-    import cgitb
-    # 非pycharm编辑器可用输出错误
-    #sys.excepthook = cgitb.Hook(1, None, 5, sys.stderr, 'text')
-    # cgitb.enable(logdir="./error/",format="text")
-    from utils.dbconn import get_tjxt_session
-    from queue import Queue
-    session = get_tjxt_session(
-        hostname='10.8.200.201',
-        dbname='tjxt',
-        user='bsuser',
-        passwd='admin2389',
-        port=1433
-    )
-    q = Queue()
+    pass
+    # import cgitb
+    # # 非pycharm编辑器可用输出错误
+    # #sys.excepthook = cgitb.Hook(1, None, 5, sys.stderr, 'text')
+    # # cgitb.enable(logdir="./error/",format="text")
+    # from utils.dbconn import get_tjxt_session
+    # from queue import Queue
+    # session = get_tjxt_session(
+    #     hostname='10.8.200.201',
+    #     dbname='tjxt',
+    #     user='bsuser',
+    #     passwd='admin2389',
+    #     port=1433
+    # )
+    # q = Queue()
     # # 处理遗漏的
     # sql = "SELECT TJBH FROM TJ_TJDJB WHERE SUMOVER='1' AND SHRQ>='2018-09-01' AND QD='1' AND (del <> '1' or del is null) AND TJBH NOT IN (SELECT TJBH FROM TJ_BGGL WHERE BGZT<>'0')"
     # # 处理没有报告路径的
@@ -994,5 +997,5 @@ if __name__ =='__main__':
     # for result in results:
     #     q.put({'tjbh': result[0], 'action': 'pdf'})
     # q.put({'tjbh': '166647427', 'action': 'pdf'})
-    q.put({'tjbh': '108261638', 'action': 'pdf'})
-    report_run(q)
+    # q.put({'tjbh': '108261638', 'action': 'pdf'})
+    # report_run(q)

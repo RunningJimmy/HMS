@@ -3,6 +3,7 @@ from gevent.pywsgi import WSGIServer
 from geventwebsocket.handler import WebSocketHandler
 from app_api.config import create_app
 from app_api.views import init_views
+from app_api.other import init_other_views
 from app_api.model import db
 from utils.envir2 import Init_env_vars
 from utils import gol
@@ -35,32 +36,39 @@ if __name__ == '__main__':
     gol_report_queue = Queue()
     process_print_num = gol.get_value('process_print_num', 3)
     process_report_num = gol.get_value('process_report_num', 3)
-    ##############打印进程########################
+    # ##############打印进程组########################
     for i in range(process_print_num):
         print_process = Process(target=report_run_api, args=(gol_print_queue,),name="报告生成进程%s" %str(i+1))
         # 启动报告服务
         print_process.start()
-    ##############报告进程########################
+    #############报告进程组########################
     for i in range(process_report_num):
         report_process = Process(target=report_run_api, args=(gol_report_queue,),name="报告生成进程%s" %str(i+1))
         # 启动报告服务
         report_process.start()
-    ##############创建进程组####################
-    # p = Pool(processes=process_count)
-    # for i in range(process_count):
-    #     p.apply_async(report_run_api,(gol_process_queue,))  # 向进程池添加任务
+    # 打印进程池
+    # if process_print_num:
+    #     pool = multiprocessing.Pool(processes=None, initializer=None, initargs=(gol_print_queue,))
+    #     for i in range(process_print_num):
+    #         pool.apply_async(report_run_api, (gol_print_queue, ))
+    # # 报告进程池
+    # if process_report_num:
+    #     pool = multiprocessing.Pool(processes=None, initializer=None,initargs=(gol_report_queue,))
+    #     for i in range(process_report_num):
+    #         pool.apply_async(report_run_api, (gol_report_queue, ))
 
     gol.set_value('tj_cxk',get_oracle_session(gol.get_value('SQLALCHEMY_DATABASE_URI2')))
     # monkey.patch_all()
     app = create_app()
-
+    forward_request_address = gol.get_value('forward_request_address')
     db.init_app(app)
     init_views(app,db,gol_print_queue,gol_report_queue)
+    init_other_views(app,db,forward_request_address)
     # 获取全局变量
     HOST = gol.get_value('api_host')
     PORT = gol.get_value('api_port')
     app.logger.info('API(%s:%s)服务启动......' % (HOST, str(PORT)))
     # 运行应用
     # server_on_tornado_run(app,'10.7.200.101',5005)
-    server_on_tornado_run(app, HOST, 4000)
+    server_on_tornado_run(app, HOST, 5005)
 

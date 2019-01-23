@@ -1,5 +1,6 @@
 from C13.breathcheck_ui import *
 from C13.model import *
+import time
 
 def cur_time():
     return time.strftime("%H:%M:%S", time.localtime(int(time.time())))

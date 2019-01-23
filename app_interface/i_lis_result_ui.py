@@ -27,8 +27,8 @@ class LisResultUI(LisDialog):
         lt_top.addWidget(self.btn_print)
         lt_top.addWidget(self.btn_receive)
         gp_top.setLayout(lt_top)
-        lt_middle = QHBoxLayout()
-        gp_middle = QGroupBox('检验列表')
+        lt_middle = HBoxLayout()
+        gp_middle = GroupBox('项目列表')
         self.inspect_master_cols = OrderedDict([
                         ('bgzt', '状态'),
                         ('tmbh', '条码编号'),
@@ -67,13 +67,13 @@ class LisResultUI(LisDialog):
         self.bgsj = Lable()
         self.shys = Lable()
         self.shsj = Lable()
-        lt_bottom.addWidget(QLabel('检验医生：'))
+        lt_bottom.addWidget(QLabel('检验：'))
         lt_bottom.addWidget(self.bgys)
-        lt_bottom.addWidget(QLabel('检验时间：'))
+        lt_bottom.addWidget(QLabel('时间：'))
         lt_bottom.addWidget(self.bgsj)
-        lt_bottom.addWidget(QLabel('审核医生：'))
+        lt_bottom.addWidget(QLabel('审核：'))
         lt_bottom.addWidget(self.shys)
-        lt_bottom.addWidget(QLabel('审核时间：'))
+        lt_bottom.addWidget(QLabel('时间：'))
         lt_bottom.addWidget(self.shsj)
         gp_bottom.setLayout(lt_bottom)
 

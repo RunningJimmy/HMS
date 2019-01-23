@@ -9,6 +9,7 @@
 '''
 
 from widgets.cwidget import *
+from widgets import CRUD_UI
 from .model import *
 
 # 设备资产
@@ -20,12 +21,14 @@ class InfoEquipAsset(Widget):
         self.initUI()
         # 绑定信号槽
         self.initSignal()
+        self.on_btn_search_click()
 
     def initSignal(self):
         self.table_asset.doubleClicked.connect(self.on_table_asset_dclick)
         self.btn_insert.clicked.connect(self.on_btn_insert_click)
         self.btn_update.clicked.connect(self.on_btn_update_click)
-        self.btn_delete.clicked.connect(self.on_btn_delete_click)
+        # self.btn_delete.clicked.connect(self.on_btn_delete_click)
+        self.btn_drop.clicked.connect(self.on_btn_drop_click)
 
     def initUI(self):
         lt_main = QVBoxLayout()
@@ -45,10 +48,10 @@ class InfoEquipAsset(Widget):
         lt_top.addStretch()
         gp_top.setLayout(lt_top)
         ######
-        lt_middle = QHBoxLayout()
-        gp_middle = QGroupBox('资产(0)')
+        lt_middle = HBoxLayout()
+        self.gp_middle = GroupBox('资产(0)')
         self.table_asset_cols = OrderedDict([
-            ('aid', ""),
+            ('aid', "ID"),
             ('ename', "厂商"),
             ('etype', "类型"),
             ('earea', "场所"),
@@ -63,21 +66,23 @@ class InfoEquipAsset(Widget):
         ])
         self.table_asset = AssetTableWidget(self.table_asset_cols)
         lt_middle.addWidget(self.table_asset)
-        gp_middle.setLayout(lt_middle)
+        self.gp_middle.setLayout(lt_middle)
         lt_bottom = QHBoxLayout()
         gp_bottom = QGroupBox()
         self.btn_insert = QPushButton('新增')
         self.btn_update = QPushButton('修改')
         self.btn_delete = QPushButton('报废')
+        self.btn_drop = QPushButton('删除')
         lt_bottom.addStretch()
         lt_bottom.addWidget(self.btn_insert)
         lt_bottom.addWidget(self.btn_update)
         lt_bottom.addWidget(self.btn_delete)
+        lt_bottom.addWidget(self.btn_drop)
         lt_bottom.addStretch()
         gp_bottom.setLayout(lt_bottom)
         # 添加主布局
         lt_main.addWidget(gp_top)
-        lt_main.addWidget(gp_middle)
+        lt_main.addWidget(self.gp_middle)
         lt_main.addWidget(gp_bottom)
         self.setLayout(lt_main)
 
@@ -89,11 +94,11 @@ class InfoEquipAsset(Widget):
     def on_btn_search_click(self):
         results = self.session.query(MT_TJ_ASSET).all()
         self.table_asset.load([result.to_dict() for result in results])
-        self.gp_middle_left.setTitle('用户(%s)' %self.table_asset.rowCount())
+        self.gp_middle.setTitle('资产(%s)' %self.table_asset.rowCount())
 
     # 增加
     def on_btn_insert_click(self):
-        ui = AssetHandleDialog(self)
+        ui = CRUD_UI(self.table_asset_cols,MT_TJ_ASSET,parent=self)
         ui.handle.emit({})
         ui.exec_()
         self.on_btn_search_click()
@@ -103,17 +108,14 @@ class InfoEquipAsset(Widget):
         if self.table_asset.currentRow()==-1:
             mes_about(self,"请选择需要修改的数据！")
             return
-        ui = AssetHandleDialog(self)
+        ui = CRUD_UI(self.table_asset_cols, MT_TJ_ASSET, parent=self)
         ui.handle.emit(self.table_asset.selectRow2Dict())
         ui.exec_()
         self.on_btn_search_click()
 
     # 删除
-    def on_btn_delete_click(self):
-        if self.table_dwmc.count()>0:
-            mes_about(self,"请先清空该用户的授权单位信息！")
-            return
-        button = mes_warn(self, '您确认删除此用户吗？')
+    def on_btn_drop_click(self):
+        button = mes_warn(self, '您确认删除吗？')
         if button == QMessageBox.Yes:
             try:
                 self.session.query(MT_TJ_ASSET).filter_by(**self.table_asset.selectRow2Dict()).delete()
@@ -123,6 +125,8 @@ class InfoEquipAsset(Widget):
             except Exception as e:
                 self.session.rollback()
                 mes_about(self,"删除失败，信息：%s" %e)
+
+        self.on_btn_search_click()
 
 #
 class AssetHandleDialog(Dialog):
@@ -232,5 +236,8 @@ class AssetTableWidget(TableWidget):
                 item.setTextAlignment(Qt.AlignCenter)
                 self.setItem(row_index, col_index, item)
 
-
-
+        # self.setColumnWidth(11, 120)  # 身份证号
+        # self.setColumnWidth(12, 80)  # 手机号码
+        # self.setColumnWidth(13, 180)  # 单位编号
+        # self.setColumnWidth(14, 70)  # 签到日期
+        # self.horizontalHeader().setStretchLastSection(True)

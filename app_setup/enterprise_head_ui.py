@@ -11,9 +11,7 @@ from widgets.cwidget import *
 from app_setup.model import *
 
 # 招工电子报告后台设置，人员和单位
-class EnterpriseHeadUI(CenterWidget):
-
-    status = False
+class EnterpriseHeadUI(Widget):
 
     def __init__(self,parent=None):
         super(EnterpriseHeadUI,self).__init__(parent)

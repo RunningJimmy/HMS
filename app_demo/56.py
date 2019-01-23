@@ -6,7 +6,8 @@ from PyQt5.QtGui import *
 from PyQt5.QtWebEngineWidgets import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtNetwork import *
-import markdown2 #用于Markdown的渲染
+import markdown #用于Markdown的渲染
+
 
 #MarkdownEditor类继承于QWidget
 class MarkdownEditor(QWidget):
@@ -46,7 +47,14 @@ class MarkdownEditor(QWidget):
     #编写TextChanged响应函数：当文本编辑区的内容改变时执行渲染动作
     def onTextChanged(self):
         try:
-            html = markdown2.markdown(self.editor.toPlainText())
+            html = markdown.markdown(self.editor.toPlainText(),['del_ins'])
+            # extensions=[
+            #     'markdown.extensions.extra',
+            #     'markdown.extensions.tables',
+            #     'markdown.extensions.codehilite'
+            #
+            # ])
+
         except:
             html = 'Error decoding '
         self.web.setHtml(html)

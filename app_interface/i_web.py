@@ -103,3 +103,10 @@ class WebsiteFrontUI(BrowserWidget):
         title = '官网主页'
         url = "http://10.7.200.127/"
         super(WebsiteFrontUI,self).__init__(title,url,parent)
+
+class AssetUI(BrowserWidget):
+
+    def __init__(self,parent=None):
+        title = '图特资产'
+        url = "http://10.7.200.56/Home/Main/"
+        super(AssetUI,self).__init__(title,url,parent)

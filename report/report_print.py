@@ -256,9 +256,17 @@ class ReportPrint(ReportPrintUI):
         elif self.lt_where_search.get_date_text() == '预约日期':
             sql = sql + ''' AND TJ_TJDJB.TJRQ>= '%s' AND TJ_TJDJB.TJRQ< '%s' ''' %(t_start,t_end)
 
-        # 是否有手工单
+        # 是否有手工单1
         if self.cb_manual.isChecked():
-            sql = sql + ''' AND TJ_BGGL.SGD='1' '''
+            if self.cb_hepatitis.isChecked():
+                sql = sql + ''' AND TJ_BGGL.SGD in ('1','0') '''
+            else:
+                sql = sql + ''' AND TJ_BGGL.SGD='1' '''
+        else:
+            if self.cb_hepatitis.isChecked():
+                sql = sql + ''' AND TJ_BGGL.SGD='0' '''
+            else:
+                pass
         # 是否有胶片
         if self.cb_film.isChecked():
             sql = sql + ''' AND TJ_BGGL.JPSL>1 '''

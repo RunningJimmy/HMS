@@ -11,10 +11,10 @@ class ReportTrackUI(Widget):
     def initUI(self):
         lt_main = QVBoxLayout()
         lt_top = QHBoxLayout()
-        lt_middle = QHBoxLayout()
-        self.gp_middle = QGroupBox('追踪列表（0）')
+        lt_middle = HBoxLayout()
+        self.gp_middle = GroupBox('追踪列表（0）')
         lt_bottom = QHBoxLayout()
-        gp_bottom = QGroupBox()
+        gp_bottom = GroupBox()
         #############################################
         gp_search = QGroupBox('条件检索')
 
@@ -106,11 +106,11 @@ class ReportTrackUI(Widget):
         # lt_bottom.addWidget(self.btn_sd)
         lt_bottom.addWidget(self.btn_djd)
         lt_bottom.addWidget(self.btn_export)
-        gp_bottom.setLayout(lt_bottom)
+        # gp_bottom.setLayout(lt_bottom)
         # 整体布局
         lt_main.addLayout(lt_top)
         lt_main.addWidget(self.gp_middle)
-        lt_main.addWidget(gp_bottom)
+        lt_main.addLayout(lt_bottom)
 
         self.setLayout(lt_main)
 
@@ -252,7 +252,7 @@ class YGGH_Dialog(Dialog):
     def initUI(self):
         lt_main = QVBoxLayout()
         lt_main.setAlignment(Qt.AlignCenter)
-        gp_user = QGroupBox('追踪护士->选择')
+        gp_user = GroupBox('追踪护士->选择')
         lt_user = QFormLayout()
         lt_user.setLabelAlignment(Qt.AlignRight)
         lt_user.setFormAlignment(Qt.AlignHCenter|Qt.AlignVCenter)

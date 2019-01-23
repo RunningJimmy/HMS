@@ -23,7 +23,7 @@ from register import RegisterManager
 # OA
 from app_interface import *
 # 基础设置
-from app_setup import EnterpriseHeadUI
+from app_setup import *
 
 
 WindowsTitle="明州体检"
@@ -249,7 +249,6 @@ class AutoUpdateThread(QThread):
         while self.running:
             if self.count==0:
                 try:
-                    print("请求")
                     response = requests.get(self.url)
                     if response.status_code == 200:
                         describe = response.json()['describe']

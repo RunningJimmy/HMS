@@ -45,13 +45,13 @@ class AchievementsNurse(Widget):
         lt_top.addStretch()
         ####################################################
 
-        lt_middle = QHBoxLayout()
-        self.gp_middle_left = QGroupBox('绩效汇总')
-        lt_middle_left = QHBoxLayout()
-        self.gp_middle_middle = QGroupBox('绩效分组汇总')
-        lt_middle_middle = QHBoxLayout()
-        self.gp_middle_right = QGroupBox('绩效明细')
-        lt_middle_right = QHBoxLayout()
+        lt_middle = HBoxLayout()
+        self.gp_middle_left = GroupBox('绩效汇总')
+        lt_middle_left = HBoxLayout()
+        self.gp_middle_middle = GroupBox('绩效分组汇总')
+        lt_middle_middle = HBoxLayout()
+        self.gp_middle_right = GroupBox('绩效明细')
+        lt_middle_right = HBoxLayout()
         # 绩效总汇总
         self.table_achieve_sum_cols = OrderedDict([
             ('yggh', '工号'),

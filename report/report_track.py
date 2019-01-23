@@ -878,7 +878,7 @@ class ResultReceiveDialog(Dialog):
     def initUI(self):
         lt_main = QVBoxLayout()
         ###########################################################
-        lt_top = QHBoxLayout()
+        lt_top = HBoxLayout()
         gp_top = QGroupBox('进度总览')
         # 待接收的总数
         self.sb_all = ProcessLable()
@@ -899,10 +899,10 @@ class ResultReceiveDialog(Dialog):
         lt_top.addWidget(self.sb_error)
         gp_top.setLayout(lt_top)
         ###########################################################
-        lt_middle = QHBoxLayout()
+        lt_middle = HBoxLayout()
         gp_middle = QGroupBox('处理详情')
         ###########################################################
-        lt_bottom = QHBoxLayout()
+        lt_bottom = HBoxLayout()
         gp_bottom = QGroupBox('接收进度')
         self.pb_progress=QProgressBar()
         self.pb_progress.setMinimum(0)
@@ -910,7 +910,7 @@ class ResultReceiveDialog(Dialog):
         lt_bottom.addWidget(self.pb_progress)
         gp_bottom.setLayout(lt_bottom)
         #########增加按钮组########################################
-        lt_1 = QHBoxLayout()
+        lt_1 = HBoxLayout()
         self.lb_timer = TimerLabel2()
         self.btn_start = QPushButton(Icon("启动"),"启动")
         self.btn_stop = QPushButton(Icon("停止"),"停止")
@@ -1242,7 +1242,7 @@ class ReportPopWidget(Dialog):
     def initUI(self):
         lt_main = QVBoxLayout()
         self.gp_top = QGroupBox('手工单报告(0)')
-        self.lt_top = QHBoxLayout()
+        self.lt_top = HBoxLayout()
         self.lb_manual = QLabel()
         self.lb_manual.setWordWrap(True)
         self.lb_manual.setStyleSheet('''color: rgb(0, 85, 255);''')
@@ -1250,7 +1250,7 @@ class ReportPopWidget(Dialog):
         self.gp_top.setLayout(self.lt_top)
         ######################胶片数量###################################
         self.gp_middle = QGroupBox('胶片数量(0)')
-        lt_middle = QHBoxLayout()
+        lt_middle = HBoxLayout()
         self.lb_count_dr = FilmLable()
         self.lb_count_ct = FilmLable()
         self.lb_count_mri = FilmLable()
@@ -1270,7 +1270,7 @@ class ReportPopWidget(Dialog):
         self.gp_middle.setLayout(lt_middle)
         ######################未结束项目###################################
         self.gp_bottom = QGroupBox('未结束项目')
-        lt_bottom  = QHBoxLayout()
+        lt_bottom  = HBoxLayout()
         self.gp_bottom.setLayout(lt_bottom)
         self.table_no_finish_cols = OrderedDict(
             [
@@ -1284,7 +1284,7 @@ class ReportPopWidget(Dialog):
         self.gp_bottom.setLayout(lt_bottom)
         ######################退回原因###################################
         self.gp_bottom2 = QGroupBox('退回原因')
-        lt_bottom2 = QHBoxLayout()
+        lt_bottom2 = HBoxLayout()
         self.lb_reason = QLabel()
         self.lb_reason.setStyleSheet('''color:#FF0000;''')
         self.lb_reason.setWordWrap(True)

@@ -2,7 +2,7 @@ from .model import *
 from widgets.cwidget import *
 from widgets.utils import CefWidget
 from .report_item_ui import ItemsStateUI,OperateUI
-from utils import gol,api_print,request_get,print_pdf_gsprint
+from utils import gol,api_print,request_get,print_pdf_gsprint,get_short_url
 from utils import cur_datetime,request_create_report,report_sms_content,sms_api
 
 
@@ -29,7 +29,11 @@ class ReportReviewFullScreen(Dialog):
         # 审阅
         self.gp_review_user.btnClick.connect(self.on_btn_review_click)
         self.gp_review_user.btnCancle.connect(self.on_btn_cancle_click)
-
+        # 获取短信模板内容
+        result = self.session.query(MT_TJ_SMSTemplate2.CONTENT).filter(MT_TJ_SMSTemplate2.TNAME=='报告领取',MT_TJ_SMSTemplate2.YXBZ=='1').limit(1).scalar()
+        self.sms_content_template = str2(result)
+        if not result:
+            mes_about(self, "未获取到《报告领取》的短信，请检查：基础维护->接口配置->短信设置 ")
         # 特殊变量 用于快速获取 复用
         self.cur_tjbh = None
         self.cur_data = None
@@ -146,6 +150,7 @@ class ReportReviewFullScreen(Dialog):
         # 审阅栏信息
         self.gp_review_user = ReportReviewUser()
         lt_middle = QHBoxLayout()
+        gp_middle = QGroupBox()
         self.btn_previous = QPushButton(Icon('向左'), '上一个')
         self.btn_fullscreen = QPushButton(Icon('全屏'),'退出全屏')
         self.btn_next = QPushButton(Icon('向右'),'下一个')
@@ -156,12 +161,12 @@ class ReportReviewFullScreen(Dialog):
         self.btn_rebuild = QPushButton(Icon('刷新'), '重新生成')
         lable = QLabel('审阅完成：')
         lable.setStyleSheet('''font: 75 14pt '微软雅黑';color: rgb(255,0,0);height:16px;''')
-        self.btn_auto_next = QCheckBox('自动下一份')
-        self.btn_auto_next.setChecked(False)
-        self.btn_auto_print = QCheckBox('自动打印报告')
+        self.btn_auto_next = QCheckBox('下一份')
+        self.btn_auto_next.setChecked(True)
+        self.btn_auto_print = QCheckBox('打印报告')
         self.btn_auto_print.setChecked(False)
-        self.btn_auto_sms = QCheckBox('自动发送短信')
-        self.btn_auto_sms.setChecked(False)
+        self.btn_auto_sms = QCheckBox('领取短信')
+        self.btn_auto_sms.setChecked(True)
         lt_middle.addStretch()
         lt_middle.addWidget(self.btn_previous)
         lt_middle.addSpacing(20)
@@ -170,6 +175,8 @@ class ReportReviewFullScreen(Dialog):
         lt_middle.addWidget(self.btn_next)
         lt_middle.addSpacing(20)
         lt_middle.addWidget(self.btn_item)
+        lt_middle.addSpacing(20)
+        lt_middle.addWidget(self.btn_czjl)
         lt_middle.addSpacing(20)
         lt_middle.addWidget(self.btn_reload)
         lt_middle.addSpacing(20)
@@ -188,10 +195,10 @@ class ReportReviewFullScreen(Dialog):
         lt_bottom.addWidget(self.wv_report_equip)
         self.gp_bottom = QGroupBox('报告预览')
         self.gp_bottom.setLayout(lt_bottom)
-
+        gp_middle.setLayout(lt_middle)
         lt_main.addWidget(self.gp_review_user,2)
         lt_main.addWidget(self.gp_bottom,37)
-        lt_main.addLayout(lt_middle,1)
+        lt_main.addWidget(gp_middle,1)
 
         self.setLayout(lt_main)
 
@@ -254,7 +261,10 @@ class ReportReviewFullScreen(Dialog):
                 try:
                     result = self.session.query(MV_RYXX).filter(MV_RYXX.tjbh == self.cur_tjbh).scalar()
                     if result.sjhm:
-                        sms_api(result.sjhm,report_sms_content)
+                        url = "http://tjbg.nbmzyy.com:5005/api/report/down/pdf/%s" %self.cur_tjbh
+                        sms_api(result.sjhm, Template(self.sms_content_template).safe_substitute({'url':url}))
+                        # 生成短网址
+                        # sms_api(result.sjhm,Template(self.sms_content_template).safe_substitute({'url':get_short_url(self.cur_tjbh)}))
                 except Exception as e:
                     mes_about(self,"短信发送失败！错误信息：%s" %e)
             # 是否下一个
@@ -298,6 +308,7 @@ class ReportReviewFullScreen(Dialog):
             self.datas[self.cur_index] = self.cur_data
 
     def closeEvent(self, QCloseEvent):
+        self.wv_report_equip.close()
         if self.item_ui:
             self.item_ui.close()
         super(ReportReviewFullScreen, self).closeEvent(QCloseEvent)
@@ -692,3 +703,4 @@ def get_pdf_url(session,tjbh):
                 return False
         except Exception as e:
             return False
+

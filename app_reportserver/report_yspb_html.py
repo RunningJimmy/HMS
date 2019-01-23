@@ -27,18 +27,11 @@ pdf_html_yspb_page='''
                     <td class="td_pb">科　　室</td>
                     <td class="td_pb">专　家</td>
                     <td class="td_pb">职务</td>
-                </tr>
                 <tr class="tr_pb">
-                    <td rowspan="2" class="td_pb2">星期一　下午</td>
+                    <td class="td_pb2">星期一　下午</td>
                     <td class="td_pb2">14:00-16:00</td>
                     <td class="td_pb">呼吸内科</td>
                     <td class="td_pb">纪　成</td>
-                    <td class="td_pb">主任</td>
-                </tr>
-                <tr class="tr_pb">
-                    <td class="td_pb2">15:00-16:00</td>
-                    <td class="td_pb">消化内科</td>
-                    <td class="td_pb">董勤勇</td>
                     <td class="td_pb">主任</td>
                 </tr>
                 <tr class="tr_pb">

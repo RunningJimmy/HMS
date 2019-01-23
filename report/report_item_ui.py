@@ -109,7 +109,6 @@ class ItemsStateUI(Dialog):
         else:
             mes_about(self,'未找到报告，无法下载！')
 
-
     # 右键功能
     def onTableMenu(self,pos):
         row_num = -1
@@ -155,8 +154,8 @@ class ItemsStateUI(Dialog):
         lt_top.addWidget(self.btn_receive)
         lt_top.addStretch()
         gp_top.setLayout(lt_top)
-        lt_middle = QHBoxLayout()
-        self.gp_middle = QGroupBox('项目信息')
+        lt_middle = HBoxLayout()
+        self.gp_middle = GroupBox('项目信息')
         # 用户基本信息
         self.gp_user = UserBaseGroup()
         self.table_item = ItemsStateTable(self.item_cols)
@@ -381,8 +380,8 @@ class OperateUI(Dialog):
         lt_top.addWidget(self.btn_query)
         lt_top.addStretch()
         gp_top.setLayout(lt_top)
-        lt_middle = QHBoxLayout()
-        self.gp_middle = QGroupBox('操作记录(0)')
+        lt_middle = HBoxLayout()
+        self.gp_middle = GroupBox('操作记录(0)')
         # 用户基本信息
         # self.gp_user = UserBaseGroup()
         self.table_operate = OperateTable(self.operate_cols)

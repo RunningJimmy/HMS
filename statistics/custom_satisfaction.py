@@ -53,8 +53,8 @@ class CustomSatisfaction(Widget):
         lt_left_top.addStretch()
         gp_left_top.setLayout(lt_left_top)
         ################## 指标栏 ######################
-        lt_left_middle = QHBoxLayout()
-        self.gp_left_middle = QGroupBox('满意度指标')
+        lt_left_middle = HBoxLayout()
+        self.gp_left_middle = GroupBox('满意度指标')
         self.btn_rate_sd = QPushButton(Icon('扫单率'),'扫单率')
         self.btn_rate_ts = QPushButton(Icon('推送率'),'推送率')
         self.btn_rate_gz = QPushButton(Icon('关注率'),'关注率')
@@ -87,8 +87,8 @@ class CustomSatisfaction(Widget):
         gp_left_bottom = QGroupBox()
         gp_left_bottom.setLayout(lt_left_bottom)
         ################# 右侧详细列表 ##########################
-        lt_right_top = QHBoxLayout()
-        self.gp_right_top = QGroupBox('详细列表（0）')
+        lt_right_top = HBoxLayout()
+        self.gp_right_top = GroupBox('详细列表（0）')
         # 关注
         self.table_cs_detail_cols = OrderedDict([
             ('state', '状态'),

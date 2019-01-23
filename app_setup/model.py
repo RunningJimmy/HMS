@@ -36,3 +36,20 @@ class MT_TJ_DWFZRSQ(BaseModel):
 
     yhid = Column(VARCHAR(16), primary_key=True, nullable=False)
     dwbh = Column(VARCHAR(10), primary_key=True, nullable=False)
+
+
+class MT_XMLB(BaseModel):
+    __tablename__ = 'TJ_XMLB'
+
+    LBBM = Column(CHAR(6, 'Chinese_PRC_CI_AS'), primary_key=True)
+    LBMC = Column(String(60, 'Chinese_PRC_CI_AS'))
+    XMLX = Column(CHAR(1, 'Chinese_PRC_CI_AS'))
+    PYJM = Column(String(50, 'Chinese_PRC_CI_AS'))
+    WBJM = Column(String(50, 'Chinese_PRC_CI_AS'))
+    ZDYM = Column(String(50, 'Chinese_PRC_CI_AS'))
+    XSSX = Column(Integer)
+    ZHXGR = Column(String(20, 'Chinese_PRC_CI_AS'))
+    ZHXGRQ = Column(DateTime)
+
+    def to_dict(self):
+        return {col.name: str2(getattr(self, col.name, None)) for col in self.__table__.columns}

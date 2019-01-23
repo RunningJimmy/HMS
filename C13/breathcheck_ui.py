@@ -54,7 +54,7 @@ class BreathCheckUI(Widget):
         lt_right.addWidget(self.gp_right_up, 5)
         lt_right.addLayout(lt_right_down,5)
         # 主布局
-        lt_main.addWidget(self.gp_left,1)
+        lt_main.addLayout(self.lt_left,1)
         lt_main.addLayout(lt_right,3)
         #
         self.setLayout(lt_main)
@@ -64,18 +64,22 @@ class BreathCheckUI(Widget):
         # 控件
         self.lb_update = QLabel()
         self.btn_update = QPushButton(Icon('刷新'),'刷新')
+        lt_top = QHBoxLayout()
+        lt_top.addWidget(QLabel('刷新时间：'))
+        lt_top.addWidget(self.lb_update)
+        lt_top.addWidget(self.btn_update)
         self.table_c13_nocheck = C13InspectTable(self.c13_cols)
         self.table_c13_nocheck.setAlternatingRowColors(False)
         self.table_c13_nocheck.verticalHeader().setVisible(False)  # 列表头
-        self.gp_left = QGroupBox('1、待测：总人数 0 人')
-        lt_1 = QHBoxLayout()
-        lt_1.addWidget(QLabel('刷新时间：'))
-        lt_1.addWidget(self.lb_update)
-        lt_1.addWidget(self.btn_update)
-        lt_left = QVBoxLayout()
-        lt_left.addLayout(lt_1)
-        lt_left.addWidget(self.table_c13_nocheck)
-        self.gp_left.setLayout(lt_left)
+        self.gp_left = GroupBox('1、待测：总人数 0 人')
+        lt_table = HBoxLayout()
+        lt_table.addWidget(self.table_c13_nocheck)
+        self.gp_left.setLayout(lt_table)
+
+        self.lt_left = QVBoxLayout()
+        self.lt_left.addLayout(lt_top)
+        self.lt_left.addWidget(self.gp_left)
+        # self.gp_left.setLayout(lt_left)
 
     def initUIRightUp(self):
         self.lt_up = QHBoxLayout()
@@ -86,9 +90,9 @@ class BreathCheckUI(Widget):
     def initUIRightMiddle(self):
         self.table_c13_checking_1 = C13InspectTable(self.c13_cols2)
         self.table_c13_checking_1.verticalHeader().setVisible(False)  # 列表头
-        self.gp_right_up = QGroupBox('2、吃药丸 计时中：总人数 0')
+        self.gp_right_up = GroupBox('2、吃药丸 计时中：总人数 0')
         ###########################
-        lt_right_up = QVBoxLayout()
+        lt_right_up = HBoxLayout()
         lt_right_up.addWidget(self.table_c13_checking_1)
         self.gp_right_up.setLayout(lt_right_up)
 
@@ -96,16 +100,16 @@ class BreathCheckUI(Widget):
         # 计时完成，待吹气
         self.table_c13_checking_2 = C13InspectTable(self.c13_cols3)
         self.table_c13_checking_2.verticalHeader().setVisible(False)  # 列表头
-        self.gp_right_down_1 = QGroupBox('3、计时完成待吹气：总人数 0')
-        lt_right_1 = QHBoxLayout()
+        self.gp_right_down_1 = GroupBox('3、计时完成待吹气：总人数 0')
+        lt_right_1 = HBoxLayout()
         # 布局
         lt_right_1.addWidget(self.table_c13_checking_2)
         self.gp_right_down_1.setLayout(lt_right_1)
         # 吹气完成的
         self.table_c13_checked = C13InspectTable(self.c13_cols3)
         self.table_c13_checked.verticalHeader().setVisible(False)  # 列表头
-        self.gp_right_down_2 = QGroupBox('4、完成吹气：总人数 0')
-        lt_right_2 = QHBoxLayout()
+        self.gp_right_down_2 = GroupBox('4、完成吹气：总人数 0')
+        lt_right_2 = HBoxLayout()
         ## 布局
         lt_right_2.addWidget(self.table_c13_checked)
         self.gp_right_down_2.setLayout(lt_right_2)

@@ -84,14 +84,14 @@ class CollectHandover_UI(Widget):
                             ])
         # 样本处理记录
         self.table_handover = CollectHandoverSTable(self.collect_sum_cols)
-        self.gp_middle_left = QGroupBox('样本汇总')
-        lt_middle_left = QVBoxLayout()
+        self.gp_middle_left = GroupBox('样本汇总')
+        lt_middle_left = HBoxLayout()
         lt_middle_left.addWidget(self.table_handover)
         self.gp_middle_left.setLayout(lt_middle_left)
         # 交接签收
         self.table_handover_master = CollectHandoverTable(self.collect_cols)
-        self.gp_middle_middle = QGroupBox('样本交接签收明细')
-        lt_middle_middle = QVBoxLayout()
+        self.gp_middle_middle = GroupBox('样本交接签收明细')
+        lt_middle_middle = HBoxLayout()
         lt_middle_middle.addWidget(self.table_handover_master)
         self.gp_middle_middle.setLayout(lt_middle_middle)
 
@@ -100,8 +100,8 @@ class CollectHandover_UI(Widget):
         self.table_handover_detail = CollectHandoverDTable(self.collect_detail_cols)
         self.table_handover_detail.verticalHeader().setVisible(False)  # 列表头
         self.table_handover_detail.horizontalHeader().setStretchLastSection(True)
-        self.gp_middle_right = QGroupBox('样本采集明细(0)')
-        lt_middle_right = QHBoxLayout()
+        self.gp_middle_right = GroupBox('样本采集明细(0)')
+        lt_middle_right = HBoxLayout()
         lt_middle_right.addWidget(self.table_handover_detail)
         self.gp_middle_right.setLayout(lt_middle_right)
         ######### 添加中间布局

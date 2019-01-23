@@ -30,6 +30,12 @@ class SqlModelHandle(object):
                 # 是否为空与UI空值比较
                 if any([col_obj.nullable,col_vue]):
                     setattr(model_obj, key, col_vue)
+                # 是否自增长
+                elif col_obj.autoincrement == True:
+                    pass
+                # 是否默认值
+                elif col_obj.server_default:
+                    pass
                 else:
                     # print(col_obj.name,col_obj.nullable,"列：%s 不能为空！" %key)
                     return False, "列：%s 不能为空！" %key
@@ -68,7 +74,6 @@ class SqlModelHandle(object):
                     where_str[col_obj.name] = col_vue
                 else:
                     update_str[col_obj.name] = col_vue
-
         model_obj = self.db_session.query(self.db_model).filter_by(**where_str).first()
         update = {setattr(model_obj, k, v) for k,v in update_str.items()}
         return self.commit()
@@ -132,6 +137,13 @@ class Widget(GolParasMixin,QWidget):
 
     def __init__(self,parent=None):
         super(Widget,self).__init__(parent)
+        self.init()
+
+# 分隔窗口带日志、登录信息、数据库链接功能
+class SplitWidget(GolParasMixin, QSplitter):
+
+    def __init__(self, parent=None):
+        super(SplitWidget, self).__init__(parent)
         self.init()
 
 # 中央窗口带日志、登录信息、数据库链接功能，每次只能打开一个界面

@@ -1,5 +1,5 @@
 from collections import OrderedDict
-import requests
+import requests,json
 from pprint import pprint
 import urllib.parse
 from utils import gol
@@ -33,7 +33,21 @@ def trans_pacs_pic(tjbh,ksbm,xmbh):
     except Exception as e:
         return False
 
-
+# 获取短网址
+def get_short_url(tjbh):
+    long_url = "http://tjbg.nbmzyy.com:5005/api/report/down/pdf/%s" %tjbh
+    url = "http://10.7.200.101:5005/api/forward"
+    keys = {'tjbh': tjbh, 'action': 'url'}
+    querystring = {"url": long_url}
+    try:
+        response = requests.post(url, params=keys, data=json.dumps(querystring))
+        if response.status_code == 200:
+            content = response.json()
+            if content['code']==1:
+                return content['data']
+        return long_url
+    except Exception as e:
+        return long_url
 
 # 发送短信
 def sms_api(mobile,context):
@@ -215,13 +229,22 @@ def request_chart_get(title,tstart,tend):
     return response
 
 
+def get_chart_url(title,tstart,tend):
+    default_url = "http://10.7.200.101:5005/api/chart/%s/%s/%s" %(title,tstart,tend)
+    config_url = gol.get_value('api_chart_show',None)
+    if config_url:
+        url = config_url  %(title,tstart,tend)
+    else:
+        url = default_url
+    return url
+
 
 if __name__=="__main__":
     from utils.envir import set_env
     from utils import str2
     #sql = "SELECT TJBH FROM TJ_TJDJB WHERE  (del <> '1' or del is null) and QD='1' and SHRQ>='2018-08-25' AND SHRQ<'2018-09-30' AND SUMOVER='1'; "
     # 处理遗漏的
-    # sql = "SELECT TJBH FROM TJ_TJDJB WHERE SUMOVER='1' AND SHRQ>='2018-09-01' AND QD='1' AND (del <> '1' or del is null) AND TJBH NOT IN (SELECT TJBH FROM TJ_BGGL WHERE BGZT<>'0')"
+    sql = "SELECT TJBH FROM TJ_TJDJB WHERE SUMOVER='1' AND SHRQ>='2018-09-01' AND QD='1' AND (del <> '1' or del is null) AND TJBH NOT IN (SELECT TJBH FROM TJ_BGGL WHERE BGZT<>'0')"
     # # 处理PDF 生成的
     # # sql = "SELECT TJBH FROM TJ_BGGL WHERE SYRQ>='2018-09-28'"
     # #sql = "SELECT TJBH FROM TJ_TJDJB WHERE SUMOVER='1' AND SHRQ>='2018-09-01' AND dybj IS NULL AND (del <> '1' or del is null) AND tjqy IN ('1','2','3','4')  "
@@ -243,10 +266,10 @@ if __name__=="__main__":
     # 审阅未打印的重新生成
     # sql = "SELECT TJBH FROM TJ_BGGL WHERE BGZT='1' AND SHRQ>='2018-10-01';"
     # sql = "SELECT TJBH FROM TJ_BGGL WHERE BGZT='2' AND SHRQ>='2018-10-16' AND SHRQ<'2018-10-17' AND TJBH NOT IN (SELECT TJBH FROM TJ_TJDJB WHERE dwbh IN ('10396','17804','17763')) "
-    # results = session.execute(sql).fetchall()
-    # for result in results:
-    #     request_create_report(result[0], 'pdf')
-        #request_create_report(result[0], 'pdf')
+    results = session.execute(sql).fetchall()
+    for result in results:
+        request_create_report(result[0], 'html')
+        # request_create_report(result[0], 'pdf')
     #print(get_barcode_wx('测试5','330227199902040663','13736093866'))
-    request_create_report('174560844','pdf')
+    # request_create_report('174560844','pdf')
     #request_post_wx()

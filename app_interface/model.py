@@ -1,22 +1,71 @@
 from utils.bmodel import *
 
+# 值班问题记录
+class MT_TJ_OverTime(BaseModel):
+
+    __tablename__ = 'TJ_OverTime'
+
+    OID = Column(Integer, primary_key=True, autoincrement=True)
+    ODate = Column(Date, nullable=False)
+    recorder = Column(String(10, 'Chinese_PRC_CI_AS'), nullable=False)
+    content = Column(TEXT, nullable=False)
+
+    def to_dict(self):
+        return {col.name: str2(getattr(self, col.name, None)) for col in self.__table__.columns}
+
+# 供应商
+class MT_TJ_Supplier(BaseModel):
+
+    __tablename__ = 'TJ_Supplier'
+
+    SID = Column(Integer, primary_key=True, autoincrement=True)
+    Ename = Column(String(50, 'Chinese_PRC_CI_AS'), nullable=False)
+    Product = Column(String(50, 'Chinese_PRC_CI_AS'), nullable=False)
+    Contactor = Column(String(50, 'Chinese_PRC_CI_AS'), nullable=True)
+    ContactWay = Column(String(50, 'Chinese_PRC_CI_AS'), nullable=True)
+    BZ = Column(TEXT, nullable=True)
+    Doc = Column(BLOB, nullable=True)
+
+    def to_dict(self):
+        return {col.name: str2(getattr(self, col.name, None)) for col in self.__table__.columns}
+
+
 # 固定资产
 class MT_TJ_ASSET(BaseModel):
 
     __tablename__ = 'TJ_ASSET'
 
     aid = Column(Integer, primary_key=True, autoincrement=True)
-    ename = Column(VARCHAR(30), nullable=True)
-    etype = Column(VARCHAR(20), nullable=True)
-    earea= Column(VARCHAR(20), nullable=True)
-    use_date = Column(Date, nullable=False)
-    use_id = Column(VARCHAR(30), nullable=False)
-    use_place = Column(VARCHAR(30), nullable=False)
-    eip = Column(VARCHAR(15), nullable=False)
-    ehost = Column(VARCHAR(30), nullable=False)
-    eport = Column(VARCHAR(10), nullable=False)
-    bz = Column(VARCHAR(200), nullable=False)
-    sfbf = Column(CHAR(1), nullable=True)
+    ename = Column(VARCHAR(30), nullable=False)
+    etype = Column(VARCHAR(20), nullable=False)
+    earea= Column(VARCHAR(20), nullable=False)
+    use_date = Column(Date, nullable=True)
+    use_id = Column(VARCHAR(30), nullable=True)
+    use_place = Column(VARCHAR(30), nullable=True)
+    eip = Column(VARCHAR(15), nullable=True)
+    ehost = Column(VARCHAR(30), nullable=True)
+    eport = Column(VARCHAR(10), nullable=True)
+    bz = Column(VARCHAR(200), nullable=True)
+    sfbf = Column(CHAR(1), nullable=False, server_default=text("('0')"))
+
+    def to_dict(self):
+        return {col.name: str2(getattr(self, col.name, None)) for col in self.__table__.columns}
+
+    # def to_dict(self):
+    #     return {
+    #             'aid': str(getattr(self, "aid")),
+    #             "ename": str2(getattr(self, "ename", '')),
+    #             "etype": str2(getattr(self, "etype", '')),
+    #             "earea": str2(getattr(self, "earea", '')),
+    #             "use_date": str(getattr(self, "use_date", '')),
+    #             "use_id": str(getattr(self, "use_id", '')),
+    #             "use_place": str2(getattr(self, "use_place", '')),
+    #             "eip": str(getattr(self, "eip", '')),
+    #             "ehost": str2(getattr(self, "ehost", '')),
+    #             "eport": str2(getattr(self, "eport", '')),
+    #             "bz": str2(getattr(self, "bz", '')),
+    #             "sfbf": getattr(self, "sfbf", '')
+    #     }
 
 
 # 需求管理

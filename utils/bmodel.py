@@ -1,9 +1,12 @@
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import *
 from sqlalchemy.orm import sessionmaker
-from utils.base import str2
+from utils.base import str2,zipfile
 from datetime import datetime
-import os
+from collections import OrderedDict
+# import os
+# from datetime import datetime as cdatetime
+# from datetime import date as tdate,time as ttime
 
 # 1、sqlalchemy  支持的字段类型
 # 类型名       python中类型           说明
@@ -78,25 +81,259 @@ BaseModel = declarative_base()
 1）MT_ 表示表     其中 M表示model  T表示table
 2）MV_ 表示视图   其中 M表示model  V表示view
 '''
-
+# query2dict 思路可参考
+# https://www.oschina.net/code/snippet_575790_35170
+# https://www.cnblogs.com/wancy86/p/6421792.html
 #
+# 多个对象
+# def dobule_to_dict(self):
+#     result = {}
+#     for key in self.__mapper__.c.keys():
+#         if getattr(self, key) is not None:
+#             result[key] = str(getattr(self, key))
+#         else:
+#             result[key] = getattr(self, key)
+#     return result
+
+
 class MT_TJDJB(BaseModel):
 
     __tablename__ = 'TJ_TJDJB'
 
-    tjbh= Column(VARCHAR(16), primary_key=True)
-    dabh = Column(VARCHAR(30),nullable=False)
-    djr = Column(VARCHAR(20),nullable=False)
-    djrq = Column(DateTime,nullable=False)
-    nl = Column(Integer,nullable=False)
-    tjlb = Column(CHAR(1),nullable=False)
-    dwbh = Column(VARCHAR(30), nullable=False)
-    fzbh = Column(CHAR(6), nullable=False)
-    fkfs = Column(Numeric(8),nullable=False)
-    fksj = Column(DateTime, nullable=False)
-    djr = Column(VARCHAR(20), nullable=False)
+    __table_args__ = (
+        Index('_dta_index_TJ_TJDJB_8_852914110__K1_K79', 'TJBH', 'del'),
+        Index('IX_CRBSB', 'CRBSB', 'CRBTJ', 'CRBSBYS')
+    )
+
+    TJBH = Column(String(16, 'Chinese_PRC_CI_AS'), primary_key=True)
+    DABH = Column(String(30, 'Chinese_PRC_CI_AS'), index=True)
+    DJR = Column(String(20, 'Chinese_PRC_CI_AS'))
+    DJRQ = Column(DateTime, index=True)
+    NL = Column(Integer)
+    TJLB = Column(CHAR(1, 'Chinese_PRC_CI_AS'))
+    DWBH = Column(String(30, 'Chinese_PRC_CI_AS'), index=True)
+    FZBH = Column(CHAR(6, 'Chinese_PRC_CI_AS'))
+    FKFS = Column(Numeric(8, 0))
+    FKSJ = Column(DateTime)
+    YSJE = Column(Numeric(8, 2))
+    ZK = Column(Numeric(8, 2))
+    YHJE = Column(Numeric(8, 2))
+    SJJE = Column(Numeric(8, 2))
+    SJHM = Column(String(16, 'Chinese_PRC_CI_AS'))
+    JSBZ = Column(CHAR(1, 'Chinese_PRC_CI_AS'))
+    JSRQ = Column(DateTime)
+    ZS = Column(Text(2147483647, 'Chinese_PRC_CI_AS'))
+    JY = Column(Text(2147483647, 'Chinese_PRC_CI_AS'))
+    JSR = Column(String(20, 'Chinese_PRC_CI_AS'))
+    DEPART = Column(String(200, 'Chinese_PRC_CI_AS'))
+    ZJYS = Column(String(20, 'Chinese_PRC_CI_AS'))
+    ZJRQ = Column(DateTime, index=True)
+    SUMOVER = Column(CHAR(1, 'Chinese_PRC_CI_AS'), nullable=False, server_default=text("('0')"))
+    GDRQ = Column(DateTime)
+    GDYS = Column(String(20, 'Chinese_PRC_CI_AS'))
+    YYBH = Column(String(30, 'Chinese_PRC_CI_AS'))
+    SFTC = Column(CHAR(1, 'Chinese_PRC_CI_AS'))
+    TCBH = Column(String(12, 'Chinese_PRC_CI_AS'))
+    dybj = Column(String(1, 'Chinese_PRC_CI_AS'))
+    jdzs = Column(Text(2147483647, 'Chinese_PRC_CI_AS'))
+    jdjy = Column(Text(2147483647, 'Chinese_PRC_CI_AS'))
+    SFDC = Column(CHAR(1, 'Chinese_PRC_CI_AS'))
+    TJRQ = Column(DateTime, index=True)
+    YXRQ = Column(DateTime)
+    DWJSJE = Column(Numeric(10, 2))
+    TJLX = Column(CHAR(1, 'Chinese_PRC_CI_AS'))
+    PASS = Column(String(20, 'Chinese_PRC_CI_AS'))
+    FBBZ = Column(CHAR(1, 'Chinese_PRC_CI_AS'))
+    HIS_SSJE = Column(Numeric(8, 2))
+    HIS_JSBZ = Column(CHAR(1, 'Chinese_PRC_CI_AS'))
+    YSKH = Column(String(20, 'Chinese_PRC_CI_AS'))
+    XRKH = Column(String(20, 'Chinese_PRC_CI_AS'))
+    XKZT = Column(CHAR(1, 'Chinese_PRC_CI_AS'))
+    jslx = Column(CHAR(1, 'Chinese_PRC_CI_AS'))
+    SMS = Column(CHAR(1, 'Chinese_PRC_CI_AS'))
+    MAIL = Column(CHAR(1, 'Chinese_PRC_CI_AS'))
+    IO_PACS = Column(CHAR(1, 'Chinese_PRC_CI_AS'))
+    IO_LIS = Column(CHAR(1, 'Chinese_PRC_CI_AS'))
+    SHYS = Column(String(20, 'Chinese_PRC_CI_AS'))
+    SHRQ = Column(DateTime, index=True)
+    GL = Column(String(10, 'Chinese_PRC_CI_AS'))
+    GZ = Column(String(100, 'Chinese_PRC_CI_AS'))
+    DHYS = Column(String(100, 'Chinese_PRC_CI_AS'))
+    sffdx = Column(CHAR(1, 'Chinese_PRC_CI_AS'))
+    FBBZ_YB = Column(CHAR(1, 'Chinese_PRC_CI_AS'))
+    joyharii_flag = Column(CHAR(1, 'Chinese_PRC_CI_AS'))
+    HDC_Issue_Flag = Column(CHAR(1, 'Chinese_PRC_CI_AS'), server_default=text("('0')"))
+    SHBZ = Column(CHAR(1, 'Chinese_PRC_CI_AS'))
+    CPAINTER = Column(String(20, 'Chinese_PRC_CI_AS'))
+    FZXH = Column(String(20, 'Chinese_PRC_CI_AS'))
+    QD = Column(CHAR(1, 'Chinese_PRC_CI_AS'))
+    BZ = Column(Text(2147483647, 'Chinese_PRC_CI_AS'))
+    MFTJ = Column(CHAR(1, 'Chinese_PRC_CI_AS'))
+    TMDY = Column(CHAR(1, 'Chinese_PRC_CI_AS'))
+    TMDYRQ = Column(DateTime)
+    ZYDDY = Column(CHAR(1, 'Chinese_PRC_CI_AS'))
+    ZYDDYRQ = Column(DateTime)
+    SXXE = Column(Numeric(18, 0))
+    TTBH = Column(String(12, 'Chinese_PRC_CI_AS'), index=True)
+    JXXE = Column(Numeric(18, 0))
+    QDRQ = Column(DateTime, index=True)
+    BGRQ = Column(DateTime)
+    zc = Column(CHAR(2, 'Chinese_PRC_CI_AS'))
+    dwxh = Column(String(30, 'Chinese_PRC_CI_AS'), index=True)
+    RYLB = Column(CHAR(2, 'Chinese_PRC_CI_AS'))
+    io_bl = Column(CHAR(1, 'Chinese_PRC_CI_AS'))
+    ywy = Column(String(20, 'Chinese_PRC_CI_AS'))
+    _del = Column('del', CHAR(1, 'Chinese_PRC_CI_AS'))
+    io_jkcf = Column(CHAR(1, 'Chinese_PRC_CI_AS'))
+    sms_sendtime = Column(DateTime)
+    tjqy = Column(String(2, 'Chinese_PRC_CI_AS'))
+    tjqdqy = Column(String(2, 'Chinese_PRC_CI_AS'))
+    SFSF = Column(CHAR(1, 'Chinese_PRC_CI_AS'))
+    SFBZ = Column(CHAR(1, 'Chinese_PRC_CI_AS'))
+    SFJG = Column(CHAR(1, 'Chinese_PRC_CI_AS'))
+    SFQD = Column(CHAR(1, 'Chinese_PRC_CI_AS'))
+    SFXS = Column(String(2, 'Chinese_PRC_CI_AS'))
+    SFZZ = Column(CHAR(1, 'Chinese_PRC_CI_AS'))
+    ZKYS = Column(String(20, 'Chinese_PRC_CI_AS'))
+    SFDY = Column(CHAR(1, 'Chinese_PRC_CI_AS'))
+    DYRQ = Column(DateTime)
+    HDC_JoyharII_Flag = Column(CHAR(1, 'Chinese_PRC_CI_AS'), nullable=False, server_default=text("('0')"))
+    JHGL = Column(String(10, 'Chinese_PRC_CI_AS'))
+    zyb_zjbz = Column(CHAR(1, 'Chinese_PRC_CI_AS'))
+    zyb_zjys = Column(String(12, 'Chinese_PRC_CI_AS'))
+    zyb_zjrq = Column(DateTime)
+    FJ_GLBH = Column(String(20, 'Chinese_PRC_CI_AS'))
+    FJ_DJRQ = Column(DateTime)
+    FJ_DJR = Column(String(20, 'Chinese_PRC_CI_AS'))
+    FJBZ = Column(String(1, 'Chinese_PRC_CI_AS'))
+    FJNR = Column(String(400, 'Chinese_PRC_CI_AS'))
+    FJ_XMBH = Column(String(200, 'Chinese_PRC_CI_AS'))
+    FJQK = Column(String(2, 'Chinese_PRC_CI_AS'))
+    ZYBLX = Column(CHAR(1, 'Chinese_PRC_CI_AS'))
+    FJTZ = Column(CHAR(1, 'Chinese_PRC_CI_AS'))
+    zhaogong = Column(CHAR(1, 'Chinese_PRC_CI_AS'))
+    DWJSDH = Column(String(20, 'Chinese_PRC_CI_AS'))
+    DWJSBZ = Column(CHAR(1, 'Chinese_PRC_CI_AS'))
+    DWJSRQ = Column(DateTime)
+    CJ = Column(String(40, 'Chinese_PRC_CI_AS'))
+    GH = Column(String(20, 'Chinese_PRC_CI_AS'))
+    HKSZD = Column(String(100, 'Chinese_PRC_CI_AS'))
+    ZYB_TJBH = Column(String(20, 'Chinese_PRC_CI_AS'))
+    ZYB_BH = Column(Integer)
+    JKZ_LB = Column(Integer)
+    JKZ_GZ = Column(String(4, 'Chinese_PRC_CI_AS'))
+    JKZ_ADDR = Column(String(400, 'Chinese_PRC_CI_AS'))
+    JKZ_ADDR_CODE = Column(String(9, 'Chinese_PRC_CI_AS'))
+    JKZ_WHCD = Column(Integer)
+    JKZ_GL = Column(Integer)
+    JKZ_DWMC = Column(String(100, 'Chinese_PRC_CI_AS'))
+    JKZ_SFHG = Column(Integer)
+    JKZ_BH = Column(String(100, 'Chinese_PRC_CI_AS'))
+    appdh = Column(String(50, 'Chinese_PRC_CI_AS'))
+    jgid = Column(DECIMAL(10, 0))
+    out_flag = Column(Numeric(1, 0), server_default=text("(0)"))
+    scbz = Column(Numeric(1, 0), server_default=text("(0)"))
+    lqbj = Column(Integer)
+    lqrq = Column(DateTime)
+    QXSHYY = Column(String(200, 'Chinese_PRC_CI_AS'))
+    FSYZL = Column(String(100, 'Chinese_PRC_CI_AS'))
+    YSZC = Column(Integer)
+    ECQDRQ = Column(DateTime)
+    BGLQFS = Column(Integer)
+    QXSHZJYS = Column(String(50, 'Chinese_PRC_CI_AS'))
+    ZGJL_EXCEL = Column(Integer, server_default=text("((0))"))
+    TJRYGH = Column(String(10, 'Chinese_PRC_CI_AS'))
+    YBSCBZ = Column(Numeric(1, 0))
+    TJZT = Column(CHAR(1, 'Chinese_PRC_CI_AS'), index=True, server_default=text("('1')"))
+    YZJYS = Column(String(20, 'Chinese_PRC_CI_AS'), index=True)
+    YSHYS = Column(String(20, 'Chinese_PRC_CI_AS'), index=True)
+    BGCC = Column(Integer, server_default=text("((0))"))
+    CRBSB = Column(Integer, server_default=text("((0))"))
+    CRBTJ = Column(Integer, server_default=text("((0))"))
+    CRBSBYS = Column(String(30, 'Chinese_PRC_CI_AS'))
+    XCGCL = Column(Integer)
+    FJ_FJBZ = Column(String(200, 'Chinese_PRC_CI_AS'))
+
+class MT_TJDAB(BaseModel):
+
+    __tablename__ = 'TJ_TJDAB'
+    __table_args__ = (
+        Index('_dta_index_TJ_TJDAB_8_820913996__K1_K5_K4_K3_K2', 'DABH', 'SFZH', 'CSNY', 'XB', 'XM'),
+        Index('_dta_index_TJ_TJDAB_8_820913996__K1_K2_K3_K5_K7_K14', 'DABH', 'XM', 'XB', 'SFZH', 'HYZK', 'SJHM')
+    )
+
+    DABH = Column(String(30, 'Chinese_PRC_CI_AS'), primary_key=True)
+    XM = Column(String(40, 'Chinese_PRC_CI_AS'), nullable=False, index=True)
+    XB = Column(Numeric(8, 0))
+    CSNY = Column(DateTime)
+    SFZH = Column(String(18, 'Chinese_PRC_CI_AS'), index=True)
+    WHCD = Column(Numeric(8, 0))
+    HYZK = Column(Numeric(8, 0))
+    ZY = Column(Numeric(8, 0))
+    SH = Column(String(100, 'Chinese_PRC_CI_AS'))
+    JG = Column(Numeric(8, 0))
+    LXDH = Column(String(32, 'Chinese_PRC_CI_AS'))
+    BGDH = Column(String(32, 'Chinese_PRC_CI_AS'))
+    ZZDH = Column(String(32, 'Chinese_PRC_CI_AS'))
+    SJHM = Column(String(32, 'Chinese_PRC_CI_AS'), index=True)
+    ADDR = Column(String(128, 'Chinese_PRC_CI_AS'))
+    HTTPADDR = Column(String(100, 'Chinese_PRC_CI_AS'))
+    TJLY = Column(Numeric(8, 0))
+    LXRM = Column(String(256, 'Chinese_PRC_CI_AS'))
+    ZC = Column(Numeric(8, 0))
+    ZW = Column(Numeric(8, 0))
+    YYBH = Column(String(30, 'Chinese_PRC_CI_AS'))
+    PYJM = Column(String(50, 'Chinese_PRC_CI_AS'))
+    WBJM = Column(String(50, 'Chinese_PRC_CI_AS'))
+    ZDYM = Column(String(50, 'Chinese_PRC_CI_AS'))
+    JDR = Column(String(20, 'Chinese_PRC_CI_AS'))
+    JDRQ = Column(DateTime, nullable=False, index=True)
+    BMGH = Column(String(20, 'Chinese_PRC_CI_AS'))
+    DWBH = Column(String(30, 'Chinese_PRC_CI_AS'))
+    FZBH = Column(CHAR(6, 'Chinese_PRC_CI_AS'))
+    GZDW = Column(String(100, 'Chinese_PRC_CI_AS'))
+    HISID = Column(Numeric(18, 0))
+    MZ = Column(CHAR(8, 'Chinese_PRC_CI_AS'))
+    EMPID = Column(String(40, 'Chinese_PRC_CI_AS'))
 
 
+# 短信模板
+class MT_TJ_SMSTemplate2(BaseModel):
+
+    __tablename__ = 'TJ_SMS_Template2'
+
+    TID = Column(Integer, primary_key=True, autoincrement=True)
+    # 模板名称
+    TNAME = Column(String(30, 'Chinese_PRC_CI_AS'), nullable=False)
+    # 模板内容
+    CONTENT = Column(Text, nullable=False)
+    # 性别
+    TXB = Column(CHAR(1, 'Chinese_PRC_CI_AS'))
+    # 备注
+    BZ = Column(String(100, 'Chinese_PRC_CI_AS'),)
+    # 有效标记
+    YXBZ = Column(CHAR(1, 'Chinese_PRC_CI_AS'), nullable=False, server_default=text("('0')"))
+    modify_time = Column(DateTime, default=datetime.utcnow)
+
+    def to_dict(self):
+        tmp = {}
+        for col_obj in self.__table__.columns:
+            values = self.property_dict(col_obj.name)
+            if values:
+                tmp[col_obj.name] = values.get(str2(getattr(self, col_obj.name, None)),None)
+            else:
+                tmp[col_obj.name] = str2(getattr(self, col_obj.name, None))
+        return tmp
+        # return {col.name: str2(getattr(self, col.name, None)) for col in self.__table__.columns}
+
+    # 字段字典属性
+    def property_dict(self,name):
+        if name == 'TXB':
+            return OrderedDict([
+                ('','所有'),
+                ('1','男'),
+                ('0','女')
+            ])
 
 #用户登录信息表
 class MT_TJ_LOGIN(BaseModel):
@@ -271,14 +508,24 @@ class MT_TJ_TJJLMXB(BaseModel):
             'xmdw': str2(getattr(self, "xmdw", ''))
         }
 
+    def to_dict(self):
+        return {col.name: str2(getattr(self, col.name, None)) for col in self.__table__.columns}
+
 class MT_TJ_CZJLWHB(BaseModel):
 
     __tablename__ = 'TJ_CZJLWHB'
 
-    czbh = Column(CHAR(4),nullable=True, primary_key=True)
-    czdzd = Column(VARCHAR(20),nullable=False)
-    jsgs = Column(Float,nullable=False)
+    czbh = Column(CHAR(4),nullable=False, primary_key=True)
+    czdzd = Column(VARCHAR(20),nullable=True)
+    JSGS = Column(Float(53), server_default=text("((0))"))
+    BZ = Column(String(50, 'Chinese_PRC_CI_AS'))
+    YXBJ = Column(Integer, server_default=text("((0))"))
+    ZHXGR = Column(String(16, 'Chinese_PRC_CI_AS'))
+    ZHXGSJ = Column(DateTime)
+    PYJM = Column(String(10, 'Chinese_PRC_CI_AS'))
 
+    def to_dict(self):
+        return {col.name: str2(getattr(self, col.name, None)) for col in self.__table__.columns}
 
 class MT_TJ_PACS_PIC(BaseModel):
 
@@ -595,9 +842,83 @@ class MT_TJ_XMDM(BaseModel):
 
     __tablename__ = 'TJ_XMDM'
 
-    xmbh = Column(VARCHAR(10), primary_key=True)
-    xmmc = Column(VARCHAR(40), nullable=False)
-    sfzh = Column(CHAR(1), nullable=False)
+    xmbh = Column(String(12, 'Chinese_PRC_CI_AS'), primary_key=True)
+    xmmc = Column(String(60, 'Chinese_PRC_CI_AS'))
+    xmdw = Column(String(20, 'Chinese_PRC_CI_AS'))
+    XSSX = Column(Integer)
+    XB = Column(CHAR(1, 'Chinese_PRC_CI_AS'))
+    DJ = Column(Numeric(8, 2))
+    SZLX = Column(CHAR(1, 'Chinese_PRC_CI_AS'))
+    MRJG = Column(Text(2147483647, 'Chinese_PRC_CI_AS'))
+    CKLB = Column(String(10, 'Chinese_PRC_CI_AS'))
+    CKSX = Column(Float(53))
+    CKXX = Column(Float(53))
+    CKZF = Column(String(20, 'Chinese_PRC_CI_AS'))
+    PGTS = Column(String(20, 'Chinese_PRC_CI_AS'))
+    PDTS = Column(String(20, 'Chinese_PRC_CI_AS'))
+    ZXZ = Column(String(20, 'Chinese_PRC_CI_AS'))
+    ZDZ = Column(String(20, 'Chinese_PRC_CI_AS'))
+    SFTX = Column(CHAR(1, 'Chinese_PRC_CI_AS'))
+    TXMC = Column(String(256, 'Chinese_PRC_CI_AS'))
+    LBBM = Column(CHAR(6, 'Chinese_PRC_CI_AS'), index=True)
+    PYJM = Column(String(50, 'Chinese_PRC_CI_AS'))
+    WBJM = Column(String(50, 'Chinese_PRC_CI_AS'))
+    ZDYM = Column(String(50, 'Chinese_PRC_CI_AS'))
+    sfzh = Column(CHAR(1, 'Chinese_PRC_CI_AS'))
+    FLAG = Column(CHAR(1, 'Chinese_PRC_CI_AS'), server_default=text("('0')"))
+    BZ = Column(String(100, 'Chinese_PRC_CI_AS'))
+    ZHXGR = Column(String(20, 'Chinese_PRC_CI_AS'))
+    ZHXGRQ = Column(DateTime)
+    LISBH = Column(String(100, 'Chinese_PRC_CI_AS'))
+    ZYDH = Column(String(3, 'Chinese_PRC_CI_AS'))
+    TSZY = Column(String(200, 'Chinese_PRC_CI_AS'))
+    ZYSX = Column(Numeric(4, 0))
+    XSHS = Column(Integer, server_default=text("((1))"))
+    BJXH = Column(Numeric(8, 0))
+    ZDXJ = Column(CHAR(1, 'Chinese_PRC_CI_AS'))
+    HISBH = Column(CHAR(100, 'Chinese_PRC_CI_AS'))
+    XMLX = Column(CHAR(1, 'Chinese_PRC_CI_AS'))
+    CDCDM = Column(String(50, 'Chinese_PRC_CI_AS'))
+    CDCBZ = Column(CHAR(1, 'Chinese_PRC_CI_AS'))
+    SCJCJG = Column(CHAR(1, 'Chinese_PRC_CI_AS'))
+    SFCF = Column(CHAR(1, 'Chinese_PRC_CI_AS'))
+    xstp = Column(CHAR(1, 'Chinese_PRC_CI_AS'))
+    sycd = Column(String(2, 'Chinese_PRC_CI_AS'))
+    Alias = Column(String(20, 'Chinese_PRC_CI_AS'))
+    IsMicrobe = Column(CHAR(1, 'Chinese_PRC_CI_AS'))
+    SFSF = Column(CHAR(1, 'Chinese_PRC_CI_AS'), server_default=text("('0')"))
+    XMBH_DZ = Column(String(10, 'Chinese_PRC_CI_AS'))
+    ZY_FLAG = Column(CHAR(1, 'Chinese_PRC_CI_AS'))
+    ZYTS3 = Column(String(100, 'Chinese_PRC_CI_AS'))
+    PACSMC = Column(String(50, 'Chinese_PRC_CI_AS'))
+    PACSBWBH = Column(String(50, 'Chinese_PRC_CI_AS'))
+    PACSBWMC = Column(String(100, 'Chinese_PRC_CI_AS'))
+    PACSJCLX = Column(String(20, 'Chinese_PRC_CI_AS'))
+    NEWLISBH = Column(String(100, 'Chinese_PRC_CI_AS'))
+    ZYTS4 = Column(String(100, 'Chinese_PRC_CI_AS'))
+    LCYY = Column(String(500, 'Chinese_PRC_CI_AS'))
+    ZYTS5 = Column(String(100, 'Chinese_PRC_CI_AS'))
+    ZYTS6 = Column(String(100, 'Chinese_PRC_CI_AS'))
+    ZYTS7 = Column(String(100, 'Chinese_PRC_CI_AS'))
+    hisdxxh = Column(Numeric(5, 0))
+    ZNPD_FLAG = Column(Numeric(1, 0), server_default=text("((0))"))
+    BDX = Column(Numeric(5, 0))
+    TYPE = Column(String(10, 'Chinese_PRC_CI_AS'))
+    XMXE = Column(Integer, server_default=text("((10000))"))
+    EDHS = Column(Integer, server_default=text("((1))"))
+    XMLB = Column(CHAR(6, 'Chinese_PRC_CI_AS'))
+    WXLBBM = Column(CHAR(6, 'Chinese_PRC_CI_AS'))
+    BGCJZQ = Column(Integer, server_default=text("((1))"))
+    YSTCBL = Column(CHAR(6, 'Chinese_PRC_CI_AS'))
+    ZDXJBJ = Column(Integer)
+    SFJC = Column(CHAR(1, 'Chinese_PRC_CI_AS'), server_default=text("('1')"))
+    BBLX = Column(CHAR(1, 'Chinese_PRC_CI_AS'))
+    JSRTCBL = Column(CHAR(6, 'Chinese_PRC_CI_AS'))
+    CYFCX = Column(Integer, server_default=text("((0))"))
+    JPSL = Column(Integer)
+
+    def to_dict(self):
+        return {col.name: str2(getattr(self, col.name, None)) for col in self.__table__.columns}
 
 
 def get_item_state_sql(tjbh):

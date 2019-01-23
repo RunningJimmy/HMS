@@ -17,14 +17,6 @@ from collections import OrderedDict
 # 初始化视图
 def init_views(app,db,print_queue=None,report_queue=None):
 
-    app.secret_key = 'secret string'
-
-    # ckeditor = CKEditor(app)
-
-    '''
-    :param app:         应用程序本身
-    :return:
-    '''
     @app.route("/")
     def static_create():
         return url_for('static', filename='/css/report.css')
@@ -659,19 +651,6 @@ def init_views(app,db,print_queue=None,report_queue=None):
         else:
             abort(404)
 
-    # 图片识别出文字
-    @app.route('/api/pic2txt/', methods=['POST'])
-    def pic2txt():
-        file_obj = request.files['file']
-        print(' %s：客户端(%s)：OCR服务请求：%s' % (cur_datetime(), request.remote_addr,file_obj.filename))
-        url = "http://10.7.200.127:10006/api/pic2txt/"
-        try:
-            response = requests.post(url, files=request.files)
-            if response.status_code == 200:
-                return response.json()
-        except Exception as e:
-            print('URL：%s 请求失败！错误信息：%s' % (url, e))
-            abort(404)
 
     @app.errorhandler(BaseError)
     def custom_error_handler(e):
@@ -816,25 +795,31 @@ def get_datas(session,title,tstart,tend):
         sql = "SELECT ZLXM,COUNT(ZLXM) AS RC FROM TJ_BGGL WHERE ZLRQ>='%s' AND ZLRQ<'%s' AND ZLXM IS NOT NULL GROUP BY ZLXM ORDER BY COUNT(ZLXM) ASC;" % (
         tstart, tend)
     elif title == "报告追踪":
-        sql = "SELECT CZXM,COUNT(CZXM) AS RC FROM TJ_CZJLB WHERE CZSJ>='%s' AND CZSJ<'%s' AND JLLX='0030' GROUP BY CZXM ORDER BY COUNT(CZXM); " % (
+        sql = "SELECT CZXM,COUNT(DISTINCT TJBH) AS RC FROM TJ_CZJLB WHERE CZSJ>='%s' AND CZSJ<'%s' AND JLLX='0030' GROUP BY CZXM ORDER BY COUNT(CZXM); " % (
         tstart, tend)
     elif title == "样本采集":
-        sql = "SELECT CZXM,COUNT(CZXM) AS RC FROM TJ_CZJLB WHERE CZSJ>='%s' AND CZSJ<'%s' AND JLLX='0010' GROUP BY CZXM ORDER BY COUNT(CZXM); " % (
+        sql = "SELECT CZXM,COUNT(DISTINCT TJBH) AS RC FROM TJ_CZJLB WHERE CZSJ>='%s' AND CZSJ<'%s' AND JLLX='0010' GROUP BY CZXM ORDER BY COUNT(CZXM); " % (
         tstart, tend)
     elif title == "呼气检查":
-        sql = "SELECT CZXM,COUNT(CZXM) AS RC FROM TJ_CZJLB WHERE CZSJ>='%s' AND CZSJ<'%s' AND JLLX='0026' AND SJFS='4' GROUP BY CZXM ORDER BY COUNT(CZXM); " % (
+        sql = "SELECT CZXM,COUNT(DISTINCT TJBH) AS RC FROM TJ_CZJLB WHERE CZSJ>='%s' AND CZSJ<'%s' AND JLLX='0026' AND SJFS='4' GROUP BY CZXM ORDER BY COUNT(CZXM); " % (
         tstart, tend)
     elif title == "心电图检查":
-        sql = "SELECT CZXM,COUNT(CZXM) AS RC FROM TJ_CZJLB WHERE CZSJ>='%s' AND CZSJ<'%s' AND JLLX='0021' GROUP BY CZXM ORDER BY COUNT(CZXM); " % (
+        sql = "SELECT CZXM,COUNT(DISTINCT TJBH) AS RC FROM TJ_CZJLB WHERE CZSJ>='%s' AND CZSJ<'%s' AND JLLX='0021' GROUP BY CZXM ORDER BY COUNT(CZXM); " % (
         tstart, tend)
     elif title == "骨密度检查":
-        sql = "SELECT CZXM,COUNT(CZXM) AS RC FROM TJ_CZJLB WHERE CZSJ>='%s' AND CZSJ<'%s' AND JLLX='0020' GROUP BY CZXM ORDER BY COUNT(CZXM); " % (
+        sql = "SELECT CZXM,COUNT(DISTINCT TJBH) AS RC FROM TJ_CZJLB WHERE CZSJ>='%s' AND CZSJ<'%s' AND JLLX='0020' GROUP BY CZXM ORDER BY COUNT(CZXM); " % (
         tstart, tend)
 
     elif title == '登录人数':
         sql = ''' SELECT login_date,COUNT(login_name) as rc 
         FROM (SELECT DISTINCT substring(convert(char,login_in,120),1,10) as login_date, login_name from TJ_LOGIN WHERE login_in>='%s' AND login_in<'%s'
         ) AS tmp GROUP BY login_date ''' %(tstart, tend)
+
+    elif title == '报告下载':
+        sql = ''' SELECT COUNT(DISTINCT TJBH) as rc,substring(convert(char,CZSJ,120),1,10) as czrq FROM TJ_CZJLB WHERE CZSJ>='%s' AND CZSJ<'%s' AND JLLX='0036' AND CZQY NOT LIKE '10.8.%%' GROUP BY substring(convert(char,CZSJ,120),1,10); ''' %(tstart, tend)
+        sql2 = ''' SELECT COUNT(TJBH) as rc ,substring(convert(char,SYRQ,120),1,10) as syrq FROM TJ_BGGL WHERE SYRQ>='%s' AND SYRQ<'%s' AND BGZT IN ('2','3','4','5') AND SYXM IS NOT NULL GROUP BY substring(convert(char,SYRQ,120),1,10) ; ''' %(tstart, tend)
+        results = session.execute(sql).fetchall()
+        return OrderedDict(results)
     else:
         sql =None
         return

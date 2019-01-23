@@ -77,8 +77,8 @@ class EquipUI(Dialog):
         lt_top.addWidget(self.btn_query)
         lt_top.addStretch()
         gp_search.setLayout(lt_top)
-        lt_middle = QHBoxLayout()
-        self.gp_middle = QGroupBox('项目信息(0)')
+        lt_middle = HBoxLayout()
+        self.gp_middle = GroupBox('项目信息(0)')
         # 用户基本信息
         # self.gp_user = EquipUserGroup()
         self.table_equip = EquipTable(self.table_equip_cols)
@@ -87,8 +87,8 @@ class EquipUI(Dialog):
         lt_middle.addWidget(self.table_equip)
         self.gp_middle.setLayout(lt_middle)
         ####################右侧布局#####################
-        lt_bottom = QHBoxLayout()
-        gp_bottom = QGroupBox('报告预览')
+        lt_bottom = HBoxLayout()
+        gp_bottom = GroupBox('报告预览')
         self.wv_report_equip = WebView()
         # self.wv_report_equip = CefWidget(self)
         lt_bottom.addWidget(self.wv_report_equip)

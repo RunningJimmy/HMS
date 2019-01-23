@@ -121,8 +121,8 @@ class DoubtfulUI(Widget):
         self.table_health = SlowHealthTable(self.cols)
         self.table_health.setContextMenuPolicy(Qt.CustomContextMenu)              ######允许右键产生子菜单
         self.table_health.customContextMenuRequested.connect(self.onTableMenu)   ####右键菜单
-        self.gp_middle = QGroupBox('疑似列表(0)')
-        lt_middle = QHBoxLayout()
+        self.gp_middle = GroupBox('疑似列表(0)')
+        lt_middle = HBoxLayout()
         lt_middle.addWidget(self.table_health)
         self.gp_middle.setLayout(lt_middle)
         ########### 功能区 #################
@@ -146,12 +146,12 @@ class DoubtfulUI(Widget):
         lt_bottom.addWidget(self.btn_phone)
         lt_bottom.addWidget(self.btn_sms)
         lt_bottom.addWidget(self.btn_export)
-        gp_bottom.setLayout(lt_bottom)
+        # gp_bottom.setLayout(lt_bottom)
         # 添加布局
         lt_main.addLayout(lt_top)
         #lt_main.addStretch()
         lt_main.addWidget(self.gp_middle)
-        lt_main.addWidget(gp_bottom)
+        lt_main.addLayout(lt_bottom)
         self.setLayout(lt_main)
 
     def on_checkbox_change(self,is_one:bool,p_int:int):

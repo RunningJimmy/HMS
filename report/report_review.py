@@ -76,7 +76,7 @@ class ReportReview(ReportReviewUI):
         rows = self.table_report_review.isSelectRows()
         if len(rows)>=200:
             if self.login_id!='BSSA':
-                mes_about(self,"批量审阅请不要超过200个/次，避免影响其他业务！")
+                mes_about(self,"批量审阅请不要超过400个/次，避免影响其他业务！")
                 return
         button = mes_warn(self, "温馨提示：批量审阅只适用于招工类型的报告！\n 您确认自动审阅当前选择的 %s 份体检报告？" %len(rows))
         if button != QMessageBox.Yes:
