@@ -484,13 +484,16 @@ class ReportPrint(ReportPrintUI):
             for i in indexs:
                 row_num = i.row()
             menu = QMenu()
-            item1 = menu.addAction(Icon("报告中心"), "查看PDF报告")
+            item1 = menu.addAction(Icon("报告中心"), "查看体检报告")
             # item2 = menu.addAction(Icon("报告中心"), "浏览器中打开HTML报告")
             item3 = menu.addAction(Icon("取消"), "取消整理")
             item4 = menu.addAction(Icon("取消"), "取消领取")
             item5 = menu.addAction(Icon("报告中心"), "重新生成PDF报告")
             item6 = menu.addAction(Icon("报告中心"), "生成江东格式报告")
             item7 = menu.addAction(Icon("报告中心"), "报告格式修复")
+            item8 = menu.addAction(Icon("报告中心"), "查看乙肝报告")
+            item9 = menu.addAction(Icon("报告中心"), "打印乙肝报告")
+            item10 = menu.addAction(Icon("报告中心"), "生成乙肝报告")
             action = menu.exec_(self.table_print.mapToGlobal(pos))
             tjbh = self.table_print.getCurItemValueOfKey('tjbh')
             zlxm = self.table_print.getCurItemValueOfKey('zlxm')
@@ -517,9 +520,9 @@ class ReportPrint(ReportPrintUI):
                         self.session.query(MT_TJ_BGGL).filter(MT_TJ_BGGL.tjbh == tjbh).update(
                             {
                                 MT_TJ_BGGL.zlrq: None,
-                                MT_TJ_BGGL.zlhm: '',
-                                MT_TJ_BGGL.zlgh: '',
-                                MT_TJ_BGGL.zlxm: '',
+                                MT_TJ_BGGL.zlhm: None,
+                                MT_TJ_BGGL.zlgh: None,
+                                MT_TJ_BGGL.zlxm: None,
                                 MT_TJ_BGGL.bgzt: '3',
                             }
                         )
@@ -603,6 +606,29 @@ class ReportPrint(ReportPrintUI):
                 text, ok = QInputDialog.getText(self, '明州体检', '请输入重叠的项目：', QLineEdit.Normal, '')
                 if ok and text:
                     mes_about(self,'修复成功！')
+
+            elif action == item8:
+                result = self.session.query(V_JGMXB).filter(V_JGMXB.tjbh).scalar()
+                if not result:
+                    mes_about(self, "该顾客没有乙肝类项目！")
+                result = self.session.query(MT_TJ_BGGL).filter(MT_TJ_BGGL.tjbh).scalar()
+                if not result:
+                    mes_about(self,"还未进入报告处理流程！")
+                if result.bgzt in ['0','1']:
+                    mes_about(self,"报告还未审阅！")
+                # 请求调用
+
+            elif action == item10:
+                result = self.session.query(V_JGMXB).filter(V_JGMXB.tjbh).scalar()
+                if not result:
+                    mes_about(self, "该顾客没有乙肝类项目！")
+                result = self.session.query(MT_TJ_BGGL).filter(MT_TJ_BGGL.tjbh).scalar()
+                if not result:
+                    mes_about(self,"还未进入报告处理流程！")
+                if result.bgzt in ['0','1']:
+                    mes_about(self,"报告还未审阅！")
+                # 请求调用
+
 
 
 

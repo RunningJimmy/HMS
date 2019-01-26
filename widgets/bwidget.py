@@ -108,6 +108,11 @@ class HBoxLayout(QHBoxLayout):
         super(HBoxLayout,self).__init__(parent)
         self.setContentsMargins(0,10,0,0)
 
+class VBoxLayout(QVBoxLayout):
+    def __init__(self, parent=None):
+        super(VBoxLayout, self).__init__(parent)
+        self.setContentsMargins(0, 0, 0, 0)
+
 # 自带检索按钮、清除按钮
 class SearchLineEdit(QLineEdit):
 
@@ -795,7 +800,7 @@ class PreviewWidget(QWidget):
         lt_main = QHBoxLayout()
         lb_mes = QTextBrowser()
         lb_mes.setText(self.mes)
-        lb_style = '''color: rgb(255, 0, 0);font: 75 16pt "微软雅黑";'''
+        lb_style = '''color: rgb(255, 0, 0);font: 75 14pt "微软雅黑";'''
         lb_mes.setStyleSheet(lb_style)
         lt_main.addWidget(lb_mes)
         self.setLayout(lt_main)

@@ -5,7 +5,6 @@ from .report_item_ui import ItemsStateUI,OperateUI
 from utils import gol,api_print,request_get,print_pdf_gsprint,get_short_url
 from utils import cur_datetime,request_create_report,report_sms_content,sms_api
 
-
 class ReportReviewFullScreen(Dialog):
 
     # 自定义 信号，封装对外使用

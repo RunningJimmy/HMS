@@ -10,6 +10,15 @@
 '''
 from .common import *
 
+# 多行表头，采用2个表格组合的形式
+class complexTableWidget(QTableWidget):
+
+
+    def __init__(self, heads: dict, parent=None):
+        pass
+
+
+# 标准表格
 class TableWidget(QTableWidget):
 
     def __init__(self,heads:dict,parent=None):

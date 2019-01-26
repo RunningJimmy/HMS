@@ -9,8 +9,9 @@
 '''
 
 from .common import *
-from .widget import WindowNotify
-from .message import NotificationWindow
+from .message import *
+from .button import *
+from .widget import *
 
 
 

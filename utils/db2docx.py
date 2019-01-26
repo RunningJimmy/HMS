@@ -34,48 +34,6 @@ def doc2pdf(doc_name, pdf_name):
         print(e)
         return
 
-class V_JGMXB(BaseModel):
-
-    __tablename__ = "V_JGMXB"
-
-    TJBH =Column(String(16, 'Chinese_PRC_CI_AS'), primary_key=True)
-    XM = Column(String(40, 'Chinese_PRC_CI_AS'))
-    XB= Column(String(2, 'Chinese_PRC_CI_AS'))
-    NL = Column(String(32, 'Chinese_PRC_CI_AS'))
-    JCRQ =Column(String(20, 'Chinese_PRC_CI_AS'))
-    SHRQ = Column(String(20, 'Chinese_PRC_CI_AS'))
-    JCYS = Column(String(40, 'Chinese_PRC_CI_AS'))
-    SHYS = Column(String(40, 'Chinese_PRC_CI_AS'))
-    JG = Column(Text(2147483647, 'Chinese_PRC_CI_AS'))
-    CKFW = Column(String(100, 'Chinese_PRC_CI_AS'))
-    XMDW = Column(String(20, 'Chinese_PRC_CI_AS'))
-    XMMC = Column(String(60, 'Chinese_PRC_CI_AS'), primary_key=True)
-    YCTS = Column(String(20, 'Chinese_PRC_CI_AS'))
-    SFZH = Column(CHAR(1))
-    ZHBH = Column(String(20, 'Chinese_PRC_CI_AS'))
-
-    # 转换为字典
-    def to_dict(self,cols:list):
-        return {col: str2(getattr(self, col, None)) for col in cols}
-
-    # 获取用户信息
-    def get_user(self):
-        return self.to_dict(['TJBH','XM','XB','NL'])
-
-    # 获取组合信息
-    def get_citem(self):
-        return self.to_dict(['ZHBH', 'XMMC', 'JCYS', 'JCRQ', 'SHYS', 'SHRQ'])
-
-    # 获取子项结果
-    def get_sitem(self):
-        tmp = self.to_dict(['ZHBH', 'XMMC', 'JG', 'YCTS', 'XMDW', 'CKFW'])
-        if tmp['YCTS']:
-            tmp['YCTS'] = RichText(tmp['YCTS'], color='FF0000', bold=True)
-            tmp['JG'] = RichText(tmp['JG'], color='FF0000', bold=True)
-        else:
-            tmp['JG'] = RichText(tmp['JG'])
-
-        return tmp
 
 def get_info(session,tjbh):
     datas = {}

@@ -566,3 +566,101 @@
 [2019-01-23 17:07:21] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
 [2019-01-23 17:07:26] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
 [2019-01-23 17:07:26] INFO [utils.config_log:195] 用户：管理员(BSSA) 登陆成功！
+[2019-01-24 09:28:46] INFO [utils.config_log:223] 用户：管理员(BSSA) 退出成功！
+[2019-01-24 10:47:00] INFO [utils.config_log:23] 程序启动......
+[2019-01-24 10:47:00] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2019-01-24 10:47:00] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2019-01-24 10:47:00] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2019-01-24 10:47:00] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2019-01-24 10:47:00] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2019-01-24 10:47:03] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2019-01-24 10:47:03] INFO [utils.config_log:195] 用户：管理员(BSSA) 登陆成功！
+[2019-01-25 08:08:35] INFO [utils.config_log:3325] 后台线程，提取队列数据：F:\HMS/tmp/100000130_000001.png 上传！
+[2019-01-25 08:08:35] INFO [utils.config_log:202] API：/api/file/upload/ 上传请求成功！
+[2019-01-25 08:12:41] INFO [utils.config_log:3325] 后台线程，提取队列数据：F:\HMS/tmp/100000130_000001.png 上传！
+[2019-01-25 08:12:41] INFO [utils.config_log:202] API：/api/file/upload/ 上传请求成功！
+[2019-01-25 08:20:36] INFO [utils.config_log:223] 用户：管理员(BSSA) 退出成功！
+[2019-01-25 08:20:48] INFO [utils.config_log:23] 程序启动......
+[2019-01-25 08:20:48] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2019-01-25 08:20:48] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2019-01-25 08:20:48] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2019-01-25 08:20:48] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2019-01-25 08:20:48] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2019-01-25 08:20:52] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2019-01-25 08:20:52] INFO [utils.config_log:195] 用户：管理员(BSSA) 登陆成功！
+[2019-01-25 08:21:21] INFO [utils.config_log:3325] 后台线程，提取队列数据：F:\HMS/tmp/100000130_000001.png 上传！
+[2019-01-25 08:21:21] INFO [utils.config_log:202] API：/api/file/upload/ 上传请求成功！
+[2019-01-25 08:22:11] INFO [utils.config_log:223] 用户：管理员(BSSA) 退出成功！
+[2019-01-25 08:22:49] INFO [utils.config_log:23] 程序启动......
+[2019-01-25 08:22:49] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2019-01-25 08:22:49] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2019-01-25 08:22:49] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2019-01-25 08:22:49] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2019-01-25 08:22:49] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2019-01-25 08:22:53] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2019-01-25 08:22:53] INFO [utils.config_log:195] 用户：管理员(BSSA) 登陆成功！
+[2019-01-25 08:23:07] INFO [utils.config_log:3325] 后台线程，提取队列数据：F:\HMS/tmp/100000130_000001.png 上传！
+[2019-01-25 08:23:07] INFO [utils.config_log:202] API：/api/file/upload/ 上传请求成功！
+[2019-01-25 08:23:48] INFO [utils.config_log:223] 用户：管理员(BSSA) 退出成功！
+[2019-01-25 08:23:52] INFO [utils.config_log:23] 程序启动......
+[2019-01-25 08:23:52] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2019-01-25 08:23:52] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2019-01-25 08:23:52] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2019-01-25 08:23:52] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2019-01-25 08:23:52] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2019-01-25 08:23:56] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2019-01-25 08:23:56] INFO [utils.config_log:195] 用户：管理员(BSSA) 登陆成功！
+[2019-01-25 08:24:06] INFO [utils.config_log:3325] 后台线程，提取队列数据：F:\HMS/tmp/100000130_000001.png 上传！
+[2019-01-25 08:24:06] INFO [utils.config_log:202] API：/api/file/upload/ 上传请求成功！
+[2019-01-25 08:24:46] INFO [utils.config_log:23] 程序启动......
+[2019-01-25 08:24:46] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2019-01-25 08:24:46] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2019-01-25 08:24:46] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2019-01-25 08:24:46] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2019-01-25 08:24:46] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2019-01-25 08:24:50] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2019-01-25 08:24:50] INFO [utils.config_log:195] 用户：管理员(BSSA) 登陆成功！
+[2019-01-25 08:24:56] INFO [utils.config_log:223] 用户：管理员(BSSA) 退出成功！
+[2019-01-25 08:25:05] INFO [utils.config_log:3325] 后台线程，提取队列数据：F:\HMS/tmp/100000130_000001.png 上传！
+[2019-01-25 08:25:05] INFO [utils.config_log:202] API：/api/file/upload/ 上传请求成功！
+[2019-01-25 08:29:43] INFO [utils.config_log:223] 用户：管理员(BSSA) 退出成功！
+[2019-01-25 08:29:50] INFO [utils.config_log:23] 程序启动......
+[2019-01-25 08:29:50] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2019-01-25 08:29:50] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2019-01-25 08:29:50] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2019-01-25 08:29:50] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2019-01-25 08:29:50] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2019-01-25 08:29:54] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2019-01-25 08:29:54] INFO [utils.config_log:195] 用户：管理员(BSSA) 登陆成功！
+[2019-01-25 08:30:06] INFO [utils.config_log:3325] 后台线程，提取队列数据：F:\HMS/tmp/100000130_000001.png 上传！
+[2019-01-25 08:30:06] INFO [utils.config_log:202] API：/api/file/upload/ 上传请求成功！
+[2019-01-25 08:30:16] INFO [utils.config_log:3325] 后台线程，提取队列数据：F:\HMS/tmp/100000130_000001.png 上传！
+[2019-01-25 08:30:16] INFO [utils.config_log:202] API：/api/file/upload/ 上传请求成功！
+[2019-01-25 08:31:26] INFO [utils.config_log:23] 程序启动......
+[2019-01-25 08:31:26] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2019-01-25 08:31:26] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2019-01-25 08:31:26] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2019-01-25 08:31:26] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2019-01-25 08:31:26] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2019-01-25 08:31:30] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2019-01-25 08:31:30] INFO [utils.config_log:195] 用户：管理员(BSSA) 登陆成功！
+[2019-01-25 08:31:38] INFO [utils.config_log:223] 用户：管理员(BSSA) 退出成功！
+[2019-01-25 08:31:49] INFO [utils.config_log:3325] 后台线程，提取队列数据：F:\HMS/tmp/100000130_000001.png 上传！
+[2019-01-25 08:31:49] INFO [utils.config_log:202] API：/api/file/upload/ 上传请求成功！
+[2019-01-25 08:31:59] INFO [utils.config_log:3325] 后台线程，提取队列数据：F:\HMS/tmp/100000130_000001.png 上传！
+[2019-01-25 08:31:59] INFO [utils.config_log:202] API：/api/file/upload/ 上传请求成功！
+[2019-01-25 08:34:42] INFO [utils.config_log:223] 用户：管理员(BSSA) 退出成功！
+[2019-01-25 08:34:46] INFO [utils.config_log:23] 程序启动......
+[2019-01-25 08:34:46] INFO [utils.config_log:25] 读取配置(mztj.ini)文件成功
+[2019-01-25 08:34:46] INFO [utils.config_log:27] 读取配置(parse.ini)文件成功
+[2019-01-25 08:34:46] INFO [utils.config_log:29] 读取配置(custom.ini)文件成功
+[2019-01-25 08:34:46] INFO [utils.config_log:31] 读取配置(version.ini)文件成功
+[2019-01-25 08:34:46] INFO [utils.config_log:33] 读取配置(database.ini)文件成功
+[2019-01-25 08:34:50] INFO [utils.config_log:194] 写入配置(custom.ini)文件成功
+[2019-01-25 08:34:50] INFO [utils.config_log:195] 用户：管理员(BSSA) 登陆成功！
+[2019-01-25 08:34:59] INFO [utils.config_log:3325] 后台线程，提取队列数据：F:\HMS/tmp/100000130_000001.png 上传！
+[2019-01-25 08:35:00] INFO [utils.config_log:202] API：/api/file/upload/ 上传请求成功！
+[2019-01-25 08:35:10] INFO [utils.config_log:3325] 后台线程，提取队列数据：F:\HMS/tmp/100000130_000001.png 上传！
+[2019-01-25 08:35:10] INFO [utils.config_log:202] API：/api/file/upload/ 上传请求成功！
+[2019-01-25 08:36:23] INFO [utils.config_log:3325] 后台线程，提取队列数据：F:\HMS/tmp/100000130_000001.png 上传！
+[2019-01-25 08:36:23] INFO [utils.config_log:202] API：/api/file/upload/ 上传请求成功！

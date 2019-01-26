@@ -8,7 +8,7 @@
 @desc: 无边框窗口
 '''
 
-from widgets.bwidget import *
+from widget_base.common import *
 import sys
 
 # 标题栏
@@ -51,7 +51,7 @@ class TitleBar(QWidget):
         self.btn_close = QPushButton('r')
         self.btn_close.setFont(self.btn_font)
         self.btn_close.setObjectName('buttonClose')
-        self.btn_close.clicked.connect(self.windowClosed.emit)
+        self.btn_close.clicked.connect(self.window_closed.emit)
         # 添加主布局
         lt_main.addWidget(self.lb_icon)
         lt_main.addWidget(self.lb_title)
@@ -376,7 +376,7 @@ class FramelessWindow(QWidget):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    app.setStyleSheet(StyleSheet)
+    # app.setStyleSheet(StyleSheet)
     mainWnd = FramelessWindow()
     mainWnd.setWindowTitle('测试标题栏')
     mainWnd.setWindowIcon(QIcon('Qt.ico'))

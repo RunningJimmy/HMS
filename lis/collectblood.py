@@ -1,4 +1,5 @@
 from lis.collectblood_ui import *
+from widget_base import WindowNotify
 from lis.model import *
 from utils.readparas import GolParasMixin
 from utils.buildbarcode import BarCodeBuild
@@ -439,6 +440,25 @@ class CollectBlood(GolParasMixin,CollectBlood_UI):
         except Exception as e:
             print(e)
         super(CollectBlood, self).closeEvent(*args, **kwargs)
+
+# 告警弹出框
+class PreviewWidget(WindowNotify):
+
+    def __init__(self,message,parent=None):
+        super(PreviewWidget,self).__init__('明州体检-提示',parent=parent)
+
+        lt_main = VBoxLayout()
+        lb_mes = QTextBrowser()
+        lb_mes.setText(message)
+        lb_mes.setReadOnly(True)
+        lb_style = '''color: rgb(255, 0, 0);font: 75 12pt "微软雅黑";'''
+        lb_mes.setStyleSheet(lb_style)
+        lt_main.addWidget(lb_mes)
+        self.setMainArea(lt_main)
+        self.show()
+
+
+
 
 
 def list_in_list(a_list,b_list):

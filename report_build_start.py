@@ -35,6 +35,7 @@ from PyPDF2.pdf import PdfFileReader
 from wand.image import Image
 from utils.bmodel import *
 import win32print,subprocess
+from utils.db2docx import render_docx_template,doc2pdf,get_info
 import gc
 
 def report_run_api(queue):
@@ -66,6 +67,7 @@ def report_run(queue):
     cachet = {'zjys':None,'shys':None,'warn':None,'syys':None}                  # 公章、总检、审核医生签名
     footer_user = pdf_options['footer-left']
     html_path =gol.get_value('report_html_resource')
+    docx_template = gol.get_value('docx_template')                              # 乙肝模板 ，word模板较适用于固定位置的
     gc_count = 0
     ####################### 数据准备：图片、首页、html ###########################
     while True:
@@ -85,8 +87,18 @@ def report_run(queue):
                 action = mes_obj['action']                                                  # 获取执行动作 ：生成HTML还是生成PDF还是打印
                 if action=='print':
                     # 打印服务
+                    tjbh = mes_obj['tjbh']
                     filename = mes_obj['filename']
+                    filename2 = mes_obj['filename2']
                     printer = mes_obj['printer']
+                    datas = get_info(session_tjxt, tjbh)
+                    if datas:
+                        if os.path.exists(filename2):
+                            result = print_pdf_gsprint(filename2, printer)
+                            if result == 0:
+                                print('%s 文件(%s)，通过打印机(%s) 打印成功！' % (cur_datetime(), filename2, printer))
+                        else:
+                            print('%s 文件(%s)，未找到！' % (cur_datetime(), filename2))
                     result = print_pdf_gsprint(filename, printer)
                     if result == 0:
                         print('%s 文件(%s)，通过打印机(%s) 打印成功！' % (cur_datetime(), filename,printer))
@@ -187,6 +199,19 @@ def report_run(queue):
                         print("%s: %s PDF报告生成成功！耗时：%s " %(cur_datetime(),tjbh,str(round(time_end2 - time_start,2))))
                         log.info("%s: %s PDF报告生成成功！耗时：%s " % (cur_datetime(),tjbh,str(round(time_end2 - time_start,2))))
                         pdf_data_obj.set_bglj(pdf_data_obj.get_pdf)
+                        # 判断是否存在乙肝项目，如果是，则生成单独一份PDF，同时更新数据标志
+                        datas = get_info(session_tjxt,tjbh)
+                        if datas:
+                            docx_file = os.path.join(pdf_data_obj.cur_dir,"%s.docx" %tjbh)
+                            pdf_file = os.path.join(pdf_data_obj.cur_dir, "%s_docx.pdf" % tjbh)
+                            try:
+                                render_docx_template(docx_template, docx_file, datas)
+                                doc2pdf(docx_file, pdf_file)
+                                print("生成乙肝报告成功！" )
+                                # 更新数据库
+                                pdf_data_obj.update_sgd(tjbh)
+                            except Exception as e:
+                                print("生成乙肝报告失败，错误信息：%s" %e)
                     ############################## 更新数据库 ########################################
                     pdf_data_obj.update_user_report()
                     # 删除数据对象
@@ -783,6 +808,17 @@ class PdfData(object):
             health['body'] = bjcf_body
             # pprint(bjcf_body)
         return health
+
+    # 更新乙肝手工单数据
+    def update_sgd(self,tjbh):
+        try:
+            self.session_tjk.query(MT_TJ_BGGL).filter(MT_TJ_BGGL.tjbh == tjbh).update({
+                MT_TJ_BGGL.sgd: '0',
+            })
+            self.session_tjk.commit()
+        except Exception as e:
+            self.session_tjk.rollback()
+            print(e)
 
     # 更新用户数据
     def update_user_report(self):

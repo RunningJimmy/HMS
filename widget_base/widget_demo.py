@@ -10,6 +10,25 @@
 '''
 
 from widget_base import *
+from widget_base.browser import cef
+
+# 浏览器
+def demo_open_url(url,title):
+    # To shutdown all CEF processes on error
+    sys.excepthook = cef.ExceptHook
+    cef.Initialize()
+    cef.CreateBrowserSync(url=url,window_title=title)
+    cef.MessageLoop()
+    cef.Shutdown()
+
+# 下拉多选按钮组合
+def demo_button():
+    window = QWidget()
+    layout = QHBoxLayout(window)
+    b1 = ComCheckBox(["a","b","c","d","e"])
+    layout.addWidget(b1)
+
+    return window
 
 # 消息弹出框
 def WindowNotify_demo():
@@ -17,7 +36,7 @@ def WindowNotify_demo():
     notify = WindowNotify(parent=window)
     layout = QHBoxLayout(window)
     b1 = QPushButton(
-        "弹窗1", window, clicked=lambda: notify.show(content=b1.text()).on_animation_start())
+        "弹窗1", window, clicked=notify.show)
     layout.addWidget(b1)
 
     return window
@@ -51,7 +70,8 @@ if __name__ == "__main__":
     import cgitb
     sys.excepthook = cgitb.Hook(1, None, 5, sys.stderr, 'text')
     app = QApplication(sys.argv)
-    # ui = WindowNotify_demo()
+    #ui = WindowNotify_demo()
     ui = message_demo()
+    #ui = demo_button()
     ui.show()
     sys.exit(app.exec_())

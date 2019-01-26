@@ -470,8 +470,9 @@ def init_views(app,db,print_queue=None,report_queue=None):
         if result:
             if result.bglj:
                 filename = os.path.join(result.bglj,"%s.pdf" %tjbh)
+                filename2 = os.path.join(result.bglj, "%s_docx.pdf" % tjbh)  #乙肝
                 if os.path.exists(filename):
-                    mes_obj = {'filename': filename, 'action': 'print', 'printer': printer}
+                    mes_obj = {'filename': filename,'filename2': filename2, 'action': 'print', 'printer': printer,'tjbh':tjbh}
                     if print_queue:
                         print_queue.put(mes_obj)
                         return ujson.dumps({'code': 1, 'mes': '报告打印成功！', 'data': ''})
