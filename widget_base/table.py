@@ -10,13 +10,129 @@
 '''
 from .common import *
 
+# 多行表头，解决方案1：
+# 使用一个QTableWidget命名为m_frozonTableWgt作为表头。
+# 使用另外一个QTableWidget作为内容显示的表格。
+# m_frozonTableWgt隐藏表头、隐藏滚动条、只显示2行的内容表格、显示到内容表格上方、只占据内容表的表头高度、设置ItemDelegate进行重绘。
+# 内容表格，显示表头，高度设置成m_frozonTableWgt前两行的高度。
+
 # 多行表头，采用2个表格组合的形式
-class complexTableWidget(QTableWidget):
+class ComplexTableWidget(QTableWidget):
 
 
     def __init__(self, heads: dict, parent=None):
-        pass
+        super(ComplexTableWidget,self).__init__( heads, parent)
 
+
+    def initTableHeader(self):
+        frozen_table = QTableWidget()
+        frozen_table.horizontalHeader().setVisible(False)                   # 表头不可见
+        frozen_table.verticalHeader().setVisible(False)                     # 表头不可见
+        frozen_table.setShowGrid(False)                                     # 网格线不可见
+        frozen_table.setEditTriggers(QAbstractItemView.NoEditTriggers)      # 设置单元格不可编辑
+        frozen_table.horizontalHeader().setStretchLastSection(True)         # 最后一个单元格扩展
+        frozen_table.setFocusPolicy(Qt.NoFocus)                             # 解决选中虚框问题
+        frozen_table.setFrameShape(QFrame.NoFrame)                          # 去除边框
+
+        frozen_table.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)      # // 隐藏滚动条
+        frozen_table.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        frozen_table.setHorizontalScrollMode(ScrollPerPixel)
+
+        frozen_table.setItemDelegate(ItemDelegate(0))        # 设置绘画代理（主要在代理中画出来header）
+
+        self.viewport().stackUnder(frozen_table)                #设置窗口层次
+
+        frozen_table.setColumnCount(10)                 # header10列
+        frozen_table.setRowCount(2)                     # header2行
+
+        frozen_table.setRowHeight(0, 42)                # 第一行设置高度42px
+        frozen_table.setRowHeight(1, 42)                # 第二行设置高度42px
+
+        # 隐藏2行后的行
+        for row in range(2,frozen_table.rowCount()):
+            frozen_table.setRowHidden(row, True)
+
+    # def updateFrozenTableGeometry(self):
+    #     self.frozen_table.setGeometry(frameWidth(),
+    #                                   frameWidth(),
+    #                                   viewport()->width(),
+    #                                               horizontalHeader()->height())
+
+# 某几列冻结的表格
+class FreezeTableWidget(QTableView):
+
+    def __init__(self, model):
+        super(FreezeTableWidget, self).__init__()
+        self.setModel(model)
+        self.frozenTableView = QTableView(self)
+        self.init()
+        self.initSignal()
+
+
+    def initSignal(self):
+        self.horizontalHeader().sectionResized.connect(self.updateSectionWidth)
+        self.verticalHeader().sectionResized.connect(self.updateSectionHeight)
+        self.frozenTableView.verticalScrollBar().valueChanged.connect(self.verticalScrollBar().setValue)
+        self.verticalScrollBar().valueChanged.connect(self.frozenTableView.verticalScrollBar().setValue)
+
+    def init(self):
+        self.frozenTableView.setModel(self.model())
+        self.frozenTableView.setFocusPolicy(Qt.NoFocus)
+        self.frozenTableView.verticalHeader().hide()
+        self.frozenTableView.horizontalHeader().setSectionResizeMode(QHeaderView.Fixed)
+        self.viewport().stackUnder(self.frozenTableView)
+
+        self.frozenTableView.setStyleSheet('''
+            QTableView { border: none;
+                         background-color: #8EDE21;
+                         selection-background-color: #999;
+            }''')  # for demo purposes
+
+        self.frozenTableView.setSelectionModel(self.selectionModel())
+        for col in range(1, self.model().columnCount()):
+            self.frozenTableView.setColumnHidden(col, True)
+        self.frozenTableView.setColumnWidth(0, self.columnWidth(0))
+        self.frozenTableView.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.frozenTableView.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.frozenTableView.show()
+        self.updateFrozenTableGeometry()
+        self.setHorizontalScrollMode(self.ScrollPerPixel)
+        self.setVerticalScrollMode(self.ScrollPerPixel)
+        self.frozenTableView.setVerticalScrollMode(self.ScrollPerPixel)
+
+    def updateSectionWidth(self, logicalIndex, oldSize, newSize):
+        if self.logicalIndex == 0:
+            self.frozenTableView.setColumnWidth(0, newSize)
+            self.updateFrozenTableGeometry()
+
+    def updateSectionHeight(self, logicalIndex, oldSize, newSize):
+        self.frozenTableView.setRowHeight(logicalIndex, newSize)
+
+    def resizeEvent(self, event):
+        super(FreezeTableWidget, self).resizeEvent(event)
+        self.updateFrozenTableGeometry()
+
+    def moveCursor(self, cursorAction, modifiers):
+        current = super(FreezeTableWidget, self).moveCursor(cursorAction, modifiers)
+        if (cursorAction == self.MoveLeft and
+                    self.current.column() > 0 and
+                    self.visualRect(current).topLeft().x() <
+                    self.frozenTableView.columnWidth(0)):
+            newValue = (self.horizontalScrollBar().value() +
+                        self.visualRect(current).topLeft().x() -
+                        self.frozenTableView.columnWidth(0))
+            self.horizontalScrollBar().setValue(newValue)
+        return current
+
+    def scrollTo(self, index, hint):
+        if index.column() > 0:
+            super(FreezeTableWidget, self).scrollTo(index, hint)
+
+    def updateFrozenTableGeometry(self):
+        self.frozenTableView.setGeometry(
+            self.verticalHeader().width() + self.frameWidth(),
+            self.frameWidth(), self.columnWidth(0),
+            self.viewport().height() + self.horizontalHeader().height())
 
 # 标准表格
 class TableWidget(QTableWidget):

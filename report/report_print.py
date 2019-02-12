@@ -291,6 +291,7 @@ class ReportPrint(ReportPrintUI):
         try:
             results = self.session.execute(sql).fetchall()
             self.table_print.load(results)
+            self.table_print.setColType('ysje')
             self.gp_middle.setTitle('打印列表（%s）' %self.table_print.rowCount())
             if results:
                 self.lb_warn.hide()
@@ -495,11 +496,15 @@ class ReportPrint(ReportPrintUI):
             item9 = menu.addAction(Icon("报告中心"), "打印乙肝报告")
             item10 = menu.addAction(Icon("报告中心"), "生成乙肝报告")
             action = menu.exec_(self.table_print.mapToGlobal(pos))
+            ####获取变量
             tjbh = self.table_print.getCurItemValueOfKey('tjbh')
+            xm = self.table_print.getCurItemValueOfKey('xm')
+            dwmc = self.table_print.getCurItemValueOfKey('dwmc')
             zlxm = self.table_print.getCurItemValueOfKey('zlxm')
             lqxm = self.table_print.getCurItemValueOfKey('lqxm')
             bgzt = self.table_print.getCurItemValueOfKey('bgzt')
             tjzt = self.table_print.getCurItemValueOfKey('tjzt')
+
             if action==item1:
                 self.cur_tjbh = tjbh
                 self.on_btn_item_click()
@@ -608,26 +613,26 @@ class ReportPrint(ReportPrintUI):
                     mes_about(self,'修复成功！')
 
             elif action == item8:
-                result = self.session.query(V_JGMXB).filter(V_JGMXB.tjbh).scalar()
-                if not result:
-                    mes_about(self, "该顾客没有乙肝类项目！")
-                result = self.session.query(MT_TJ_BGGL).filter(MT_TJ_BGGL.tjbh).scalar()
-                if not result:
-                    mes_about(self,"还未进入报告处理流程！")
-                if result.bgzt in ['0','1']:
-                    mes_about(self,"报告还未审阅！")
-                # 请求调用
+                url_title = "体检编号：%s   姓名：%s   单位名称：%s" % (tjbh, xm, dwmc)
+                state,message = report_special(self.session,tjbh,'show')
+                if state:
+                    self.open_url(message, url_title)
+                else:
+                    mes_about(self,message)
+
+            elif action == item9:
+                state,message = report_special(self.session,tjbh,'print')
+                if state:
+                    pass
+                else:
+                    mes_about(self,message)
 
             elif action == item10:
-                result = self.session.query(V_JGMXB).filter(V_JGMXB.tjbh).scalar()
-                if not result:
-                    mes_about(self, "该顾客没有乙肝类项目！")
-                result = self.session.query(MT_TJ_BGGL).filter(MT_TJ_BGGL.tjbh).scalar()
-                if not result:
-                    mes_about(self,"还未进入报告处理流程！")
-                if result.bgzt in ['0','1']:
-                    mes_about(self,"报告还未审阅！")
-                # 请求调用
+                state,message = report_special(self.session,tjbh,'build')
+                if state:
+                    pass
+                else:
+                    mes_about(self,message)
 
 
 
@@ -1141,3 +1146,32 @@ def date_compare(date1:str,date2:str):
     t_time = time.mktime(time.strptime(date2,'%Y-%m-%d'))
     return int(s_time) - int(t_time)
 
+# 乙肝类项目报告
+def report_special(session,tjbh,handle:str):
+    '''
+    :param session: 数据库连接会话
+    :param tjbh: 体检编号
+    :param handle: 执行动作,查看、打印、生成
+    :return:
+    '''
+    result = session.query(V_JGMXB).filter(V_JGMXB.tjbh==tjbh).scalar()
+    if not result:
+        return False,'该顾客没有乙肝类项目！'
+    result = session.query(MT_TJ_BGGL).filter(MT_TJ_BGGL.tjbh==tjbh).scalar()
+    if not result:
+        return False,'还未进入报告处理流程！'
+    if result.bgzt in ['0','1']:
+        return False,"报告还未审阅！"
+    # 处理
+    if handle=='show':
+        if result.sgd!='0':
+            return
+        filename = os.path.join(result.bglj, '%s_docx.pdf' %tjbh).replace('D:/activefile/', '')
+        # url = gol.get_value('api_pdf_new_show') % filename
+        return True,gol.get_value('api_pdf_new_show') % filename
+    elif handle=='print':
+        pass
+    elif handle=='build':
+        pass
+
+    return True,''

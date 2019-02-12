@@ -185,7 +185,6 @@ class CollectHandover(CollectHandover_UI):
         self.sgys = self.table_handover.getItemValueOfKey(QTableWidgetItem.row(),'sgys')
         self.on_btn_query()
 
-
     # 查看采集详细
     def on_table_handover_master_clicked(self,QTableWidgetItem):
         t_start = self.table_handover_master.item(QTableWidgetItem.row(),0).text()

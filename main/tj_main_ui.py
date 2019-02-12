@@ -145,11 +145,20 @@ class TJ_Main_UI(QMainWindow):
 
     # 注销
     def login_out(self):
-        self.close()
-        from main.login_ui import Login_UI
-        login_ui = Login_UI()
-        if login_ui.exec_():
-                pass
+        button = mes_warn(self,"您确定注销吗？")
+        if button == QMessageBox.Yes:
+            self.hide()  # 先隐藏
+            self.restarted.emit(self, path)
+        else:
+            pass
+
+    @classmethod
+    def onRestart(cls, widget):
+        w = ()
+        w.show()
+        widget.close()
+        widget.deleteLater()
+        del widget
 
     def update_mes(self,version,message):
         dialog = UpdateDialog(self)

@@ -1,5 +1,6 @@
 from barcode.writer import ImageWriter
-from barcode.codex import Code39
+from barcode.codex import Code39,Code128
+from pystrich.code128 import Code128Encoder
 import os
 
 class BarCodeBuild(object):
@@ -17,11 +18,11 @@ class BarCodeBuild(object):
     }
 
     option2 = {
-               "module_width":0.1,      # 条形码模块宽度：浮点数。默认值为0.2
-               "module_height":5,       # 条形码模块高度：为浮点。默认值为15
-               "quiet_zone":0.8,          # 左、右边的距离，从边界到第一个（最后）条形码模块，以M为浮点。默认值为6.5。
+               "module_width":0.2,      # 条形码模块宽度：浮点数。默认值为0.2
+               "module_height":15,       # 条形码模块高度：为浮点。默认值为15
+               "quiet_zone":6.5,       # 左、右边的距离，从边界到第一个（最后）条形码模块，以M为浮点。默认值为6.5。
                "font_size":10,          # 在PT下的文本大小为整数。默认值为10
-               "text_distance": 0.5,    # 条形码与它下面的文本之间的距离为浮点。默认值为5。
+               "text_distance": 5,    # 条形码与它下面的文本之间的距离为浮点。默认值为5。
                "center_text":True,      # 条形码下面文本是否居中
                "write_text":True,
                "text":"测试",
@@ -79,9 +80,19 @@ class BarCodeBuild(object):
         ean = Code39(serialno, writer=self.tmp, add_checksum=False)
         return ean.save(os.path.join(self.path,serialno), options=self.option1)
 
+    #
+    def create_code128(self,serialno):
+        self.tmp.format = 'bmp'
+        self.tmp.dpi = 800
+        ean = Code128Encoder("1901291140")
+        return ean.save(os.path.join(self.path,serialno))
+
 if __name__=="__main__":
-    bc= BarCodeBuild(path=r'C:/Users/Administrator/Desktop/')
-    print(bc.create('123456789'))
+    # bc= BarCodeBuild(path=r'C:/Users/Administrator/Desktop/')
+    # print(bc.create_code128('1901291140'))
+    from pystrich.code128 import Code128Encoder
+    encoder = Code128Encoder("1901291140")
+    encoder.save("C:/Users/Administrator/Desktop/pyStrich.png")
 
 
 

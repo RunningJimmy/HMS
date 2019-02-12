@@ -43,8 +43,8 @@ class DemandManger(Widget):
             ('所有',None),
             ('已提交','0'),
             ('已审核','1'),
-            ('已审批','2'),
-            ('开发中','3'),
+            ('开发中','2'),
+            ('跟踪','3'),
             ('已验收','4')
         ])
         self.cb_state = QComboBox()
@@ -71,8 +71,8 @@ class DemandManger(Widget):
         lt_left_top.addStretch()
         gp_left_top.setLayout(lt_left_top)
         # 左中布局
-        lt_left_middle = QHBoxLayout()
-        self.gp_left_middle = QGroupBox('需求列表(0)')
+        lt_left_middle = HBoxLayout()
+        self.gp_left_middle = GroupBox('需求列表(0)')
         self.table_demand_cols = OrderedDict([('state', '状态'),
                                               ('dname', '需求名称'),
                                               ('submiter', '需求人'),
@@ -97,7 +97,7 @@ class DemandManger(Widget):
         gp_btns = QGroupBox()
         self.btn_xqtj = QPushButton(Icon('submit'), '需求提交')
         self.btn_xqsh = QPushButton(Icon('submit'), '需求审核')
-        self.btn_xqsp = QPushButton(Icon('submit'), '需求审批')
+        # self.btn_xqsp = QPushButton(Icon('submit'), '需求审批')
         self.btn_kfqr = QPushButton(Icon('submit'), '确认开发')
         self.btn_csgz = QPushButton(Icon('submit'), '测试跟踪')
         self.btn_yspj = QPushButton(Icon('评价'), '验收评价')
@@ -260,12 +260,14 @@ class DemandSubmitDialog(Dialog):
     def initUI(self):
         lt_main = QVBoxLayout()
         lt_top = QHBoxLayout()
-        gp_top = QGroupBox()
-        lb_demand_title = QLabel('IT需求申请单 - 提交')
-        lb_demand_title.setStyleSheet('''font: 75 28pt '微软雅黑';color: rgb(0,128,0);''')
+        gp_top = QGroupBox('需求名称')
+        lt_top2 = QHBoxLayout()
+        gp_top2 = QGroupBox()
+        self.lb_demand_title = QLabel('IT需求申请单 - 提交')
+        self.lb_demand_title.setStyleSheet('''font: 75 28pt '微软雅黑';color: rgb(0,128,0);''')
         lt_1 = QHBoxLayout()
         lt_1.addStretch()
-        lt_1.addWidget(lb_demand_title)
+        lt_1.addWidget(self.lb_demand_title)
         lt_1.addStretch()
         # 期望时间
         self.le_expected_time = QDateEdit(QDate.currentDate().addMonths(1))
@@ -289,34 +291,34 @@ class DemandSubmitDialog(Dialog):
         self.cb_level.setEditable(True)
         lt_top.addWidget(QLabel('需求名称：'))
         lt_top.addWidget(self.le_demand_title)
-        lt_top.addSpacing(15)
-        lt_top.addWidget(QLabel('系统：'))
-        lt_top.addWidget(self.cb_system)
-        lt_top.addSpacing(15)
-        lt_top.addWidget(QLabel('模块：'))
-        lt_top.addWidget(self.cb_module)
-        lt_top.addSpacing(15)
-        lt_top.addWidget(QLabel('期望时间：'))
-        lt_top.addWidget(self.le_expected_time)
-        lt_top.addSpacing(15)
-        lt_top.addWidget(QLabel('紧急程度：'))
-        lt_top.addWidget(self.cb_level)
-        lt_top.addSpacing(15)
+        gp_top.setLayout(lt_top)
+        lt_top2.addWidget(QLabel('系统：'))
+        lt_top2.addWidget(self.cb_system)
+        lt_top2.addSpacing(15)
+        lt_top2.addWidget(QLabel('模块：'))
+        lt_top2.addWidget(self.cb_module)
+        lt_top2.addSpacing(15)
+        lt_top2.addWidget(QLabel('期望时间：'))
+        lt_top2.addWidget(self.le_expected_time)
+        lt_top2.addSpacing(15)
+        lt_top2.addWidget(QLabel('紧急程度：'))
+        lt_top2.addWidget(self.cb_level)
+        lt_top2.addSpacing(15)
         # lt_top.addWidget(QLabel('提交时间：%s' %cur_date()))
         # lt_top.addSpacing(15)
         # lt_top.addWidget(QLabel('提交人：%s' % self.login_name))
-        lt_top.addStretch()
-        gp_top.setLayout(lt_top)
+        lt_top2.addStretch()
+        gp_top2.setLayout(lt_top2)
         ### 现状描述 ########################
-        lt_question = QHBoxLayout()
-        gp_question = QGroupBox('现状描述')
+        lt_question = HBoxLayout()
+        gp_question = GroupBox('现状描述')
         self.rt_question_describe = RichTextWidget()
         self.rt_question_describe.setPlaceholderText("业务场景描述：含现状操作流程、描述、问题及痛点。")
         lt_question.addWidget(self.rt_question_describe)
         gp_question.setLayout(lt_question)
         ### 需求描述 #################
-        lt_demand = QHBoxLayout()
-        gp_demand = QGroupBox('需求描述')
+        lt_demand = HBoxLayout()
+        gp_demand = GroupBox('需求描述')
         self.rt_demand_describe = RichTextWidget()
         self.rt_demand_describe.setPlaceholderText("1、期望达成的目的；\n2、系统需求描述（含功能需求、流程、逻辑及描述等）；")
         lt_demand.addWidget(self.rt_demand_describe)
@@ -327,9 +329,10 @@ class DemandSubmitDialog(Dialog):
         self.buttonBox.addButton("取消", QDialogButtonBox.NoRole)
         self.buttonBox.setCenterButtons(True)
         # 添加布局
-        lt_main.addLayout(lt_1)
-        lt_main.addSpacing(20)
+        # lt_main.addLayout(lt_1)
+        # lt_main.addSpacing(20)
         lt_main.addWidget(gp_top)
+        lt_main.addWidget(gp_top2)
         lt_main.addWidget(gp_question)
         lt_main.addWidget(gp_demand)
         lt_main.addSpacing(20)
@@ -338,7 +341,7 @@ class DemandSubmitDialog(Dialog):
 
     # 提交数据库
     def on_btn_submit_click(self):
-        if not self.le_demand_name.text():
+        if not self.le_demand_title.text():
             mes_about(self,"请输入需求名称！")
             return
         if not self.rt_question_describe.text():
@@ -353,7 +356,7 @@ class DemandSubmitDialog(Dialog):
         # 数据对象
         data_obj = {
             'state':'0',
-            'dname':self.le_demand_name.text(),
+            'dname':self.le_demand_title.text(),
             'submiter':self.login_name,
             'submit_time': cur_datetime(),
             'expect_date':self.le_expected_time.text(),
@@ -457,9 +460,9 @@ class DemandAuditDialog(Dialog):
         self.buttonBox.addButton("提交", QDialogButtonBox.YesRole)
         self.buttonBox.addButton("取消", QDialogButtonBox.NoRole)
         self.buttonBox.setCenterButtons(True)
-        lt_main.addLayout(lt_1)
-        lt_main.addSpacing(20)
+        # lt_main.addLayout(lt_1)
         lt_main.addWidget(gp_top)
+        lt_main.addWidget(gp_top2)
         lt_main.addWidget(gp_middle)
         lt_main.addSpacing(20)
         lt_main.addWidget(self.buttonBox)

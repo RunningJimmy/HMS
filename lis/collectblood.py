@@ -70,10 +70,10 @@ class CollectBlood(GolParasMixin,CollectBlood_UI):
         self.serialno_validate()
         self.cb_is_photo.setChecked(True)
 
-    # 打开样本交接
+    # 打开样本交接界面
     def on_btn_handover_click(self):
         collect_handle_ui = CollectHandleUI(self)
-        collect_handle_ui.initQuery.emit(True)
+        collect_handle_ui.signal_query.emit(True)
         collect_handle_ui.exec_()
 
     def serialno_validate(self):
@@ -456,9 +456,6 @@ class PreviewWidget(WindowNotify):
         lt_main.addWidget(lb_mes)
         self.setMainArea(lt_main)
         self.show()
-
-
-
 
 
 def list_in_list(a_list,b_list):

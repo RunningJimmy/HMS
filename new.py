@@ -1,10 +1,11 @@
-from widgets.richText import RichTextWidget
-from widgets.pic_widget import PicWidget
+from widget_base.camera import *
 
-if __name__=="__main__":
-    from PyQt5.QtWidgets import QApplication
+if __name__ == "__main__":
     import sys
+    import cgitb
+    sys.excepthook = cgitb.Hook(1, None, 5, sys.stderr, 'text')
     app = QApplication(sys.argv)
-    ui = PicWidget()
+    ui = CameraWidget()
+    # ui.on_camera_open()
     ui.show()
-    app.exec_()
+    sys.exit(app.exec_())

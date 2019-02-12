@@ -3,9 +3,8 @@
 @license: (C) Copyright 明州体检
 @contact: 13736093855
 @software: HMS
-@file: __init__.py.py
-@time: 2019-1-23 9:17
-@desc: 业务组件
+@file: common.py
+@time: 2019-1-30 22:39
+@version：0.1
+@desc: 
 '''
-
-from .user_widget import *

@@ -198,6 +198,7 @@ class TableWidget(QTableWidget):
         self.heads = heads
         self.setStyleSheet("QTableCornerButton::section{background-color:white;}")
         self.keys = None
+        self.key_int_index = []
         # 鼠标跟踪功能
         # self.setMouseTracking(True)
         # self.cellEntered.connect(self.MouseTrackItem)
@@ -272,6 +273,14 @@ class TableWidget(QTableWidget):
 
     def setKeys(self,keys):
         self.keys = keys
+
+    def setColType(self,key):
+        for row in range(self.rowCount()):
+            item = self.item(row,list(self.heads.keys()).index(key))
+            # item = self.getItemValueOfKey(row,key)
+            item.setData(Qt.DisplayRole, item.text())
+        # self.key_int_index.append(list(self.heads.keys()).index(key))
+            # self.key_type = {}
 
     # 插入一行 实现
     def insert(self,data):

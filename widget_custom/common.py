@@ -42,7 +42,7 @@ class HBoxLayout(QHBoxLayout):
 
     def __init__(self,parent=None):
         super(HBoxLayout,self).__init__(parent)
-        self.setContentsMargins(0,10,0,0)
+        self.setContentsMargins(0, 0, 0, 0)
 
 class VBoxLayout(QVBoxLayout):
     def __init__(self, parent=None):

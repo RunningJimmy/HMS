@@ -76,7 +76,7 @@ class MT_TJ_BGGL(BaseModel):
     bgth = Column(CHAR(1), nullable=True)                               # 报告退回    0 审核退回  1审阅退回
     gcbz = Column(Text, nullable=False)                                 # 过程备注    记录领取信息
     dyzt = Column(CHAR(1), nullable=False)                              # 打印状态    记录打印状态，默认已打印，打印中(0) 打印失败（1）
-    sgd = Column(CHAR(1), nullable=False)                               # 是、否
+    sgd = Column(CHAR(1), nullable=False)                               # None 0 乙肝类手工单  1 普通手工单
 
 def get_report_tracked_sql(tstart, tend):
     sql = '''

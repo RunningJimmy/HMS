@@ -263,9 +263,10 @@ class CollectBloodTable(TableWidget):
             item.setTextAlignment(Qt.AlignCenter)
             self.setItem(0, col_index, item)
 
+# 采集处理
 class CollectHandleUI(Dialog):
 
-    initQuery = pyqtSignal(bool)    # 是否初始化查询
+    signal_query = pyqtSignal(bool)    # 是否初始化查询
 
     def __init__(self,parent=None):
         super(CollectHandleUI,self).__init__(parent)
@@ -273,7 +274,7 @@ class CollectHandleUI(Dialog):
         self.setMinimumHeight(500)
         self.initParas()
         self.initUI()
-        self.initQuery.connect(self.on_btn_query_click)                         #初始化查询，默认
+        self.signal_query.connect(self.on_btn_query_click)                         #初始化查询，默认
         self.btn_query.clicked.connect(partial(self.on_btn_query_click,False))  #手工查询，用于复杂场景，多人合并操作的
         self.table_handover_master.itemClicked.connect(self.on_table_detail_click)
         self.table_handover_master.setContextMenuPolicy(Qt.CustomContextMenu)  ######允许右键产生子菜单
@@ -461,7 +462,7 @@ class CollectHandleUI(Dialog):
             return
         # 生成条码UI
         lb_serialno = SerialNoLable()
-        lb_serialno.set_data.emit(serialno_pic, serialno_lable)
+        lb_serialno.signal_set_data.emit(serialno_pic, serialno_lable)
         #######################################
         printer = QPrinter(QPrinter.HighResolution)
         # 自定义格式 标准设置
@@ -547,7 +548,7 @@ class CollectHandleUI(Dialog):
                 self.session.rollback()
                 mes_about(self,"更新表 GY_IDENTITY 出错，信息：%s" %e)
         # 生成条码图片
-        BarCodeBuild(path=self.tmp_file).create(serialno_text)
+        BarCodeBuild(path=self.tmp_file).create_code128(serialno_text)
         try:
             serialno_pic = open(os.path.join(self.tmp_file, "%s.png" % serialno_text), "rb").read()
         except Exception as e:
@@ -773,22 +774,22 @@ class CollectHandleSumTable(TableWidget):
 
 class SerialNoLable(QDialog):
 
-    set_data = pyqtSignal(bytes,str)
+    signal_set_data = pyqtSignal(bytes,str)
     # 参数1 图片 二进制数据
     # 参数2 文字 字符串
 
     def __init__(self,parent=None):
         super(SerialNoLable,self).__init__(parent)
-        # self.setFixedWidth(55)
-        # self.setFixedHeight(35)
         self.setStyleSheet('''QWidget{background-color:#ffffff;}''')
         self.initUI()
-        self.set_data.connect(self.initDatas)
+        self.signal_set_data.connect(self.initDatas)
 
     def initUI(self):
         lt_main = QVBoxLayout()
         # 条码
         self.lb_tm = QLabel()
+        # self.lb_tm.setFixedWidth(165)
+        # self.lb_tm.setFixedHeight(105)
         # 文字
         self.lb_wz = QLabel()
         # font = QFont()
