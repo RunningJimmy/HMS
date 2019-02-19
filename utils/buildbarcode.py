@@ -95,8 +95,8 @@ if __name__=="__main__":
     encoder.save("C:/Users/Administrator/Desktop/pyStrich.png")
 
 
-
-
+    #
+    #
     # 定义二维码生成函数，将网址放入二维码是常用场景
     # def gen_qrcode(link):
     #     qr = qrcode.QRCode(

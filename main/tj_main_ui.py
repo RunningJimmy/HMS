@@ -71,6 +71,7 @@ class TJ_Main_UI(QMainWindow):
         self.mdiArea.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
         self.mdiArea.setViewMode(QMdiArea.SubWindowView)                       #子窗口模式
         self.setCentralWidget(self.mdiArea)
+        # print("中央窗口大小：%s" %str(self.centralWidget().height()/2))
 
     # 初始化参数
     def initParas(self):
@@ -203,7 +204,15 @@ class TJ_Main_UI(QMainWindow):
     def online_count_show(self,p1_int,p2_int):
         self.statusBar().on_login_info_show(p1_int,p2_int)
 
+    # def mouseMoveEvent(self,QEvent):
+    #     globalPos = self.mapFromGlobal(QEvent.pos())
+    #     self.text = """鼠标的位置为: 窗口坐标为: Qpoint({0},{1}),屏幕坐标为：屏幕坐标为：QPoint({2},{3})""".format(
+    #         QEvent.pos().x(), QEvent.pos().y(), globalPos.x(), globalPos.y())
+    #
+    #     print(self.text)
+
     def closeEvent(self, QEvent):
+        print(2222222222222)
         button = mes_warn(self, "温馨提示：您确认退出系统吗？")
         if button != QMessageBox.Yes:
             QEvent.ignore()

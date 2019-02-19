@@ -12,6 +12,7 @@ from .common import *
 from .message import *
 from .button import *
 from .widget import *
+from .browser import CefWidget
 from collections import OrderedDict
 from functools import partial
 

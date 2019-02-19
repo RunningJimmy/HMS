@@ -74,59 +74,66 @@ class MT_TJ_XQGL(BaseModel):
     __tablename__ = 'TJ_XQGL'
 
     vstate = {
-        '0':'已提交',
-        '1':'已审核',
-        '2':'已审批' ,
-        '3':'开发中' ,
-        '4':'已验收'
+        None:'已作废',
+        '0': '待提交',
+        '1': '已提交',
+        '2': '已审核' ,
+        '3': '已开发' ,
+        '4': '已跟踪',
+        '5': '已验收'
     }
 
     DID = Column(Integer, primary_key=True, autoincrement=True)
-    state = Column(CHAR(1), nullable=True)          # 需求状态
-    dname = Column(VARCHAR(50), nullable=True)      # 需求名称
-    submiter = Column(VARCHAR(10), nullable=True)      #
-    submit_time = Column(DateTime, nullable=True)
-    expect_date = Column(VARCHAR(10), nullable=True)
-    question = Column(TEXT, nullable=True)
-    demand = Column(TEXT, nullable=True)
-    system = Column(VARCHAR(20), nullable=False)
-    module = Column(VARCHAR(20), nullable=False)
-    level = Column(VARCHAR(20), nullable=False)
-    shxm = Column(VARCHAR(10), nullable=False)
-    shsj = Column(DateTime, nullable=False)
-    spxm = Column(VARCHAR(10), nullable=False)
-    spsj = Column(DateTime, nullable=False)
-    kfxm = Column(VARCHAR(10), nullable=False)
-    kfsj = Column(DateTime, nullable=False)
-    jjfa = Column(VARCHAR(200), nullable=False)
-    gzxm = Column(VARCHAR(10), nullable=False)
-    gzsj = Column(DateTime, nullable=False)
-    ysxm = Column(VARCHAR(10), nullable=False)
-    yssj = Column(DateTime, nullable=False)
+    state = Column(CHAR(1), nullable=False)              # 需求状态
+    dname = Column(VARCHAR(50), nullable=True)          # 需求名称
+    submiter = Column(VARCHAR(10), nullable=True)       # 提交人
+    submitime = Column(DateTime, nullable=True)         # 提交时间
+    expect_date = Column(VARCHAR(10), nullable=True)    # 期望日期
+    question = Column(TEXT, nullable=True)              # 问题描述
+    demand = Column(TEXT, nullable=True)                # 需求描述
+    system = Column(VARCHAR(20), nullable=False)        # 系统名称
+    module = Column(VARCHAR(20), nullable=False)        # 模块名称
+    level = Column(VARCHAR(20), nullable=False)         # 紧急程度
+    dtype = Column(VARCHAR(20), nullable=False)         # 需求类型
+    shxm = Column(VARCHAR(10), nullable=False)          # 审核姓名
+    shsj = Column(DateTime, nullable=False)             # 审核时间
+    shnr = Column(TEXT, nullable=False)                 # 需求评估内容，收益价值
+    spxm = Column(VARCHAR(10), nullable=False)          # 审批姓名
+    spsj = Column(DateTime, nullable=False)             # 审批时间
+    kfxm = Column(VARCHAR(10), nullable=False)          # 开发姓名
+    kfsj = Column(DateTime, nullable=False)             # 开发时间
+    jjfa = Column(TEXT, nullable=False)                 # 解决方案
+    gzxm = Column(VARCHAR(10), nullable=False)          # 跟踪姓名
+    gzsj = Column(DateTime, nullable=False)             # 跟踪时间
+    syqk = Column(TEXT, nullable=False)                 # 使用情况
+    ysxm = Column(VARCHAR(10), nullable=False)          # 验收姓名
+    yssj = Column(DateTime, nullable=False)             # 验收时间
     yspj = Column(TEXT, nullable=False)
+    zfxm = Column(VARCHAR(10), nullable=False)          # 作废姓名
+    zfsj = Column(DateTime, nullable=False)             # 作废时间
+    zfyy = Column(TEXT, nullable=False)                 # 作废原因
+    zdy_pj1 = Column(Integer, nullable=False)           # 自定义评价1
+    zdy_pj2 = Column(Integer, nullable=False)           # 自定义评价2
+    zdy_pj3 = Column(Integer, nullable=False)           # 自定义评价3
+    zdy_pj4 = Column(Integer, nullable=False)           # 自定义评价4
+    zdy_pj5 = Column(Integer, nullable=False)           # 自定义评价5
+    zdy_pj6 = Column(Integer, nullable=False)           # 自定义评价6
 
     @property
     def to_dict(self):
-        return {
-            'did': str(getattr(self, "DID")),
-            "state":self.vstate[getattr(self, "state", '0')],
-            'dname': str2(getattr(self, "dname", '')),
-            'submiter': str2(getattr(self, "submiter", '')),
-            'submit_time': str2(getattr(self, "submit_time", ''))[0:19],
-            'system': str2(getattr(self, "system", '')),
-            'module': str2(getattr(self, "module", '')),
-            'level': str2(getattr(self, "level", '')),
-            'shxm': str2(getattr(self, "shxm", '')),
-            'shsj': str2(getattr(self, "shsj", ''))[0:19],
-            'spxm': str2(getattr(self, "shxm", '')),
-            'spsj': str2(getattr(self, "shsj", ''))[0:19],
-            'kfxm': str2(getattr(self, "shxm", '')),
-            'kfsj': str2(getattr(self, "shsj", ''))[0:19],
-            'gzxm': str2(getattr(self, "shxm", '')),
-            'gzsj': str2(getattr(self, "shsj", ''))[0:19],
-            'ysxm': str2(getattr(self, "shxm", '')),
-            'yssj': str2(getattr(self, "shsj", ''))[0:19]
-        }
+        tmp = {}
+        for col_obj in self.__table__.columns:
+            if col_obj.name == 'state':
+                tmp[col_obj.name] = self.vstate.get(getattr(self, col_obj.name))
+            elif col_obj.type==INTEGER:
+                tmp[col_obj.name] = str(getattr(self, col_obj.name))
+            elif col_obj.type==DATETIME:
+                tmp[col_obj.name] = str(getattr(self, col_obj.name))[0:19]
+            else:
+                tmp[col_obj.name] = str2(getattr(self, col_obj.name))
+
+        return tmp
+        # return {col.name: str2(getattr(self, col.name, None)) for col in self.__table__.columns}
 
 # 电话记录 实际应该同步 TJ_CZJLB 此表为过渡
 class MT_TJ_DHGTJLB(BaseModel):

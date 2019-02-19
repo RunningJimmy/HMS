@@ -46,6 +46,7 @@ def init_views(app,db,print_queue=None,report_queue=None):
     #     url = url_for('uploaded_files', filename=f.filename)
     #     return upload_success(url=url)
 
+    # 调用 chart_instance.render_embed() 方法渲染图表
     @app.route('/api/chart/<string:title>/<string:start>/<string:end>')
     def chart_show(title,start,end):
         datas = get_datas(db.session,title,start,end)
@@ -56,6 +57,7 @@ def init_views(app,db,print_queue=None,report_queue=None):
                                    host='/static',
                                    script_list=bar.get_js_dependencies())
         return ret_html
+
 
     # 外出体检API 用户名获取
     @app.route('/api/wctj/user/<string:user_id>', methods=['GET'])
@@ -274,12 +276,28 @@ def init_views(app,db,print_queue=None,report_queue=None):
             tjbh = str(tjbh)
         else:
             abort(404)
-        mes_obj = {'tjbh':tjbh,'action':filetype}
+        mes_obj = {'tjbh': tjbh, 'action': filetype}
         if report_queue:
-            # print('%s 队列插入消息：%s' %(cur_datetime(),ujson.dumps(mes_obj)))
             report_queue.put(mes_obj)
         else:
             abort(404)
+
+        # 招工报告自动审阅，生成PDF
+        if filetype=='html':
+            try:
+                sql = "SELECT TJBH FROM TJ_TJDJB WHERE TJBH='%s' AND zhaogong='1' AND TJLX='1' ;" %tjbh
+                result = db.session.execute(sql).fetchone()
+                if result:
+                    mes_obj2 = {'tjbh': tjbh, 'action': 'pdf'}
+                    report_queue.put(mes_obj2)
+                try:
+                    sql2 = "UPDATE TJ_BGGL SET SYRQ=SHRQ WHERE TJBH ='%s' AND SYRQ IS NULL" %tjbh
+                    db.session.execute(sql2)
+                except Exception as e:
+                    print(e)
+            except Exception as e:
+                print("%s：招工报告(%s)自动审阅出错，错误信息：%s" %(cur_datetime(),tjbh,e))
+
         if filetype=='html':
             return ujson.dumps({'code': 1, 'mes': 'HTML报告生成', 'data': ''})
         elif filetype=='pdf':

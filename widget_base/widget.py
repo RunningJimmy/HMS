@@ -8,7 +8,12 @@
 @desc: 基础组件，无关业务
 '''
 from widget_base.common import *
-
+from ctypes.wintypes import POINT
+import ctypes.wintypes
+from PyQt5.QtWinExtras import QtWin
+import win32api
+import win32con
+import win32gui
 
 
 # 流水布局，自动换行
@@ -136,18 +141,6 @@ class CircularPicLabel(QLabel):
         painter.drawPixmap(0, 0, p)
         self.setPixmap(self.target)
 
-from ctypes.wintypes import POINT
-import ctypes.wintypes
-
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QWidget, QPushButton
-from PyQt5.QtWinExtras import QtWin
-import win32api
-import win32con
-import win32gui
-
-
-
 class MINMAXINFO(ctypes.Structure):
     _fields_ = [
         ("ptReserved",      POINT),
@@ -240,53 +233,6 @@ class Window(QWidget):
                 return True, win32con.HTCAPTION
         return retval, result
 
-
-class SearchLineEdit2(QLineEdit):
-    """创建一个可自定义图片的输入框。"""
-
-    style = '''
-            QPushButton {
-            border-image: url(resource/search.png);
-        }
-
-        QLineEdit#SearchLine{
-            margin-bottom: 1px;
-            border: 4px solid #171719;
-            border-radius: 10px;
-            color: #555555;
-            font: 75 9pt "黑体";
-            background: #171719;
-        }
-
-        QLineEdit#SearchLine:pressed {
-            color: #D0D0D1;
-        }
-    '''
-
-    def __init__(self, parent=None):
-        super(SearchLineEdit2, self).__init__(parent)
-        self.setMinimumSize(218, 20)
-        # with open('QSS/searchLine.qss', 'r') as f:
-        self.setStyleSheet(self.style)
-
-        self.button = QPushButton(self)
-        self.button.setMaximumSize(13, 13)
-        self.button.setCursor(QCursor(Qt.PointingHandCursor))
-
-        self.setTextMargins(3, 0, 19, 0)
-
-        self.spaceItem = QSpacerItem(150, 10, QSizePolicy.Expanding)
-
-        self.mainLayout = QHBoxLayout()
-        self.mainLayout.addSpacerItem(self.spaceItem)
-        # self.mainLayout.addStretch(1)
-        self.mainLayout.addWidget(self.button)
-        self.mainLayout.addSpacing(10)
-        self.mainLayout.setContentsMargins(0, 0, 0, 0)
-        self.setLayout(self.mainLayout)
-
-    def setButtonSlot(self, funcName):
-        self.button.clicked.connect(funcName)
 
 if __name__ == '__main__':
     import sys

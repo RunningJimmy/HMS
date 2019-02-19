@@ -2650,7 +2650,7 @@ class DirTabWidget(QSplitter):
         ##########################自身样式########################################
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.setStyleSheet("QSplitter.handle{background:lightgray}")
-
+        # self.setMouseTracking(True)
         #信号按照其objectName连接到相应的槽上
         QMetaObject.connectSlotsByName(self)
 
@@ -2658,6 +2658,7 @@ class DirTabWidget(QSplitter):
         ################## 控件区 ########################################
         self.lwidget=TreeWidget(self,self.nodes)
         self.lwidget.setFixedWidth(120)
+        # self.btn_show = ArrowButton("left")
         self.button = ArrowButton("left")
         self.button.setMinimumWidth(6)
         self.rwidget=TabWidget(self,self.lb_is_close)
@@ -2702,10 +2703,20 @@ class DirTabWidget(QSplitter):
             self.button.setIcon(Icon("left"))
             self.lwidget.setVisible(True)
 
-    # def mouseMoveEvent(self,event):
-    #     globalPos = self.mapTpGlobal(event.pos())
+    # def mousePressEvent(self, event):
+    #     super(DirTabWidget, self).mousePressEvent(event)
+    #     if event.pos().y() <= 24:
+    #         # 发送点击信号
+    #         self.clicked.emit()
+
+    # def mouseMoveEvent(self,QEvent):
+    #     globalPos = self.mapFromGlobal(QEvent.pos())
     #     self.text = """鼠标的位置为: 窗口坐标为: Qpoint({0},{1}),屏幕坐标为：屏幕坐标为：QPoint({2},{3})""".format(
-    #         event.pos().x(), event.pos().y(), globalPos.x(), globalPos.y())
+    #         QEvent.pos().x(), QEvent.pos().y(), globalPos.x(), globalPos.y())
+    #
+    #     print(self.text)
+    #     if QEvent.pos().x()==0:
+    #         self.on_left_clicked()
 
 
 

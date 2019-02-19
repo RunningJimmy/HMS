@@ -4,11 +4,16 @@ class RichTextWidget(QWidget):
 
     def __init__(self,parent=None):
         super(RichTextWidget,self).__init__(parent)
+        self.setContentsMargins(0, 0, 0, 0)
+        self.setMinimumHeight(180)
         self.initUI()
         # 添加信号槽
 
     #选择的文字自适应 格式
     def mergeFormatOnWordOrSelection(self, format):
+        # 设置只读后，不变更
+        if self.textEdit.isReadOnly():
+            return
         cursor = self.textEdit.textCursor()
         if not cursor.hasSelection():
             cursor.select(QTextCursor.WordUnderCursor)
@@ -16,11 +21,23 @@ class RichTextWidget(QWidget):
         cursor.mergeCharFormat(format)
         self.textEdit.mergeCurrentCharFormat(format)
 
-    def text(self):
+    def html(self):
         return self.textEdit.toHtml()
+
+    def setHtml(self,html):
+        self.textEdit.setHtml(html)
+
+    def text(self):
+        return self.textEdit.toPlainText()
+
+    def setText(self,text):
+        self.textEdit.setText(text)
 
     def setPlaceholderText(self,p_str):
         self.textEdit.setPlaceholderText(p_str)
+
+    def setReadOnly(self,flag=True):
+        self.textEdit.setReadOnly(flag)
 
     # 设置加粗
     def setTextBold(self):
@@ -169,26 +186,20 @@ class RichTextWidget(QWidget):
         # 功能区
         self.tb_file = QToolBar()
         self.tb_file.setAllowedAreas(Qt.TopToolBarArea | Qt.BottomToolBarArea)
-        self.btn_save = QAction(Icon('filesave'),'保存')
-        self.btn_print = QAction(Icon('fileprint'), '打印')
+        # self.btn_save = QAction(Icon('filesave'),'保存')
+        # self.btn_print = QAction(Icon('fileprint'), '打印')
         # self.tb_file.addAction(self.btn_save)
         # self.tb_file.addAction(self.btn_print)
         # 文本编辑
         self.tb_text_edit = QToolBar()
-
-        self.btn_text_edit_undo = QAction(Icon('editundo'), '撤销')
+        self.btn_text_edit_undo = self.tb_text_edit.addAction(Icon('editundo'), '撤销')
         self.btn_text_edit_undo.setShortcut(QKeySequence.Undo)
-        self.btn_text_edit_redo = QAction(Icon('editredo'), '前进')
+        self.btn_text_edit_redo = self.tb_text_edit.addAction(Icon('editredo'), '前进')
         self.btn_text_edit_redo.setShortcut(QKeySequence.Redo)
         self.btn_text_edit_redo.setPriority(QAction.LowPriority)
-        self.btn_text_edit_cut = QAction(Icon('editcut'),'剪切')
-        self.btn_text_edit_copy = QAction(Icon('editcopy'), '复制')
-        self.btn_text_edit_paste = QAction(Icon('editpaste'),'粘贴')
-        # self.tb_text_edit.addAction(self.btn_text_edit_undo)
-        # self.tb_text_edit.addAction(self.btn_text_edit_redo)
-        # self.tb_text_edit.addAction(self.btn_text_edit_cut)
-        # self.tb_text_edit.addAction(self.btn_text_edit_copy)
-        # self.tb_text_edit.addAction(self.btn_text_edit_paste)
+        self.btn_text_edit_cut = self.tb_text_edit.addAction(Icon('editcut'),'剪切')
+        self.btn_text_edit_copy = self.tb_text_edit.addAction(Icon('editcopy'), '复制')
+        self.btn_text_edit_paste = self.tb_text_edit.addAction(Icon('editpaste'),'粘贴')
         # 文本样式
         self.tb_text_style = QToolBar()
         ################ 设置文本加粗 #####################

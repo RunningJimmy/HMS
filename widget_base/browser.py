@@ -23,6 +23,7 @@ class CefWidget(QWidget):
         super(CefWidget, self).__init__(parent)
         self.parent = parent
         self.browser = None
+        self.re_height = 0
         self.hidden_window = None  # Required for PyQt5 on Linux
         self.show()
 
@@ -108,6 +109,7 @@ class CefWidget(QWidget):
 
     def resizeEvent(self, event):
         size = event.size()
+        self.re_height = size.height()
         if self.browser:
             if WINDOWS:
                 cef.WindowUtils().OnSize(self.getHandle(), 0, 0, 0)

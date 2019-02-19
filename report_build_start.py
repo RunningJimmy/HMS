@@ -75,7 +75,7 @@ def report_run(queue):
             try:
                 mes_obj = queue.get_nowait()                                                 # 获取进程队列消息,非阻塞模式
             except Exception as e:
-                print('%s 进程(ID：%s) 从队列中获得消息出错！' % (cur_datetime(), os.getpid()))
+                print('%s 进程(ID：%s) 从队列中获得空消息！' % (cur_datetime(), os.getpid()))
                 mes_obj = {}
             if mes_obj:
                 gc_count = gc_count + 1
@@ -84,13 +84,13 @@ def report_run(queue):
                     gc.collect()
                 print('%s 进程(ID：%s) 从队列中获得消息：%s' %(cur_datetime(),os.getpid(),ujson.dumps(mes_obj)))
                 log.info('%s 进程(ID：%s) 从队列中获得消息：%s' % (cur_datetime(), os.getpid(), ujson.dumps(mes_obj)))
-                action = mes_obj['action']                                                  # 获取执行动作 ：生成HTML还是生成PDF还是打印
+                action = mes_obj['action']                   # 获取执行动作 ：生成HTML还是生成PDF还是打印
+                tjbh = mes_obj.get('tjbh', '')
                 if action=='print':
                     # 打印服务
-                    tjbh = mes_obj['tjbh']
-                    filename = mes_obj['filename']
-                    filename2 = mes_obj['filename2']
-                    printer = mes_obj['printer']
+                    filename = mes_obj.get('filename','')
+                    filename2 = mes_obj.get('filename2','')
+                    printer = mes_obj.get('printer','')
                     datas = get_info(session_tjxt, tjbh)
                     if datas:
                         if os.path.exists(filename2):
@@ -108,7 +108,6 @@ def report_run(queue):
                         log.info('%s 文件(%s)，通过打印机(%s) 打印失败！' % (cur_datetime(), filename,printer))
                 else:
                     # 报告生成服务
-                    tjbh = mes_obj['tjbh']                                                      # 获取体检编号
                     time_start = timer.time()
                     # pdf 数据对象
                     pdf_data_obj = PdfData(session_tjxt,session_cxk,gol.get_value('report_path'),tjbh,action)
@@ -562,8 +561,10 @@ class PdfData(object):
         bc.create2(self.tjbh)
         # ################ 2、B超、内镜、病理图片 ########################
         # 文件传输服务
-        hander_pis = RemoteFileHandler('administrator', 'tomtaw')
-        hander_pacs = RemoteFileHandler('administrator', 'Admin2389')
+        # hander_pis = RemoteFileHandler('administrator', 'tomtaw')
+        # hander_pacs = RemoteFileHandler('administrator', 'Admin2389')
+        hander_pis = RemoteFileHandler(gol.get_value('png_pis_user'),gol.get_value('png_pis_pwd'))
+        hander_pacs = RemoteFileHandler(gol.get_value('png_pacs_user'), gol.get_value('png_pacs_pwd'))
         # 取图片，是否齐全
         results = self.session_tjk.query(MT_TJ_PACS_PIC).filter(MT_TJ_PACS_PIC.tjbh == self.tjbh).all()
         tmp = None

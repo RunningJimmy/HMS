@@ -205,7 +205,7 @@ if __name__ =="__main__":
     # results = session.execute("SELECT XZ1,XZ2,XZ3,XZ4,XZ5,XZ6 FROM NBMZYY35.dbo.JC_DCTXZB WHERE NL='41' AND XB='男'").fetchone()
     # print(results)
     #
-    results = session.execute(SQL_NCD %('2019-01-28','2019-02-03')).fetchall()
+    results = session.execute(SQL_NCD %('2019-02-14','2019-02-19')).fetchall()
     count = 0
     #ryxx = {'tjbh':'','xm':'','xb':'','nl':0,'sjhm':'','sfzh':'','dwbh':'','dwmc':'','addr':'','ysje':0.00,
     #       'djrq':'','tjrq':'','qdrq':'','zjrq':'','shrq':'','zjys':'','shys':''}

@@ -257,13 +257,15 @@ class ReportReviewFullScreen(Dialog):
             request_create_report(self.cur_tjbh, 'pdf')
             # 是否发送短信
             if self.btn_auto_sms.isChecked():
+                # 是否招工，招工不发送短信
                 try:
                     result = self.session.query(MV_RYXX).filter(MV_RYXX.tjbh == self.cur_tjbh).scalar()
-                    if result.sjhm:
-                        url = "http://tjbg.nbmzyy.com:5005/api/report/down/pdf/%s" %self.cur_tjbh
-                        sms_api(result.sjhm, Template(self.sms_content_template).safe_substitute({'url':url}))
-                        # 生成短网址
-                        # sms_api(result.sjhm,Template(self.sms_content_template).safe_substitute({'url':get_short_url(self.cur_tjbh)}))
+                    if result.tjlx not in ['招工','从业','职业病']:
+                        if result.sjhm:
+                            url = "http://tjbg.nbmzyy.com:5005/api/report/down/pdf/%s" %self.cur_tjbh
+                            sms_api(result.sjhm, Template(self.sms_content_template).safe_substitute({'url':url}))
+                            # 生成短网址
+                            # sms_api(result.sjhm,Template(self.sms_content_template).safe_substitute({'url':get_short_url(self.cur_tjbh)}))
                 except Exception as e:
                     mes_about(self,"短信发送失败！错误信息：%s" %e)
             # 是否下一个

@@ -1,5 +1,5 @@
 from collections import OrderedDict
-import requests,json
+import requests,json,os
 from pprint import pprint
 import urllib.parse
 from utils import gol
@@ -237,6 +237,22 @@ def get_chart_url(title,tstart,tend):
     else:
         url = default_url
     return url
+
+def build_chart(title,datas,chart='bar',height=240):
+    url2 = "http://10.7.200.101:5005/api/chart/show/%s"
+    default_url = "http://10.7.200.101:5005/api/chart/create/%s/%s"
+    url = gol.get_value('api_chart_ctrate',None)
+    if not url:
+        url =default_url
+    try:
+        response = requests.post(url %(chart,height), data=json.dumps({'title':title,'datas':datas}))
+        if response.status_code == 200:
+            filename = response.json().get('data',None)
+            if filename:
+                print(url2 %filename)
+                return url2 %filename
+    except Exception as e:
+        return None
 
 
 if __name__=="__main__":

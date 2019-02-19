@@ -150,6 +150,9 @@ class ReportPrint(ReportPrintUI):
             if bgzt in ['','已审核']:
                 mes_about(self,'当前报告还未被审阅，不允许打印！')
                 return
+        if bgzt in ['审阅退回','审核退回']:
+            mes_about(self, '当前报告状态，不允许打印！')
+            return
         rows = self.table_print.isSelectRows()
         if not rows:
             return
@@ -312,6 +315,9 @@ class ReportPrint(ReportPrintUI):
             if bgzt in ['','已审核']:
                 mes_about(self,'当前报告还未被审阅，不允许下载！')
                 return
+        if bgzt in ['审阅退回','审核退回']:
+            mes_about(self, '当前报告状态，不允许打印！')
+            return
         rows = self.table_print.isSelectRows()
         button = mes_warn(self, "您确认下载当前选择的 %s 份体检报告？" %len(rows))
         if button != QMessageBox.Yes:

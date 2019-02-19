@@ -42,7 +42,8 @@ class InfoOverTime(Widget):
             ('OID', "ID"),
             ('ODate', "日期"),
             ('recorder', "值班人"),
-            ('content', "值班交接")
+            ('content', "值班交接"),
+            ('content', "已调休？")
         ])
         self.table_overtime = OverTimeTableWidget(self.table_overtime_cols)
         lt_middle.addWidget(self.table_overtime)
