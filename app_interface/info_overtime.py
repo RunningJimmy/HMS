@@ -8,11 +8,10 @@
 @desc: 加班信息
 '''
 
-from widgets.cwidget import *
-from widgets import CRUD_UI
+from widget_online import *
 from .model import *
 
-# 供应商联系表
+# 加班信息
 class InfoOverTime(Widget):
 
     def __init__(self,parent=None):
@@ -42,8 +41,9 @@ class InfoOverTime(Widget):
             ('OID', "ID"),
             ('ODate', "日期"),
             ('recorder', "值班人"),
-            ('content', "值班交接"),
-            ('content', "已调休？")
+            ('sftx', "是否已调休"),
+            ('wtgz', "问题是否跟踪"),
+            ('content', "值班交接内容")
         ])
         self.table_overtime = OverTimeTableWidget(self.table_overtime_cols)
         lt_middle.addWidget(self.table_overtime)
@@ -77,7 +77,7 @@ class InfoOverTime(Widget):
 
     # 增加
     def on_btn_insert_click(self):
-        ui = CRUD_UI(self.table_overtime_cols,MT_TJ_OverTime,parent=self)
+        ui = CRUD_UI(self.table_overtime_cols,MT_TJ_OverTime,parent=self,map_extend={'content':RichTextWidget})
         ui.handle.emit({})
         ui.exec_()
         self.on_btn_search_click()
@@ -87,8 +87,10 @@ class InfoOverTime(Widget):
         if self.table_overtime.currentRow()==-1:
             mes_about(self,"请选择需要修改的数据！")
             return
-        ui = CRUD_UI(self.table_overtime_cols, MT_TJ_OverTime, parent=self)
-        ui.handle.emit(self.table_overtime.selectRow2Dict())
+        ui = CRUD_UI(self.table_overtime_cols, MT_TJ_OverTime, parent=self,map_extend={'content':RichTextWidget})
+        ##### 2019-02-20 特殊处理下
+        kwargs = {'sftx':{'否':'0','是':'1'},'wtgz':{'否':'0','是':'1'}}
+        ui.handle.emit(self.table_overtime.selectRow2Dict(**kwargs))
         ui.exec_()
         self.on_btn_search_click()
 
@@ -115,16 +117,20 @@ class OverTimeTableWidget(TableWidget):
 
     # 具体载入逻辑实现
     def load_set(self, datas, heads=None):
-
+        value_dict = {'0': '否', '1': '是'}
         for row_index, row_data in enumerate(datas):
             self.insertRow(row_index)  # 插入一行
             for col_index, col_name in enumerate(heads.keys()):
-                item = QTableWidgetItem(str(row_data[col_name]))
-                if col_index==len(heads)-1:
+                # 数值
+                if col_index in [3,4]:
+                    item = QTableWidgetItem(value_dict.get(str(row_data[col_name]), '否'))
+                else:
+                    item = QTableWidgetItem(str(row_data[col_name]))
+                # 布局位置
+                if col_index == len(self.heads)-1:
                     item.setTextAlignment(Qt.AlignLeft)
                 else:
                     item.setTextAlignment(Qt.AlignCenter)
-
                 self.setItem(row_index, col_index, item)
 
         self.setColumnWidth(0, 40)

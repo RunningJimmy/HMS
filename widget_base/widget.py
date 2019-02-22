@@ -234,6 +234,17 @@ class Window(QWidget):
         return retval, result
 
 
+# 竖线和横线
+class Line(QFrame):
+
+    def __init__(self,vertical=True):
+        super(Line,self).__init__()
+        if vertical:
+            self.setFrameShape(QFrame.VLine)
+        else:
+            self.setFrameShape(QFrame.HLine)
+        self.setFrameShadow(QFrame.Sunken)
+
 if __name__ == '__main__':
     import sys
     from PyQt5.QtWidgets import QApplication

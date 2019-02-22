@@ -9,5 +9,5 @@
 '''
 
 from .user_widget import *
-from .ui_mapper import widget_set_value,widget_get_value
+from .ui_mapper import *
 from .widget_set import SettingWidget

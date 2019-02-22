@@ -14,7 +14,7 @@ from utils import gol
 class InfoManager(DirTabWidget):
 
     def __init__(self):
-        nodes= ['固定资产','机密文档','值班交接']
+        nodes= ['固定资产','机密文档','值班交接','工作总结']
         super(InfoManager,self).__init__('科室管理',nodes)
         default_menu_name = gol.get_value('menu_child_name','')
         if default_menu_name in nodes:
@@ -22,22 +22,27 @@ class InfoManager(DirTabWidget):
 
     def addTab(self,title):
         super(InfoManager, self).addTab(title)
+        if gol.get_value('login_user_name', '') not in ['朱飞达', '张倩', '陈璇玑', '张兆丰', '管理员', '陈卫龙']:
+            mes_about(self, "您没有查看的权限！")
+            return
         if title=='固定资产':
             from .info_asset import InfoEquipAsset
             widget = InfoEquipAsset(self)
             self.rwidget.addPage(widget,Icon(title),title)
 
         elif title=='机密文档':
-            if gol.get_value('login_user_id','')=='BSSA':
-                from .info_supplier import InfoSupplier
-                widget = InfoSupplier(self)
-                self.rwidget.addPage(widget,Icon(title),title)
-            else:
-                mes_about(self,"您没有查看的权限！")
+            from .info_supplier import InfoSupplier
+            widget = InfoSupplier(self)
+            self.rwidget.addPage(widget,Icon(title),title)
 
         elif title=='值班交接':
             from .info_overtime import InfoOverTime
             widget = InfoOverTime(self)
+            self.rwidget.addPage(widget,Icon(title),title)
+
+        elif title=='工作总结':
+            from .info_work_summary import WorkSummaryWidget
+            widget = WorkSummaryWidget(self)
             self.rwidget.addPage(widget,Icon(title),title)
 
     def closeEvent(self, *args, **kwargs):

@@ -278,11 +278,11 @@ class SerialNoButton(QToolButton):
 
     def initUI(self,icon,name):
         self.setIcon(Icon(icon))
-        self.setIconSize(QSize(150,66))
+        self.setIconSize(QSize(100,66))
         self.setToolTip(name)
         self.collect_txt = name
         self.ab(name)
-        self.setMinimumWidth(152)
+        self.setMinimumWidth(102)
         self.setMinimumHeight(72)
         self.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
         self.setAutoRaise(True)
@@ -354,10 +354,10 @@ class SerialNoButton(QToolButton):
 
     # 缩写
     def ab(self,p_text):
-        if len(p_text)<8:
+        if len(p_text)<6:
             self.setText(p_text)
         else:
-            self.setText("%s..." %p_text[0:8])
+            self.setText("%s..." %p_text[0:6])
 
     #设置管子颜色
     def setCollectColor(self,color:str):

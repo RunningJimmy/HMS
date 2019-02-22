@@ -3,6 +3,7 @@ from .model import *
 from .report_item_ui import ItemsStateUI
 from utils import request_get,print_pdf_gsprint,cur_datetime,request_create_report
 from widgets.bweb import WebView
+from widget_base import WindowNotify
 from statistics import SumRankOrder
 import webbrowser
 from .common import *
@@ -1009,12 +1010,13 @@ class PrintThread(QThread):
 
 
 # 报告打印弹出框
-class ReportPrintPopWidget(Dialog):
+class ReportPrintPopWidget(GolParasMixin,WindowNotify):
 
     inited = pyqtSignal(str,str)    # 人员信息、体检编号
 
     def __init__(self,parent=None):
-        super(ReportPrintPopWidget, self).__init__(parent)
+        super(ReportPrintPopWidget, self).__init__(size=(400, 400),parent=parent)
+        self.init()
         self.initUI()
         self.inited.connect(self.on_search)
         self.states = {'0':'追踪中','1':'已审核','2':'已审阅','3':'已打印','4':'已整理','5':'已领取'}
@@ -1088,15 +1090,8 @@ class ReportPrintPopWidget(Dialog):
         lt_main.addWidget(gp_bottom)
         # lt_main.addWidget(self.gp_bottom2)
         lt_main.addStretch()
-        self.setLayout(lt_main)
+        self.setMainArea(lt_main)
 
-        self.setWindowIcon(Icon('mztj'))
-        # 移动整体位置
-        desktop = QDesktopWidget()
-        self.setFixedHeight(400)
-        self.setFixedWidth(400)
-        self.move((desktop.availableGeometry().width()-self.width()-20),
-                  desktop.availableGeometry().height()-self.height()-50)  # 初始化位置到右下角
 
     # 传递体检编号
     def on_search(self,ryxx,tjbh):

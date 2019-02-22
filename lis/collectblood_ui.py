@@ -461,8 +461,9 @@ class CollectHandleUI(Dialog):
         if not serialno_text:
             return
         # 生成条码UI
-        lb_serialno = SerialNoLable()
-        lb_serialno.signal_set_data.emit(serialno_pic, serialno_lable)
+        lb_serialno = SerialnoDialog()
+        # lb_serialno.signal_set_data.emit(serialno_pic, serialno_lable)
+        lb_serialno.signal_init_data.emit(serialno_text, serialno_lable)
         #######################################
         printer = QPrinter(QPrinter.HighResolution)
         # 自定义格式 标准设置
@@ -497,6 +498,10 @@ class CollectHandleUI(Dialog):
         '''
         #### 方法1 render  但是尺寸 匹配有问题，不能自动匹配上
         painter = QPainter(printer)
+        # 抗锯齿
+        painter.setRenderHint(QPainter.Antialiasing, True)
+        painter.setRenderHint(QPainter.HighQualityAntialiasing, True)
+        painter.setRenderHint(QPainter.SmoothPixmapTransform, True)
         # painter.begin()
         painter.setViewport(widget.rect())
         # widget.rect() 打印窗口不设置大小，默认640*480，标签设置320*240 才刚刚好，未找到原因
@@ -548,9 +553,10 @@ class CollectHandleUI(Dialog):
                 self.session.rollback()
                 mes_about(self,"更新表 GY_IDENTITY 出错，信息：%s" %e)
         # 生成条码图片
-        BarCodeBuild(path=self.tmp_file).create_code128(serialno_text)
+        filename = BarCodeBuild(path=self.tmp_file).create_code39(serialno_text)
         try:
-            serialno_pic = open(os.path.join(self.tmp_file, "%s.png" % serialno_text), "rb").read()
+            #serialno_pic = open(os.path.join(self.tmp_file, "%s.png" % serialno_text), "rb").read()
+            serialno_pic = open(filename, "rb").read()
         except Exception as e:
             mes_about(self, "发生错误：%s" % e)
             return '',bytes()
@@ -772,22 +778,24 @@ class CollectHandleSumTable(TableWidget):
         self.setColumnWidth(8, 80)
         self.setColumnWidth(9, 80)
 
-class SerialNoLable(QDialog):
+class SerialnoDialog(QDialog):
 
     signal_set_data = pyqtSignal(bytes,str)
+    signal_init_data = pyqtSignal(str, str)
     # 参数1 图片 二进制数据
     # 参数2 文字 字符串
 
     def __init__(self,parent=None):
-        super(SerialNoLable,self).__init__(parent)
+        super(SerialnoDialog,self).__init__(parent)
         self.setStyleSheet('''QWidget{background-color:#ffffff;}''')
         self.initUI()
         self.signal_set_data.connect(self.initDatas)
+        self.signal_init_data.connect(self.initData)
 
     def initUI(self):
         lt_main = QVBoxLayout()
         # 条码
-        self.lb_tm = QLabel()
+        self.lb_tm = SerialnoLabel()
         # self.lb_tm.setFixedWidth(165)
         # self.lb_tm.setFixedHeight(105)
         # 文字
@@ -805,3 +813,17 @@ class SerialNoLable(QDialog):
         self.lb_tm.setPixmap(p)
         self.lb_tm.setScaledContents(True)
         self.lb_wz.setText(title)
+
+    def initData(self,serialno:str,title:str):
+        self.lb_tm.setText(serialno)
+        self.lb_wz.setText(title)
+
+
+# 条形码字体
+class SerialnoLabel(QLabel):
+
+    def __init__(self,parent=None):
+        super(SerialnoLabel,self).__init__(parent)
+        font = QFont('C39HrP24DhTt')
+        font.setPointSize(36)
+        self.setFont(font)

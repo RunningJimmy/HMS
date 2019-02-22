@@ -3,12 +3,12 @@
 @license: (C) Copyright 明州体检
 @contact: 13736093855
 @software: HMS
-@file: crud_ui.py
-@time: 2019-1-8 20:36
-@desc: 通用增删改查UI窗口，增删改查UI对话框
+@file: ui_crud.py
+@time: 2019-2-20 13:37
+@version：0.1
+@desc: 
 '''
-from widgets.cwidget import *
-
+from .common import *
 
 # 增删改查窗口
 class CRUDWidget(Widget):
@@ -229,27 +229,3 @@ class CRUD_UI(Dialog):
             widget = self.data_widget_map.get(key,None)
             if widget:
                 widget_set_value(widget,value)
-
-# 获取数据类型、数据长度、为空属性，主键属性，自增长属性
-def pyobj(model,col:str):
-    col_obj = getattr(model, col, None)
-    if col_obj:
-        col_type = col_obj.property.columns[0].type.python_type
-        if col_type == str:
-            return col_type, col_obj.property.columns[0].type.length,col_obj.nullable,col_obj.primary_key,col_obj.autoincrement
-        else:
-            return col_type, 0, col_obj.nullable,col_obj.primary_key,col_obj.autoincrement
-
-    return None,None,None,None,None
-
-
-class DynamicComboBox(QComboBox):
-
-    def __init__(self,items:dict,parent=None):
-        super(DynamicComboBox,self).__init__(parent)
-        self.items = items
-        self.addItems(list(items.keys()))
-
-    def currentText(self):
-        return list(self.items.values())[self.currentIndex()]
-

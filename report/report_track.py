@@ -3,6 +3,7 @@ from app_interface import *
 from .report_item_ui import ItemsStateUI,OperateUI
 from .report_track_thread import *
 from widgets.cwidget import *
+from widget_base import WindowNotify
 from widgets.pic_widget import PicWidget
 from .report_track_ui import ReportTrackUI
 from utils import api_file_down,cur_datetime
@@ -285,6 +286,7 @@ class ReportTrack(ReportTrackUI):
             #
             #     else:
             #         mes_about(self, "只有审阅退回/审核退回的报告才能使用此功能！")
+
             elif action == item12:
                 zzxm = self.table_track.getCurItemValueOfKey('lqry')
                 tjbh = self.table_track.getCurItemValueOfKey('tjbh')
@@ -492,7 +494,6 @@ class ReportTrack(ReportTrackUI):
         # 传递数据
         self.pop_ui.inited.emit("体检编号：%s  姓名：%s" %(tjbh,xm),self.cur_tjbh,reason)
 
-
     #体检系统项目查看
     def on_btn_item_click(self):
         if not self.item_ui:
@@ -501,7 +502,6 @@ class ReportTrack(ReportTrackUI):
         if self.cur_tjbh:
             self.item_ui.returnPressed.emit(self.cur_tjbh)
 
-
     #体检系统操作记录查看
     def on_btn_czjl_click(self):
         if not self.operatr_ui:
@@ -509,7 +509,6 @@ class ReportTrack(ReportTrackUI):
         self.operatr_ui.show()
         if self.cur_tjbh:
             self.operatr_ui.returnPressed.emit(self.cur_tjbh)
-
 
     #体检系统项目查看
     def on_btn_equip_click(self):
@@ -1188,12 +1187,13 @@ class ProcessLable(QLabel):
 
 
 # 弹出框
-class ReportPopWidget(Dialog):
+class ReportPopWidget(GolParasMixin,WindowNotify):
 
     inited = pyqtSignal(str,str,str)    # 人员信息、体检编号、退回原因
 
     def __init__(self,parent=None):
-        super(ReportPopWidget, self).__init__(parent)
+        super(ReportPopWidget, self).__init__(size=(400, 400),parent=parent)
+        self.init()
         self.initUI()
         self.inited.connect(self.on_search)
 
@@ -1226,18 +1226,9 @@ class ReportPopWidget(Dialog):
         if reason:
             # 剔除未完成项目布局
             self.lb_reason.setText(reason)
-            # try:
-            #     self.layout().removeWidget(self.gp_bottom)
-            #     self.layout().addWidget(self.gp_bottom2)
-            # except Exception as e:
-            #     print(e,111111)
         else:
             self.lb_reason.setText('')
-            # try:
-            #     self.layout().removeWidget(self.gp_bottom2)
-            #     self.layout().addWidget(self.gp_bottom)
-            # except Exception as e:
-            #     print(e,22222222)
+
 
     def initUI(self):
         lt_main = QVBoxLayout()
@@ -1295,16 +1286,7 @@ class ReportPopWidget(Dialog):
         lt_main.addWidget(self.gp_middle)
         lt_main.addWidget(self.gp_bottom)
         lt_main.addWidget(self.gp_bottom2)
-        # lt_main.addStretch()
-        self.setLayout(lt_main)
-
-        self.setWindowIcon(Icon('mztj'))
-        # 移动整体位置
-        desktop = QDesktopWidget()
-        self.setFixedHeight(500)
-        self.setFixedWidth(400)
-        self.move((desktop.availableGeometry().width()-self.width()-20),
-                  desktop.availableGeometry().height()-self.height()-120)  # 初始化位置到右下角
+        self.setMainArea(lt_main)
 
     # 初始化胶片信息
     def init_film(self,film:dict):
@@ -1320,7 +1302,6 @@ class FilmLable(QLabel):
         super(FilmLable,self).__init__()
         self.setMinimumWidth(50)
         self.setStyleSheet('''font: 75 14pt \"微软雅黑\";color: rgb(0, 85, 255);''')
-
 
 # 报告审阅列表
 class ItemTable(TableWidget):

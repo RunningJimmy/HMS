@@ -1,5 +1,41 @@
 from utils.bmodel import *
 
+# 工作总结
+class MT_TJ_WorkSummary(BaseModel):
+
+    __tablename__ = 'TJ_WorkSummary'
+
+    WID = Column(Integer, primary_key=True, autoincrement=True)
+    editime = Column(DateTime, nullable=False)
+    editor = Column(String(10, 'Chinese_PRC_CI_AS'), nullable=False)               # 编辑人
+    state = Column(CHAR(1), nullable=False, server_default=text("('0')"))          # 总结状态
+    xjqk = Column(TEXT, nullable=True)          # 巡检情况
+    jyfs = Column(TEXT, nullable=True)          # 举一反三
+    bzzj = Column(TEXT, nullable=True)          # 本周总结
+    xzjh = Column(TEXT, nullable=True)          # 下周计划
+    zsk = Column(TEXT, nullable=True)           # 知识库维护
+    jsqk = Column(TEXT, nullable=True)          # 晋升情况
+    score = Column(Integer, nullable=True)      # 评分
+    sjpy = Column(TEXT, nullable=True)          # 上级评语
+    sjxm = Column(String(10, 'Chinese_PRC_CI_AS'), nullable=False)          # 上级姓名
+    pysj = Column(DateTime, nullable=False)     # 上级评语
+
+    def to_dict(self):
+        tmp = {}
+        for col_obj in self.__table__.columns:
+            if col_obj.name == 'state':
+                tmp[col_obj.name] = {'0':'提交','1':'审阅'}.get(getattr(self, col_obj.name, '0'),'提交')
+            elif col_obj.name == 'score':
+                if not getattr(self, col_obj.name, 0):
+                    tmp[col_obj.name] = '0'
+                else:
+                    tmp[col_obj.name] = str(getattr(self, col_obj.name, None))
+            else:
+                tmp[col_obj.name] = str2(getattr(self, col_obj.name, None))
+
+        return tmp
+        # return {col.name: str2(getattr(self, col.name, None)) for col in self.__table__.columns}
+
 # 值班问题记录
 class MT_TJ_OverTime(BaseModel):
 
@@ -9,6 +45,8 @@ class MT_TJ_OverTime(BaseModel):
     ODate = Column(Date, nullable=False)
     recorder = Column(String(10, 'Chinese_PRC_CI_AS'), nullable=False)
     content = Column(TEXT, nullable=False)
+    sftx = Column(CHAR(1), nullable=False, server_default=text("('0')"))
+    wtgz = Column(CHAR(1), nullable=False, server_default=text("('0')"))
 
     def to_dict(self):
         return {col.name: str2(getattr(self, col.name, None)) for col in self.__table__.columns}

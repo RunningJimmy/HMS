@@ -257,16 +257,21 @@ class TableWidget(QTableWidget):
         return tmp
 
     # 获取单行的字典 {col:value,......,colx:valuex,.....}
-    def selectRow2Dict(self,*args):
+    def selectRow2Dict(self,*args,**kwargs):
         tmp = {}
         if self.keys:
-            for key in self.keys:
-                tmp[key] = self.getCurItemValueOfKey(key)
+            keys = self.keys
         elif args:
-            for key in args:
-                tmp[key] = self.getCurItemValueOfKey(key)
+            keys = args
         else:
-            for index,key in enumerate(self.heads.keys()):
+            keys = self.heads.keys()
+
+        # 特殊处理，字典转换值，以后更新为UserData和ItemData分开取
+        for key in keys:
+            value = kwargs.get(key, {})
+            if value:
+                tmp[key] = value.get(self.getCurItemValueOfKey(key),'0')
+            else:
                 tmp[key] = self.getCurItemValueOfKey(key)
 
         return tmp

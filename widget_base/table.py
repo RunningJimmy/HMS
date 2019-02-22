@@ -19,10 +19,8 @@ from .common import *
 # 多行表头，采用2个表格组合的形式
 class ComplexTableWidget(QTableWidget):
 
-
     def __init__(self, heads: dict, parent=None):
         super(ComplexTableWidget,self).__init__( heads, parent)
-
 
     def initTableHeader(self):
         frozen_table = QTableWidget()
@@ -214,13 +212,9 @@ class TableWidget(QTableWidget):
     def curSelectRow2Dict(self,*args):
         return self.selectRow2Dict(self.currentRow(),args)
 
-    # 获取某行的 整行值
-    def selectRow2Dict(self,row:int, *args):
-        '''
-        :param row: 行
-        :param args:
-        :return: dict
-        '''
+    # 获取单行的字典 {col:value,......,colx:valuex,.....}
+    def selectRow2Dict(self,*args,**kwargs):
+        tmp = {}
         if self.keys:
             keys = self.keys
         elif args:
@@ -228,7 +222,15 @@ class TableWidget(QTableWidget):
         else:
             keys = self.heads.keys()
 
-        return dict([(key, self.itemValueOfKey(row,key)) for key in keys])
+        # 特殊处理，字典转换值，以后更新为UserData和ItemData分开取
+        for key in keys:
+            value = kwargs.get(key, {})
+            if value:
+                tmp[key] = value.get(self.curItemValueOfKey(key),'0')
+            else:
+                tmp[key] = self.curItemValueOfKey(key)
+
+        return tmp
 
     #获取某行某列值
     def itemValue(self,row:int,col:int):

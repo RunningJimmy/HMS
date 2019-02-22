@@ -285,16 +285,18 @@ def init_views(app,db,print_queue=None,report_queue=None):
         # 招工报告自动审阅，生成PDF
         if filetype=='html':
             try:
-                sql = "SELECT TJBH FROM TJ_TJDJB WHERE TJBH='%s' AND zhaogong='1' AND TJLX='1' ;" %tjbh
+                sql = "SELECT SHRQ FROM TJ_TJDJB WHERE TJBH='%s' AND zhaogong='1' AND TJLX='1' ;" %tjbh
                 result = db.session.execute(sql).fetchone()
                 if result:
+                    shrq = result[0]
                     mes_obj2 = {'tjbh': tjbh, 'action': 'pdf'}
                     report_queue.put(mes_obj2)
-                try:
-                    sql2 = "UPDATE TJ_BGGL SET SYRQ=SHRQ WHERE TJBH ='%s' AND SYRQ IS NULL" %tjbh
-                    db.session.execute(sql2)
-                except Exception as e:
-                    print(e)
+                    # 执行此语句，无意义，因为记录还未生成
+                    try:
+                        sql2 = "UPDATE TJ_BGGL SET SYRQ='%s' WHERE TJBH ='%s' AND SYRQ IS NULL" %(shrq,tjbh)
+                        db.session.execute(sql2)
+                    except Exception as e:
+                        print(e)
             except Exception as e:
                 print("%s：招工报告(%s)自动审阅出错，错误信息：%s" %(cur_datetime(),tjbh,e))
 

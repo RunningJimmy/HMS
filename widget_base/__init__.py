@@ -13,6 +13,7 @@ from .message import *
 from .button import *
 from .widget import *
 from .browser import CefWidget
+from .table import TableWidget
 from collections import OrderedDict
 from functools import partial
 

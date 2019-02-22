@@ -466,9 +466,15 @@ class PdfData(object):
         dyear = dday[0:4]
         dmonth = dday[0:7]
         cur_path = '%s/%s/%s/%s/%s/' % (self.path, dyear, dmonth, dday, self.tjbh)
-        if not os.path.exists(cur_path):
-            os.makedirs(cur_path)
-        self.cur_dir = cur_path
+        cur_path_tmp = '%s/%s/%s/%s/%s/tmp/' % (self.path, dyear, dmonth, dday, self.tjbh)
+        # 多进程会出问题，可能先后就间隔了1ms创建文件
+        try:
+            if not os.path.exists(cur_path):
+                os.makedirs(cur_path)
+            self.cur_dir = cur_path
+        except Exception as e:
+            os.makedirs(cur_path_tmp)
+            self.cur_dir = cur_path_tmp
         # print("体检编号:%s 报告路径：%s" %(self.tjbh,self.cur_dir))
 
     # 获得封面 名称

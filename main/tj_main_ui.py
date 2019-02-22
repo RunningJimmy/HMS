@@ -58,6 +58,9 @@ class TJ_Main_UI(QMainWindow):
             self.timer_update_thread.signalCount.connect(self.online_count_show, type=Qt.QueuedConnection)
             self.timer_update_thread.start()
 
+        # 特殊变量，绑定关闭次数，默认0
+        self.close_count = 0
+
 
     # 初始化界面
     def initUI(self):
@@ -212,13 +215,17 @@ class TJ_Main_UI(QMainWindow):
     #     print(self.text)
 
     def closeEvent(self, QEvent):
-        print(2222222222222)
-        button = mes_warn(self, "温馨提示：您确认退出系统吗？")
-        if button != QMessageBox.Yes:
-            QEvent.ignore()
-            return
-        else:
+        if self.close_count==1:
+            # 第二次直接关闭子进程，无须提示信息
             QEvent.accept()
+        else:
+            button = mes_warn(self, "温馨提示：您确认退出系统吗？")
+            if button != QMessageBox.Yes:
+                QEvent.ignore()
+                return
+            else:
+                QEvent.accept()
+        self.close_count = self.close_count + 1
         try:
             self.session.query(MT_TJ_LOGIN).filter(MT_TJ_LOGIN.login_id == self.login_id,
                                                    MT_TJ_LOGIN.lid == gol.get_value('login_lid',0)

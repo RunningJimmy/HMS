@@ -50,7 +50,10 @@ class ReportReviewFullScreen(Dialog):
             sql = "UPDATE TJ_TJDJB SET TJZT='4' WHERE TJBH ='%s' " %self.cur_tjbh
             self.session.bulk_insert_mappings(MT_TJ_CZJLB, [data_obj])
             self.session.query(MT_TJ_BGGL).filter(MT_TJ_BGGL.tjbh == self.cur_tjbh).update({
-                MT_TJ_BGGL.bgzt:'0', MT_TJ_BGGL.bgth:'1',MT_TJ_BGGL.gcbz: p_str,MT_TJ_BGGL.sybz: p_str
+                MT_TJ_BGGL.bgzt:'0',
+                MT_TJ_BGGL.bgth:'1',
+                MT_TJ_BGGL.gcbz: p_str,
+                MT_TJ_BGGL.sybz: p_str
             })
             self.session.execute(sql)
             self.session.commit()
@@ -233,6 +236,7 @@ class ReportReviewFullScreen(Dialog):
                         MT_TJ_BGGL.sybz: self.gp_review_user.get_sybz(),
                         MT_TJ_BGGL.sysc: num,
                         MT_TJ_BGGL.bgzt: 2,
+                        MT_TJ_BGGL.bgth: None,              # 审阅完成，清空审核退回和审阅退回标记
                     }
                 )
                 sql = "UPDATE TJ_TJDJB SET TJZT='8' WHERE TJBH='%s';" %self.cur_tjbh
